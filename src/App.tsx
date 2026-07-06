@@ -1,24 +1,13 @@
-import { Nav } from "./components/Nav";
-import { Hero } from "./components/Hero";
-import { Projects } from "./components/Projects";
-import { Skills } from "./components/Skills";
-import { Experience } from "./components/Experience";
-import { Contact } from "./components/Contact";
-import { TricolorBar } from "./components/TricolorBar";
+import { Route, Routes } from "react-router-dom";
+import { Home } from "./pages/Home";
+import { CaseStudyTechDrishti } from "./pages/CaseStudyTechDrishti";
 
 function App() {
   return (
-    <div className="min-h-screen bg-ink-950">
-      <TricolorBar />
-      <Nav />
-      <main>
-        <Hero />
-        <Projects />
-        <Skills />
-        <Experience />
-      </main>
-      <Contact />
-    </div>
+    <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="/case-study/techdrishti" element={<CaseStudyTechDrishti />} />
+    </Routes>
   );
 }
 

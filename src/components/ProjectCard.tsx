@@ -1,6 +1,23 @@
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 import { ExternalLink } from "lucide-react";
 import type { Project } from "../data/projects";
+
+function ProjectLink({ label, href, className }: { label: string; href: string; className: string }) {
+  if (href.startsWith("/")) {
+    return (
+      <Link to={href} className={className}>
+        {label}
+      </Link>
+    );
+  }
+  return (
+    <a href={href} target="_blank" rel="noreferrer" className={className}>
+      {label}
+      <ExternalLink size={12} />
+    </a>
+  );
+}
 
 export function FeaturedProjectCard({ project, index }: { project: Project; index: number }) {
   return (
@@ -37,16 +54,12 @@ export function FeaturedProjectCard({ project, index }: { project: Project; inde
       {project.links.length > 0 && (
         <div className="mt-6 flex flex-wrap gap-4">
           {project.links.map((l) => (
-            <a
+            <ProjectLink
               key={l.href}
+              label={l.label}
               href={l.href}
-              target="_blank"
-              rel="noreferrer"
               className="inline-flex items-center gap-1.5 text-sm font-medium text-saffron-400 hover:text-saffron-500"
-            >
-              {l.label}
-              <ExternalLink size={13} />
-            </a>
+            />
           ))}
         </div>
       )}
@@ -89,16 +102,12 @@ export function ProjectCard({ project, index }: { project: Project; index: numbe
       {project.links.length > 0 && (
         <div className="mt-auto pt-4 flex flex-wrap gap-4">
           {project.links.map((l) => (
-            <a
+            <ProjectLink
               key={l.href}
+              label={l.label}
               href={l.href}
-              target="_blank"
-              rel="noreferrer"
               className="inline-flex items-center gap-1.5 text-xs font-medium text-saffron-400 hover:text-saffron-500"
-            >
-              {l.label}
-              <ExternalLink size={12} />
-            </a>
+            />
           ))}
         </div>
       )}

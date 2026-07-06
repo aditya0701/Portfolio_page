@@ -65,7 +65,7 @@ export const projects: Project[] = [
     ],
     tags: ["Python", "LLM Pipelines", "Sarvam AI", "sentence-transformers", "GitHub Actions"],
     links: [
-      { label: "Case Study", href: "https://claude.ai/code/artifact/8dc20399-2ae9-46d7-9ef4-6672045f655d" },
+      { label: "Case Study", href: "/case-study/techdrishti" },
       { label: "Live Edition", href: "https://aditya0701.github.io/Local_news_aggregator/" },
       { label: "GitHub", href: "https://github.com/aditya0701/Local_news_aggregator" },
     ],

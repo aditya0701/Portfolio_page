@@ -56,7 +56,7 @@ export const projects: Project[] = [
     tagline: "An unattended Hindi tech-journalism pipeline, running daily on GitHub Actions",
     period: "06/2026 – present · Solo project",
     description:
-      "A fully autonomous newsroom: every morning it collects English tech news, decides for itself what's genuine news versus job listings or SEO spam, and writes an original Hindi article per story through a 3-stage LLM pipeline — not machine translation. Zero servers, zero hosting cost.",
+      "A fully autonomous newsroom: every morning it collects English tech news, decides for itself what's genuine news versus job listings or SEO spam, and writes an original Hindi article per story through a 3-stage LLM pipeline, not machine translation. Zero servers, zero hosting cost.",
     bullets: [
       "3-stage plan-execute LLM pipeline (research → editorial strategy → prose) across sarvam-30b/105b, engineered around real token-starvation and hallucination failure modes found in production",
       "Persistent entity knowledge cache (45-day TTL) and typed, free-tier-only web search so the same name is never re-researched twice",

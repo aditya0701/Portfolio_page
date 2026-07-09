@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { ExternalLink } from "lucide-react";
 import type { Project } from "../data/projects";
+import { TechDrishtiIcon } from "./icons/TechDrishtiIcon";
 
 function ProjectLink({ label, href, className }: { label: string; href: string; className: string }) {
   if (href.startsWith("/")) {
@@ -29,6 +30,7 @@ export function FeaturedProjectCard({ project, index }: { project: Project; inde
       className="notch-corner group relative border border-ink-700 bg-ink-900 p-6 transition-colors hover:border-ink-600 sm:p-8"
     >
       <div className="absolute inset-x-0 top-0 h-[3px] bg-gradient-to-r from-transparent via-neon-500 to-transparent" />
+      {project.slug === "techdrishti" && <TechDrishtiIcon size={36} className="mb-3" />}
       <div className="mb-1 text-[10px] text-neon-300">{project.period}</div>
       <h3 className="font-display text-xl font-semibold text-ink-50 sm:text-2xl">{project.title}</h3>
       <p className="mt-1 text-[13px] text-ink-300">{project.tagline}</p>

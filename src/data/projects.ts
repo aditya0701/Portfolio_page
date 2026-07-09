@@ -53,17 +53,17 @@ export const projects: Project[] = [
   {
     slug: "techdrishti",
     title: "TechDrishti (टेकदृष्टि)",
-    tagline: "An unattended Hindi tech-journalism pipeline, running daily on GitHub Actions",
+    tagline: "An agentic AI workflow for Hindi tech journalism, running unattended daily on GitHub Actions",
     period: "06/2026 – present · Solo project",
     description:
-      "A fully autonomous newsroom: every morning it collects English tech news, decides for itself what's genuine news versus job listings or SEO spam, and writes an original Hindi article per story through a 3-stage LLM pipeline, not machine translation. Zero servers, zero hosting cost.",
+      "A fully autonomous, agentic newsroom: every morning it collects English tech news, decides for itself what's genuine news versus job listings or SEO spam, calls out to its own research agent for anything a keyword search can't answer, and writes an original Hindi article per story through a multi-stage LLM pipeline, not machine translation. Zero servers, zero hosting cost.",
     bullets: [
-      "3-stage plan-execute LLM pipeline (research → editorial strategy → prose) across sarvam-30b/105b, engineered around real token-starvation and hallucination failure modes found in production",
-      "Persistent entity knowledge cache (45-day TTL) and typed, free-tier-only web search so the same name is never re-researched twice",
+      "Agentic, multi-stage plan-execute LLM pipeline (research → editorial strategy → prose) across sarvam-30b/105b, engineered around real token-starvation and hallucination failure modes found in production",
+      "Autonomous research-agent routing for ambiguous entities and comparison questions, backed by a persistent entity knowledge cache (45-day TTL) so the same name is never re-researched twice",
       "Sentence-embedding clustering to merge duplicate coverage of the same story across 8 RSS feeds + GitHub trending",
       "Every fix backed by a documented claim → root cause → fix → verified-on-real-articles case study, not just a passing test",
     ],
-    tags: ["Python", "LLM Pipelines", "Sarvam AI", "sentence-transformers", "GitHub Actions"],
+    tags: ["Agentic AI", "Python", "LLM Pipelines", "Sarvam AI", "sentence-transformers", "GitHub Actions"],
     links: [
       { label: "Case Study", href: "/case-study/techdrishti" },
       { label: "Live Edition", href: "https://aditya0701.github.io/Local_news_aggregator/" },

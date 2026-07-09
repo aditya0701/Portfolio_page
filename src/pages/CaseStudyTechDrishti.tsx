@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft, ExternalLink, ChevronDown } from "lucide-react";
 import { SignalBar } from "../components/SignalBar";
+import { TechDrishtiIcon } from "../components/icons/TechDrishtiIcon";
 
 const WHY = [
   {
@@ -147,9 +148,10 @@ export function CaseStudyTechDrishti() {
 
       <main className="mx-auto max-w-3xl px-6 pb-28">
         <div className="neon-glow-bg notch-corner relative overflow-hidden border border-ink-700 bg-ink-900/60 px-6 py-12 text-center">
-          <p className="font-hero-mono mb-4 text-[10px] tracking-wider text-neon-300">ENGINEERING CASE STUDY</p>
+          <p className="font-hero-mono mb-4 text-[10px] tracking-wider text-neon-300">AGENTIC AI ENGINEERING CASE STUDY</p>
+          <TechDrishtiIcon size={48} className="mx-auto mb-3" />
           <h1 className="font-display text-4xl font-semibold text-ink-50 sm:text-5xl">टेकदृष्टि</h1>
-          <p className="font-display mt-2 text-lg italic text-ink-300">TechDrishti, an unattended newsroom</p>
+          <p className="font-display mt-2 text-lg italic text-ink-300">TechDrishti, an autonomous AI news agent</p>
           <div className="signal-bar mx-auto mt-5 w-24" />
           <p className="font-hero-mono mt-4 text-[9px] tracking-wide text-ink-500">
             PUBLISHES DAILY AT 8:00 AM IST &middot; BUILDING SINCE JUNE 2026
@@ -157,15 +159,16 @@ export function CaseStudyTechDrishti() {
         </div>
 
         <p className="font-display mt-10 text-xl leading-relaxed text-ink-100 sm:text-2xl">
-          Every morning, before most of India is awake, an unattended GitHub Actions job reads the day's English tech
-          news, decides for itself which stories are worth covering, and writes each one from scratch, in original
-          Hindi prose rather than machine translation, through a three-stage AI pipeline it has to be caught arguing
-          with itself along the way.
+          Every morning, before most of India is awake, an agentic AI workflow running unattended on GitHub Actions
+          reads the day's English tech news, decides for itself which stories are worth covering, calls out to its
+          own research agent when a fact needs real investigation, and writes each one from scratch, in original
+          Hindi prose rather than machine translation, through a multi-stage LLM pipeline it has to be caught
+          arguing with itself along the way.
         </p>
         <p className="mt-4 text-[13px] leading-loose text-ink-400">
-          This page is the log of that build: why it exists, what the architecture does today, and nine real bugs
-          found along the way, each with what was claimed, what broke, what fixed it, and how it was verified.
-          Nothing below is hypothetical.
+          This page is the log of that build: why the agentic workflow exists, what the AI architecture does today,
+          and nine real bugs found along the way, each with what was claimed, what broke, what fixed it, and how it
+          was verified. Nothing below is hypothetical.
         </p>
 
         <div className="mt-8 flex flex-wrap gap-4">
@@ -191,12 +194,12 @@ export function CaseStudyTechDrishti() {
           <SectionHead num="01" title="Why this exists" />
           <p className="mb-6 text-sm text-ink-400">
             There's no shortage of Hindi tech coverage, but almost all of it is either wire-service translation or a
-            human editor's fast rewrite. The bet here was different: could an unattended pipeline make its own
-            editorial calls, research what it doesn't know, and write original Hindi prose, at a running cost of
-            fractions of a cent per article, with no server or hosting bill beyond a GitHub Actions runner? That
-            framing is what makes the field reports below worth reading: each one is the pipeline being asked to make
-            a judgment call a human editor makes without thinking twice, getting it wrong the first time, in a way
-            specific to how it was asked.
+            human editor's fast rewrite. The bet here was different: could an agentic AI workflow make its own
+            editorial calls, autonomously research what it doesn't know by calling out to a second AI agent, and
+            write original Hindi prose, at a running cost of fractions of a cent per article, with no server or
+            hosting bill beyond a GitHub Actions runner? That framing is what makes the field reports below worth
+            reading: each one is the AI agent being asked to make a judgment call a human editor makes without
+            thinking twice, getting it wrong the first time, in a way specific to how it was asked.
           </p>
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             {WHY.map((w) => (
@@ -233,10 +236,11 @@ export function CaseStudyTechDrishti() {
         </section>
 
         <section className="mt-20">
-          <SectionHead num="03" title="How the newsroom thinks today" />
+          <SectionHead num="03" title="How the agentic workflow thinks today" />
           <p className="mb-6 text-sm text-ink-400">
-            No server, no database, no standing infrastructure: the entire operation runs inside a daily GitHub
-            Actions job and pushes its own output back to the repo.
+            No server, no database, no standing infrastructure: the entire agentic AI workflow runs inside a daily
+            GitHub Actions job, chains through collection, an LLM editorial gate, a self-built research agent, and a
+            two-stage writing pipeline, then pushes its own output back to the repo, unattended, end to end.
           </p>
           <p className="mb-4 text-[12px] text-ink-500">Click a step for how it actually works.</p>
           <div className="flex flex-col gap-3">
@@ -273,6 +277,22 @@ export function CaseStudyTechDrishti() {
                     <div className="overflow-hidden">
                       <div className="border-t border-ink-800 px-4 pb-4 pl-5 pt-3 sm:px-5 sm:pb-5 sm:pl-6">
                         <p className="text-[13px] leading-relaxed text-ink-300">{s.detail}</p>
+                        {s.tag === "RESEARCH" && (
+                          <div className="mt-3 notch-corner-sm border border-neon-400/30 bg-neon-500/[0.06] p-3 pl-4">
+                            <span className="font-hero-mono text-[9px] tracking-wide text-neon-300">
+                              CUSTOM BUILD &middot; 45-DAY ENTITY CACHE
+                            </span>
+                            <p className="mt-1.5 text-[12px] leading-relaxed text-ink-300">
+                              A self-built local cache keyed by resolved entity, not raw string, so "Python (language)"
+                              and "Python (snake)" never collide. Every entity checks the cache before a single search
+                              or model call fires: a hit costs nothing at all, no DDG fetch, no sarvam-30b synthesis
+                              call. Only a miss pays for search + model. Because most entities recur across runs
+                              (the same companies, people, and products keep showing up in tech news), this alone is
+                              what keeps the RESEARCH stage's real per-article API spend a fraction of what it would
+                              be if every entity were re-researched from scratch, on every run, forever.
+                            </p>
+                          </div>
+                        )}
                         {s.link && (
                           <a
                             href={s.link.url}
@@ -297,6 +317,40 @@ export function CaseStudyTechDrishti() {
                 </div>
               );
             })}
+          </div>
+        </section>
+
+        <section className="mt-16">
+          <div className="notch-corner overflow-hidden border border-green-500/40 bg-black font-mono text-[12px] shadow-[0_0_18px_-4px_rgba(74,222,128,0.35)]">
+            <div className="flex items-center gap-1.5 border-b border-green-500/30 bg-ink-950 px-3 py-2">
+              <span className="h-2.5 w-2.5 rounded-full bg-red-500/70" />
+              <span className="h-2.5 w-2.5 rounded-full bg-yellow-500/70" />
+              <span className="h-2.5 w-2.5 rounded-full bg-green-500/70" />
+              <span className="ml-2 text-[10px] tracking-wide text-green-500/60">techdrishti@build:~$</span>
+            </div>
+            <div className="space-y-2 px-4 py-4 leading-relaxed text-green-400">
+              <p>
+                <span className="text-green-500/60">$</span> ./deploy_pipeline.sh --research-mode
+              </p>
+              <p className="text-yellow-400">
+                [WARNING] flow altered: reverted RESEARCH stage to DuckDuckGo-only search, tiered
+                research-agent routing left in place but disabled for production runs.
+              </p>
+              <p className="pl-4 text-green-300">
+                current build (DDG-only) . . . . ~$0.008 USD/run &middot; 9&ndash;20 min
+              </p>
+              <p className="pl-4 text-green-300">
+                search-agent build (retained) . . ~$0.17&ndash;$0.20 USD/run &middot; 1 hr 20+ min
+              </p>
+              <p className="text-green-400">
+                reason: build time and cost cut took priority over the marginal research quality
+                gain. tiered search-agent routing kept in codebase for future use, not deleted.
+              </p>
+              <p>
+                <span className="text-green-500/60">$</span>
+                <span className="ml-1 inline-block h-3.5 w-2 animate-pulse bg-green-400 align-middle" />
+              </p>
+            </div>
           </div>
         </section>
 
@@ -382,13 +436,22 @@ export function CaseStudyTechDrishti() {
 
         <footer className="mt-20 border-t border-ink-700 pt-8">
           <p className="text-[13px] leading-relaxed text-ink-400">
-            Built solo, end to end: collection, deduplication, a 3-stage LLM writing pipeline, an entity knowledge
-            cache, and the reading frontend, running on GitHub Actions with no server and no hosting cost. The
-            research agent it calls out to for ambiguous entities and comparison questions (RESEARCH, above) is a
-            second project of mine, built and hosted separately.
+            Built solo, end to end: an agentic AI workflow covering collection, deduplication, a multi-stage LLM
+            writing pipeline, an entity knowledge cache, and the reading frontend, running on GitHub Actions with no
+            server and no hosting cost. The autonomous research agent it calls out to for ambiguous entities and
+            comparison questions (RESEARCH, above) is a second AI agent project of mine, built and hosted separately.
           </p>
           <div className="mt-4 flex flex-wrap gap-2">
-            {["Python", "Sarvam-30B / 105B", "sentence-transformers", "BeautifulSoup", "GitHub Actions", "pytest"].map(
+            {[
+              "Agentic AI",
+              "LLM Pipeline",
+              "Python",
+              "Sarvam-30B / 105B",
+              "sentence-transformers",
+              "BeautifulSoup",
+              "GitHub Actions",
+              "pytest",
+            ].map(
               (t) => (
                 <span key={t} className="notch-corner-sm border border-ink-700 bg-ink-800 px-2.5 py-1 text-[11px] text-ink-400">
                   {t}

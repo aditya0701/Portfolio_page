@@ -1,5 +1,15 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" shape-rendering="crispEdges">
-  <path fill="#090c16" d="M0 3h3V0h18v3h3v18h-3v3H3v-3H0z"/>
-  <path fill="#ff9933" fill-rule="evenodd" d="M8 1h8l7 7v8l-7 7H8l-7-7V8z M10 6.5h4l3.5 3.5v4l-3.5 3.5h-4l-3.5-3.5v-4z"/>
-  <rect x="10" y="10" width="4" height="4" fill="#128807"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" shape-rendering="crispEdges">
+  <path fill="#060805" d="M0 2h2V0h12v2h2v12h-2v2H2v-2H0z"/>
+  <g fill="#22e378">
+    <rect x="3" y="3" width="3" height="1"/>
+    <rect x="3" y="3" width="1" height="3"/>
+    <rect x="10" y="3" width="3" height="1"/>
+    <rect x="12" y="3" width="1" height="3"/>
+    <rect x="3" y="12" width="3" height="1"/>
+    <rect x="3" y="10" width="1" height="3"/>
+    <rect x="10" y="12" width="3" height="1"/>
+    <rect x="12" y="10" width="1" height="3"/>
+  </g>
+  <rect x="6" y="6" width="4" height="4" fill="#0e7a3c"/>
+  <rect x="7" y="7" width="2" height="2" fill="#8ff5b8"/>
 </svg>

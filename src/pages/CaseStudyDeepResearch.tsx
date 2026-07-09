@@ -82,26 +82,31 @@ const QUIRKS = [
 
 const MODES = [
   {
-    tag: "MODE 1 · ASK",
+    tag: "MODE 1 · ASK A QUESTION",
     title: "Direct research question in, full cited report out",
-    desc: "The plain research loop end to end — for a caller that wants the whole write-up, not a distilled answer.",
+    desc: "The plain research loop end to end — for someone who wants the whole write-up, not a distilled answer.",
   },
   {
-    tag: "MODE 2 · ARTICLE ENRICHMENT",
-    title: "Feed it an article; it finds what the article doesn't say",
-    desc: "One continuous session, not a dossier of independently-researched questions — gap-finding happens inside the model's own first-turn thinking, sharing full article context and one retrieved-evidence pool. A separate, non-agentic writing pass (no tools, no search budget) then turns the report into a final article, since turning findings into prose is a writing job, not a research-decision job.",
-  },
-  {
-    tag: "MODE 3 · CONCISE",
+    tag: "MODE 2 · QUICK GROUNDED ANSWER",
     title: "Classify the question before deciding how hard to work on it",
-    desc: "The model tags its own final answer SIMPLE_ANSWER, AMBIGUOUS_ANSWER, or COMPLEX_REPORT on its first line — a fixed, code-checked tag rather than trusting the model to \"just keep it short\" from memory. Only COMPLEX questions get a second LLM pass that turns the research report into a grounded conclusion; SIMPLE and AMBIGUOUS answers are already short and returned as-is.",
+    desc: "The model tags its own final answer SIMPLE_ANSWER, AMBIGUOUS_ANSWER, or COMPLEX_REPORT on its first line — a fixed, code-checked tag rather than trusting the model to \"just keep it short\" from memory. Simple questions get a fast verified answer; ambiguous ones get every plausible meaning plus which one fits the given context; genuinely complex questions are still fully researched — a second LLM pass just turns that research into a distilled, grounded conclusion instead of handing back the raw write-up.",
+  },
+  {
+    tag: "MODE 3 · RESEARCH AN ARTICLE",
+    title: "Feed it an article; it finds what the article doesn't say",
+    desc: "One continuous session, not a dossier of independently-researched questions — gap-finding happens inside the model's own first-turn thinking, sharing full article context and one retrieved-evidence pool. Returns the raw findings, not a rewritten article.",
+  },
+  {
+    tag: "MODE 4 · WRITE AN ARTICLE",
+    title: "Same gap research, one more pass to weave it into a finished piece",
+    desc: "Reuses mode 3's exact research session — same code path, one flag flipped (write_hindi=true) — then hands the findings to a separate, non-agentic writing pass (no tools, no search budget) that weaves them together with the original article into one complete Hindi-language piece. Kept as its own LLM call rather than folded into the research loop, since turning findings into prose is a writing job, not a research-decision job.",
   },
 ];
 
 const STATS = [
   { num: "8", unit: "-turn", label: "hard iteration cap (MAX_ITERATIONS), code-enforced regardless of what the model wants" },
-  { num: "6", unit: "", label: "CORE_RULES shared across every mode — direct Q&A, article enrichment, concise answers" },
-  { num: "3", unit: "", label: "task framings on one agent loop: ask, article-gap research, classify-then-answer" },
+  { num: "6", unit: "", label: "CORE_RULES shared across every mode — questions, quick answers, article research, article writing" },
+  { num: "4", unit: "", label: "chat modes on one agent loop: ask, quick grounded answer, research an article, write an article" },
   { num: "2", unit: "", label: "swappable backends (DeepSeek V4 Flash / Sarvam) behind one LLM_PROVIDER env var" },
 ];
 
@@ -322,10 +327,12 @@ export function CaseStudyDeepResearch() {
         </section>
 
         <section className="mt-20">
-          <SectionHead num="05" title="Three modes, one loop" />
+          <SectionHead num="05" title="Four modes, one loop" />
           <p className="mb-6 text-sm text-ink-400">
             Every mode is the same ResearchAgent with a different system prompt and a different
-            final-answer contract — not three separate codepaths to keep in sync.
+            final-answer contract — not four separate codepaths to keep in sync. "Research an
+            article" and "Write an article" are even the same function under the hood, one
+            boolean flag apart.
           </p>
           <div className="flex flex-col gap-3">
             {MODES.map((m) => (
@@ -335,6 +342,28 @@ export function CaseStudyDeepResearch() {
                 <p className="mt-1 text-[13px] leading-relaxed text-ink-400">{m.desc}</p>
               </div>
             ))}
+          </div>
+
+          <div className="notch-corner mt-3 border border-ink-700 bg-ink-900/60 p-4 pl-5 sm:p-5 sm:pl-6">
+            <span className="font-hero-mono text-[9px] tracking-wide text-neon-300">ALSO CALLABLE OVER PLAIN HTTP</span>
+            <div className="mt-1 font-display text-base font-semibold text-ink-50">
+              Not chat-only — a GitHub Actions job or another model can call this directly
+            </div>
+            <p className="mt-2 text-[13px] leading-relaxed text-ink-300">
+              Three POST routes (<code className="text-ink-300">/api/concise</code>,{" "}
+              <code className="text-ink-300">/api/research</code>,{" "}
+              <code className="text-ink-300">/api/article</code>) mirror the quick-answer, ask,
+              and article modes for a caller that can't speak Chainlit's websocket chat protocol —
+              deliberately not a second server: Hugging Face Spaces exposes exactly one port, so
+              these routes mount directly onto Chainlit's own FastAPI instance instead of standing
+              up a process with nowhere to listen. Every request accepts an optional{" "}
+              <code className="text-ink-300">provider</code> field, so a caller can A/B the same
+              question against DeepSeek and Sarvam without touching an env var. Guarded by a
+              shared-secret <code className="text-ink-300">X-API-Key</code> header that fails
+              closed — if the server-side secret is ever unset, the route refuses every request
+              rather than silently reopening itself to anyone on the internet with a spare API
+              quota to spend.
+            </p>
           </div>
         </section>
 
@@ -382,7 +411,28 @@ export function CaseStudyDeepResearch() {
         </section>
 
         <section className="mt-20">
-          <SectionHead num="07" title="By the numbers" />
+          <SectionHead num="07" title="Sarvam vs DeepSeek, measured head-to-head" />
+          <p className="mb-6 text-sm text-ink-400">
+            Since this agent runs on either backend behind one <code className="text-ink-300">LLM_PROVIDER</code>{" "}
+            switch, the two were put through the same fixed question set and compared on identical metrics rather
+            than picked by feel. Three kinds of questions were run: basic factual questions, open-ended research
+            queries, and disambiguation cases (an ambiguous entity with more than one plausible answer). Article
+            writing was also tried manually against both models but left out of the scored comparison, since writing
+            isn't this agent's job — the research loop's job is finding and grounding facts, not prose. Qualitative
+            answers were judged by feeding both models' output to ChatGPT and asking which held up better and why;
+            numerical claims were checked by actually running the calculation, not by asking a model whether a number
+            looked plausible.
+          </p>
+          <Link
+            to="/case-study/techdrishti/sarvam-vs-deepseek"
+            className="notch-corner-sm inline-flex items-center gap-2 border border-ink-700 bg-ink-900/60 px-4 py-2 text-xs text-ink-200 transition-colors hover:text-neon-300"
+          >
+            Full comparison, side by side <ExternalLink size={14} />
+          </Link>
+        </section>
+
+        <section className="mt-20">
+          <SectionHead num="08" title="By the numbers" />
           <div className="grid grid-cols-2 gap-px border border-ink-700 bg-ink-700 sm:grid-cols-4">
             {STATS.map((s) => (
               <div key={s.label} className="bg-ink-900 p-5">

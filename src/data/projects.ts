@@ -72,6 +72,26 @@ export const projects: Project[] = [
     featured: true,
   },
   {
+    slug: "deep-research-agent",
+    title: "Deep Research Agent",
+    tagline: "An autonomous research loop — Tavily-grade cited answers on a free search stack",
+    period: "06/2026 – present · Solo project, spun out of TechDrishti",
+    description:
+      "Given a research question, this agent decides for itself how many searches to run, what to search next based on what it already found, and when it has enough grounded evidence to stop, then hands back a cited report with every comparison claim checked in code against what it actually retrieved. Built directly out of a measured limitation in TechDrishti's fixed, single-shot search pipeline.",
+    bullets: [
+      "Code-enforced iteration budget (8 turns) and a grounding check that flags any comparison claim whose named target wasn't found in retrieved sources, not trusted to a 'don't hallucinate' prompt",
+      "Free, keyless retrieval layer (DuckDuckGo + Google News RSS + page/PDF fetch) instead of a metered search API, with only the LLM calls themselves as a real cost",
+      "Three task framings on one loop: direct Q&A, article-gap enrichment, and a classify-then-answer concise mode",
+      "Provider-swappable backend (DeepSeek V4 Flash / Sarvam) behind one env var, plus a recovery path for tool calls a model leaks as raw text instead of a structured call",
+    ],
+    tags: ["Python", "DeepSeek V4 Flash", "Sarvam", "Chainlit", "FastAPI", "Agentic Search"],
+    links: [
+      { label: "Case Study", href: "/case-study/deep-research-agent" },
+      { label: "Live Demo", href: "https://huggingface.co/spaces/aditya0701/DeepSeek_Mini_research_tool" },
+    ],
+    featured: true,
+  },
+  {
     slug: "human-detection-and-counting",
     title: "Realtime Human Detection & Counting",
     tagline: "YOLOv3-based distance enforcement during COVID-19",

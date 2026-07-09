@@ -1,27 +1,30 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  --font-display: "Fraunces", "Georgia", serif;
+  /* Whole-site type system runs on the terminal voice: monospace body/UI,
+     a CRT pixel-font for headings. No separate "brand font" vs "body font"
+     split — the hacker-terminal identity is the typography, not a skin
+     layered on top of it. */
+  --font-sans: "JetBrains Mono", ui-monospace, "SFMono-Regular", monospace;
+  --font-display: "VT323", "Courier New", monospace;
   --font-mono: ui-monospace, "SFMono-Regular", Consolas, monospace;
-  --font-pixel: "Press Start 2P", "Courier New", monospace;
 
-  --color-ink-950: #090c16;
-  --color-ink-900: #0e1220;
-  --color-ink-800: #151a2c;
-  --color-ink-700: #212842;
-  --color-ink-600: #313a5c;
-  --color-ink-500: #4d5680;
-  --color-ink-400: #7178a0;
-  --color-ink-300: #9aa0c4;
-  --color-ink-200: #c4c8e0;
-  --color-ink-100: #e5e7f4;
-  --color-ink-50: #f7f7fc;
+  /* Neutral scale: jet black with a faint green tint throughout (phosphor
+     CRT glass), not a neutral gray or navy ramp. */
+  --color-ink-950: #060805;
+  --color-ink-900: #0b0f09;
+  --color-ink-800: #121810;
+  --color-ink-700: #1f2818;
+  --color-ink-600: #313f26;
+  --color-ink-500: #4c5e3c;
+  --color-ink-400: #71875c;
+  --color-ink-300: #9aac86;
+  --color-ink-200: #c3d0b4;
+  --color-ink-100: #e4ecdb;
+  --color-ink-50: #f6f9f2;
 
-  --color-saffron-400: #ffb459;
-  --color-saffron-500: #ff9933;
-  --color-saffron-600: #e07f1e;
-
+  /* Semantic only: before/after and correct/incorrect states in the
+     TechDrishti field-report and pricing content. Not brand accents. */
   --color-green-400: #4fd67f;
   --color-green-500: #1f9d55;
   --color-green-600: #128807;
@@ -30,7 +33,31 @@
   --color-rust-500: #e2542c;
   --color-rust-600: #b8401e;
 
-  --color-chakra-500: #1f2e7a;
+  /* Two-series comparison charts only (validated: OKLCH dark-mode lightness
+     band 0.48-0.67, CVD-safe, >=3:1 vs ink-900/950 surfaces). Not for prose
+     accents. */
+  --color-sarvam-500: #d4791b;
+  --color-deepseek-500: #2563eb;
+
+  /* Site identity (hacker-terminal): neon is the dominant phosphor-green
+     accent — links, eyebrows, CTAs, glow. Magenta is a single rare signal
+     color (an alert/highlight moment, never a wash). Phosphor is a
+     green-white used for fine linework and glow highlights, not body text. */
+  --color-neon-200: oklch(92% 0.15 145);
+  --color-neon-300: oklch(85% 0.19 145);
+  --color-neon-400: oklch(78% 0.22 145);
+  --color-neon-500: oklch(72% 0.24 145);
+  --color-neon-600: oklch(55% 0.19 145);
+  --color-neon-700: oklch(38% 0.13 145);
+
+  --color-magenta-500: oklch(65% 0.25 340);
+  --color-magenta-600: oklch(52% 0.22 335);
+
+  --color-phosphor-100: oklch(96% 0.04 145);
+  --color-phosphor-300: oklch(88% 0.06 145);
+
+  --font-hero-display: "VT323", "Courier New", monospace;
+  --font-hero-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", monospace;
 }
 
 html {
@@ -41,63 +68,95 @@ body {
   margin: 0;
   background: var(--color-ink-950);
   color: var(--color-ink-100);
-  font-family: var(--font-pixel);
+  font-family: var(--font-sans);
   line-height: 1.7;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 ::selection {
-  background: color-mix(in srgb, var(--color-saffron-500) 35%, transparent);
-  color: white;
+  background: color-mix(in oklch, var(--color-neon-500) 35%, transparent);
+  color: black;
 }
 
 .text-balance {
   text-wrap: balance;
 }
 
-.tricolor-bar {
+/* Site-wide divider: a neon line resolving through a single magenta tick,
+   replacing the retired tricolor gradient bar. */
+.signal-bar {
   height: 3px;
   width: 100%;
   background: linear-gradient(
     to right,
-    var(--color-saffron-500) 0%,
-    var(--color-saffron-500) 33.33%,
-    var(--color-ink-50) 33.33%,
-    var(--color-ink-50) 66.66%,
-    var(--color-green-600) 66.66%,
-    var(--color-green-600) 100%
+    transparent 0%,
+    var(--color-neon-600) 15%,
+    var(--color-neon-400) 45%,
+    var(--color-magenta-500) 50%,
+    var(--color-neon-400) 55%,
+    var(--color-neon-600) 85%,
+    transparent 100%
   );
 }
 
-.jali-bg {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='56' viewBox='0 0 56 56'%3E%3Cg fill='none' stroke='%23ff9933' stroke-opacity='0.16'%3E%3Cpath d='M28 2 L54 28 L28 54 L2 28 Z'/%3E%3Ccircle cx='28' cy='28' r='7'/%3E%3C/g%3E%3Cg fill='none' stroke='%231f9d55' stroke-opacity='0.1'%3E%3Cpath d='M28 2 L28 54 M2 28 L54 28'/%3E%3C/g%3E%3C/svg%3E");
-  background-size: 56px 56px;
+/* Ambient phosphor-glow watermark, replacing the retired temple-glow. */
+.neon-glow-bg {
+  background-image: radial-gradient(
+      ellipse 60% 55% at 50% 20%,
+      color-mix(in oklch, var(--color-neon-500) 14%, transparent),
+      transparent 70%
+    ),
+    radial-gradient(
+      ellipse 40% 45% at 85% 90%,
+      color-mix(in oklch, var(--color-magenta-500) 6%, transparent),
+      transparent 70%
+    );
 }
 
-.font-pixel {
-  font-family: var(--font-pixel);
-  image-rendering: pixelated;
-}
-
-.pixel-corners {
-  clip-path: polygon(
-    0 10px, 5px 10px, 5px 5px, 10px 5px, 10px 0,
-    calc(100% - 10px) 0, calc(100% - 10px) 5px, calc(100% - 5px) 5px, calc(100% - 5px) 10px, 100% 10px,
-    100% calc(100% - 10px), calc(100% - 5px) calc(100% - 10px), calc(100% - 5px) calc(100% - 5px), calc(100% - 10px) calc(100% - 5px), calc(100% - 10px) 100%,
-    10px 100%, 10px calc(100% - 5px), 5px calc(100% - 5px), 5px calc(100% - 10px), 0 calc(100% - 10px)
-  );
-}
-
-.pixel-corners-sm {
-  clip-path: polygon(
-    0 6px, 3px 6px, 3px 3px, 6px 3px, 6px 0,
-    calc(100% - 6px) 0, calc(100% - 6px) 3px, calc(100% - 3px) 3px, calc(100% - 3px) 6px, 100% 6px,
-    100% calc(100% - 6px), calc(100% - 3px) calc(100% - 6px), calc(100% - 3px) calc(100% - 3px), calc(100% - 6px) calc(100% - 3px), calc(100% - 6px) 100%,
-    6px 100%, 6px calc(100% - 3px), 3px calc(100% - 3px), 3px calc(100% - 6px), 0 calc(100% - 6px)
-  );
-}
-
-.pixel-dot {
+.square-dot {
   border-radius: 0;
+}
+
+/* CRT scanline texture: fixed, low-opacity horizontal lines over the whole
+   viewport — the "old monitor" signal, replacing the retired yantra-grid
+   tile. Baked-in opacity stays low so it reads as screen texture, never
+   competing with foreground content. */
+.scanlines {
+  position: relative;
+}
+
+.scanlines::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  /* Ambient texture layer: above normal content (z-index: auto), below the
+     sticky nav (z-50) and any future overlay/modal — this is the only
+     z-indexed layer below "sticky" in the current stacking order. */
+  z-index: 1;
+  pointer-events: none;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    color-mix(in oklch, var(--color-neon-500) 5%, transparent) 0px,
+    color-mix(in oklch, var(--color-neon-500) 5%, transparent) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+}
+
+/* A single cut corner reads as a terminal-window tab. */
+.notch-corner {
+  clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 0 100%);
+}
+
+.notch-corner-sm {
+  clip-path: polygon(0 0, calc(100% - 7px) 0, 100% 7px, 100% 100%, 0 100%);
+}
+
+/* Text glow for neon headline/accent moments. Kept as a class (not inline
+   style) so usage stays deliberate and grep-able. */
+.text-glow {
+  text-shadow:
+    0 0 8px color-mix(in oklch, var(--color-neon-500) 70%, transparent),
+    0 0 24px color-mix(in oklch, var(--color-neon-500) 35%, transparent);
 }

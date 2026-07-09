@@ -1,13 +1,16 @@
 import { Mail, ExternalLink } from "lucide-react";
 import { profile } from "../data/profile";
-import { GithubIcon, PixelChakraIcon } from "./icons";
+import { GithubIcon, TerminalMark } from "./icons";
 
 export function Contact() {
   return (
     <section id="contact" className="relative overflow-hidden border-t border-ink-700">
-      <div className="jali-bg pointer-events-none absolute inset-0 opacity-40" />
+      <div className="neon-glow-bg pointer-events-none absolute inset-0 opacity-40" />
       <div className="relative mx-auto max-w-5xl px-6 py-20 text-center sm:py-28">
-        <p className="font-pixel mb-4 text-[10px] tracking-wider text-saffron-400">Get in touch</p>
+        <p className="font-hero-mono mb-4 flex items-center justify-center gap-2 text-[10px] uppercase tracking-[0.25em] text-neon-300">
+          <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-magenta-500" aria-hidden="true" />
+          Get in touch
+        </p>
         <h2 className="font-display text-balance text-2xl font-semibold text-ink-50 sm:text-3xl">
           Open to computer vision & ML roles
         </h2>
@@ -18,7 +21,7 @@ export function Contact() {
         <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
           <a
             href={`mailto:${profile.email}`}
-            className="pixel-corners-sm inline-flex items-center gap-2 bg-saffron-500 px-5 py-2.5 text-xs font-medium text-ink-950 shadow-[4px_4px_0_var(--color-ink-700)] transition-transform hover:-translate-y-0.5"
+            className="notch-corner-sm inline-flex items-center gap-2 bg-neon-500 px-5 py-2.5 text-xs font-hero-mono uppercase tracking-wider text-ink-950 transition-[background-color,box-shadow] hover:bg-neon-400 hover:shadow-[0_0_24px_color-mix(in_oklch,var(--color-neon-500)_55%,transparent)]"
           >
             <Mail size={15} />
             {profile.email}
@@ -27,7 +30,7 @@ export function Contact() {
             href={profile.github}
             target="_blank"
             rel="noreferrer"
-            className="pixel-corners-sm inline-flex items-center gap-2 border border-ink-700 bg-ink-900 px-5 py-2.5 text-xs font-medium text-ink-100 transition-colors hover:border-ink-500"
+            className="notch-corner-sm inline-flex items-center gap-2 border border-neon-700 bg-ink-900 px-5 py-2.5 text-xs font-hero-mono uppercase tracking-wider text-phosphor-100 transition-colors hover:border-neon-400 hover:text-neon-300"
           >
             <GithubIcon size={15} />
             GitHub
@@ -36,15 +39,15 @@ export function Contact() {
             href={profile.huggingface}
             target="_blank"
             rel="noreferrer"
-            className="pixel-corners-sm inline-flex items-center gap-2 border border-ink-700 bg-ink-900 px-5 py-2.5 text-xs font-medium text-ink-100 transition-colors hover:border-ink-500"
+            className="notch-corner-sm inline-flex items-center gap-2 border border-neon-700 bg-ink-900 px-5 py-2.5 text-xs font-hero-mono uppercase tracking-wider text-phosphor-100 transition-colors hover:border-neon-400 hover:text-neon-300"
           >
             Hugging Face
             <ExternalLink size={13} />
           </a>
         </div>
       </div>
-      <footer className="relative flex items-center justify-center gap-2 border-t border-ink-700 py-6 text-center font-pixel text-[9px] tracking-wide text-ink-500">
-        <PixelChakraIcon size={12} />© {new Date().getFullYear()} {profile.name}
+      <footer className="relative flex items-center justify-center gap-2 border-t border-ink-700 py-6 text-center font-hero-mono text-[9px] tracking-wide text-ink-500">
+        <TerminalMark size={12} />© {new Date().getFullYear()} {profile.name}
       </footer>
     </section>
   );

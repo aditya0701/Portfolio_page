@@ -13,18 +13,28 @@ export function GithubIcon({ size = 18, className = "" }: { size?: number; class
   );
 }
 
-export function PixelChakraIcon({ size = 20, className = "" }: { size?: number; className?: string }) {
+export function TerminalMark({ size = 20, className = "" }: { size?: number; className?: string }) {
   return (
-    <svg
-      viewBox="0 0 24 24"
-      width={size}
-      height={size}
-      shapeRendering="crispEdges"
-      className={className}
-      aria-hidden="true"
-    >
-      <path fill="var(--color-saffron-500)" fillRule="evenodd" d="M8 1h8l7 7v8l-7 7H8l-7-7V8z M10 6.5h4l3.5 3.5v4l-3.5 3.5h-4l-3.5-3.5v-4z" />
-      <rect x="10" y="10" width="4" height="4" fill="var(--color-green-600)" />
+    <svg viewBox="0 0 24 24" width={size} height={size} className={className} aria-hidden="true">
+      <rect
+        x="1.5"
+        y="3.5"
+        width="21"
+        height="17"
+        rx="1"
+        fill="none"
+        stroke="var(--color-neon-500)"
+        strokeWidth="1.25"
+      />
+      <path
+        d="M5 9 L9.5 12 L5 15"
+        fill="none"
+        stroke="var(--color-neon-400)"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <line x1="11.5" y1="15" x2="17" y2="15" stroke="var(--color-magenta-500)" strokeWidth="1.5" strokeLinecap="round" />
     </svg>
   );
 }

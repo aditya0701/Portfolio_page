@@ -21,7 +21,7 @@ export function Projects() {
         ))}
       </div>
 
-      <div className="pixel-corners mt-10 border border-ink-700 bg-ink-900/40 p-6">
+      <div className="notch-corner mt-10 border border-ink-700 bg-ink-900/40 p-6">
         <h3 className="mb-3 text-sm font-medium text-ink-200">Coursework & experiments</h3>
         <ul className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:gap-x-8 sm:gap-y-2">
           {coursework.map((c) => (
@@ -30,7 +30,7 @@ export function Projects() {
                 href={c.href}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center gap-1.5 text-sm text-ink-400 hover:text-saffron-400"
+                className="inline-flex items-center gap-1.5 text-sm text-ink-400 hover:text-neon-300"
               >
                 {c.label}
                 <ExternalLink size={12} />

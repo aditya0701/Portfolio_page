@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Mail } from "lucide-react";
 import { profile } from "../data/profile";
-import { GithubIcon, PixelChakraIcon } from "./icons";
+import { GithubIcon, TerminalMark } from "./icons";
 
 const links = [
   { href: "#projects", label: "Projects" },
@@ -27,7 +27,7 @@ export function Nav() {
     >
       <nav className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
         <a href="#top" className="flex items-center gap-2 font-display text-base font-semibold text-ink-50">
-          <PixelChakraIcon size={18} />
+          <TerminalMark size={18} />
           Aditya Rawat
         </a>
         <ul className="hidden items-center gap-8 sm:flex">
@@ -35,7 +35,7 @@ export function Nav() {
             <li key={l.href}>
               <a
                 href={l.href}
-                className="font-pixel text-[10px] tracking-wide text-ink-300 transition-colors hover:text-saffron-400"
+                className="font-hero-mono text-[10px] tracking-wide text-ink-300 transition-colors hover:text-neon-300"
               >
                 {l.label}
               </a>
@@ -48,14 +48,14 @@ export function Nav() {
             target="_blank"
             rel="noreferrer"
             aria-label="GitHub"
-            className="text-ink-300 transition-colors hover:text-saffron-400"
+            className="text-ink-300 transition-colors hover:text-neon-300"
           >
             <GithubIcon size={18} />
           </a>
           <a
             href={`mailto:${profile.email}`}
             aria-label="Email"
-            className="text-ink-300 transition-colors hover:text-saffron-400"
+            className="text-ink-300 transition-colors hover:text-neon-300"
           >
             <Mail size={18} />
           </a>

@@ -8,7 +8,7 @@ import { SignalBar } from "../components/SignalBar";
 
 export function Home() {
   return (
-    <div className="scanlines min-h-screen bg-ink-950">
+    <div className="min-h-screen bg-paper">
       <SignalBar />
       <Nav />
       <main>

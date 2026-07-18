@@ -14,15 +14,17 @@ export function Section({
   children: ReactNode;
 }) {
   return (
-    <section id={id} className="mx-auto w-full max-w-5xl px-6 py-20 sm:py-28">
-      <div className="mb-10 sm:mb-14">
-        <p className="font-hero-mono mb-3 flex items-center gap-2 text-[13px] uppercase tracking-[0.22em] text-neon-300">
-          <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-magenta-500" aria-hidden="true" />
+    <section id={id} className="mx-auto w-full max-w-[74rem] px-[var(--gutter,clamp(1.25rem,4vw,3.5rem))] py-[clamp(3.5rem,7vw,6rem)]">
+      <div className="mb-6 flex items-baseline justify-between gap-4 border-b border-ink pb-[0.5rem]">
+        <h2
+          className="font-display m-0 text-[clamp(1.05rem,2vw,1.3rem)] font-[800] uppercase tracking-[-0.005em] text-ink"
+          style={{ fontVariationSettings: '"wdth" 118, "wght" 800' }}
+        >
           {eyebrow}
-        </p>
-        <h2 className="font-display text-2xl font-semibold text-ink-50 sm:text-3xl">{title}</h2>
-        {intro && <p className="mt-3 max-w-2xl text-[14px] leading-relaxed text-ink-300">{intro}</p>}
+        </h2>
+        <span className="font-hero-mono text-[0.7rem] uppercase tracking-[0.09em] text-ink-soft">{title}</span>
       </div>
+      {intro && <p className="mb-6 mt-3 max-w-[64ch] text-[0.92rem] leading-[1.68] text-ink-mid">{intro}</p>}
       {children}
     </section>
   );

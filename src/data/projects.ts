@@ -15,9 +15,8 @@ export type Project = {
   tags: string[];
   links: { label: string; href: string }[];
   /** `lead` gets the full-width treatment; `flagship` gets a large card;
-   *  `supporting` stays deliberately lightweight so it cannot dilute the
-   *  work above it. */
-  weight: "lead" | "flagship" | "supporting";
+   *  `supporting` stays lightweight; `pending` marks a project still in progress. */
+  weight: "lead" | "flagship" | "supporting" | "pending";
   track: Track;
   period: string;
   figures?: Figure[];
@@ -130,14 +129,14 @@ export const projects: Project[] = [
     period: "07/2026 – present · Solo project",
     track: "both",
     description:
-      "An agentic assistant built on a vision-language model: it takes images, reasons about them, calls tools and holds conversation context. The VLM runs on Colab's free GPU tier, bridged through a FastAPI server to a web UI, a desktop app and a CLI. The project where the two tracks meet.",
+      "An agentic assistant built on a vision-language model: it takes images, reasons about them, calls tools and holds conversation context. The VLM runs on Colab's free GPU tier, bridged through a FastAPI server to a web UI, a desktop app and a CLI.",
     bullets: [
       "VLM inference on a free Colab GPU, bridged to a local FastAPI server so no client ever talks to Colab directly",
       "Tool use and conversation context on top of a vision model, with three clients (web, Tkinter desktop, CLI) against one API",
     ],
     tags: ["VLM", "Agentic AI", "FastAPI", "Python", "Computer Vision"],
     links: [{ label: "GitHub", href: "https://github.com/aditya0701/Chitragupta---A-Vision-based-AI-helper" }],
-    weight: "supporting",
+    weight: "pending",
   },
   {
     slug: "human-detection-and-counting",

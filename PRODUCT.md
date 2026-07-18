@@ -23,23 +23,25 @@ The dual track is carried by structure, not by two competing headlines: track la
 
 ## Brand Personality
 
-Precise & technical, hacker-terminal, 90s-cyberpunk. The voice is an engineer who takes the work seriously but doesn't take themselves too seriously — rigorous claims (benchmarks, metrics, architecture decisions) delivered with a bit of visual wit rather than corporate polish. The identity is a classic phosphor-terminal aesthetic (Matrix-style green-on-black, monospace/pixel type, CRT scanline texture, neon glow) — a nod to "hacking the mainframe" 90s movie computing rather than a modern SaaS dashboard. Confidence comes from depth of explanation and a distinctive point of view, not from selling language or corporate polish.
+Precise & technical, cold-lab-paper, data-as-aesthetic. The voice is an engineer who takes the work seriously but doesn't take themselves too seriously — rigorous claims (benchmarks, metrics, architecture decisions) delivered with clarity rather than corporate polish. The identity is "the figure plate": a cold lab-paper ground with black data panels, an accent palette sampled from the owner's own instance-label predictions, and an epistemic status system (MEASURED / SHIPPED / PENDING / NOT SHIPPED) that makes uncertainty visible rather than hiding it. Archivo + IBM Plex Mono replace the terminal fonts. Confidence comes from depth of explanation and a distinctive point of view, not from selling language or visual gimmicks.
 
 ## Anti-references
 
 - Generic SaaS/startup portfolio templates (hero-metric blocks, gradient text, identical project cards, tiny uppercase eyebrows).
 - Overly corporate/agency-style personal sites that read as impersonal.
 - The prior Indo-futurist direction (bronze/vermillion palette, yantra/lotus radial motif, sun-wheel mark): explored and retired — not the current direction. Don't reference it or revive it.
-- Multi-neon "Blade Runner" maximalism or Y2K hacker-zine chaos: the palette stays disciplined around one dominant neon (green) with a rare second signal color, not a rainbow of neons.
+- The prior hacker-terminal direction (green-on-black, digital rain, CRT scanlines, VT323 pixel type): explored and retired — not the current direction. Don't reference it or revive it.
+- Multi-neon maximalism or Y2K hacker-zine chaos: the palette stays disciplined around the six-instance-label hues, not a rainbow of neons.
 
 ## Design Principles
 
 - Show, don't tell: benchmarks, architecture diagrams, and concrete metrics carry more weight than adjectives. Research work in particular must have something clickable: a figure, a demo, or a table, never a bullet list standing in for evidence.
 - Depth on demand: each of the three flagships gets full case-study treatment; supporting projects stay lightweight so they don't dilute them.
 - Precision as aesthetic: technical rigor should be visible in the craft of the page itself, not just claimed in the copy. This is why the build refuses to ship an unresolved metric placeholder: the page holds itself to the standard its copy claims.
-- Terminal as identity: the hacker/CRT aesthetic should surface through real UI logic (a terminal-window frame, a blinking cursor, monospace type, scanline texture) rather than being pasted on as a color swap over a generic layout.
+- Data as palette: the accent colours are sampled from the model's own instance-label predictions, so the visual identity is a readout of the work itself, not a decoration applied on top of it.
+- Epistemic honesty: every number carries a status — measured, shipped, pending, or not shipped — so a reader can tell at a glance what is a real result, what is in progress, and what was consciously left out.
 - One clear conversion path: every surface should make it obvious how to reach out (email/GitHub), without ever publishing personal contact info like a phone number.
 
 ## Accessibility & Inclusion
 
-WCAG AA baseline: contrast ratios, keyboard navigation, and reduced-motion alternatives for all animation. Reduced motion is handled globally (framer-motion MotionConfig set to reducedMotion "user", plus Tailwind motion-safe: for CSS animation) rather than per-component. Body copy sits at 14px and never below 12px: the audience is skimming under time pressure, and unreadable-but-atmospheric is a failure of the "precision as aesthetic" principle, not an expression of it. Chart/data-viz colors must remain colorblind-safe (already evidenced by the CVD-safe two-series chart palette in the codebase) — carry that standard forward into any future visualizations.
+WCAG AA baseline: contrast ratios, keyboard navigation, and reduced-motion alternatives for all animation. Reduced motion is handled globally (framer-motion MotionConfig set to reducedMotion "user", plus Tailwind motion-safe: for CSS animation) rather than per-component. Body copy sits at 16px on the light ground (the figure-plate direction uses a larger base size than the terminal direction did). Chart/data-viz colors must remain colorblind-safe (already evidenced by the CVD-safe two-series chart palette in the codebase) — carry that standard forward into any future visualizations.

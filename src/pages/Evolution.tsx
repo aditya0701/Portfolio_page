@@ -182,7 +182,7 @@ function EvidenceBox({ evidence }: { evidence: (typeof REPORTS)[number]["evidenc
                 {e.label}
               </span>
             </div>
-            <p className="text-[13px] leading-relaxed whitespace-pre-wrap text-ink-200">{e.text}</p>
+            <p className="text-[13px] leading-relaxed whitespace-pre-wrap text-ink">{e.text}</p>
           </div>
         );
       })}
@@ -192,28 +192,28 @@ function EvidenceBox({ evidence }: { evidence: (typeof REPORTS)[number]["evidenc
 
 function ReportCard({ report }: { report: (typeof REPORTS)[number] }) {
   return (
-    <article className="notch-corner border border-ink-700 bg-ink-900/60 p-6 sm:p-7">
+    <article className="notch-corner border border-rule-hard bg-panel p-6 sm:p-7">
       <div className="mb-3 flex items-baseline gap-3">
-        <span className="font-hero-mono text-[12px] tracking-wide text-ink-400">FIELD REPORT {report.no}</span>
+        <span className="font-hero-mono text-[12px] tracking-wide text-ink-soft">FIELD REPORT {report.no}</span>
       </div>
-      <h3 className="font-display text-lg font-semibold text-ink-50 sm:text-xl">{report.title}</h3>
+      <h3 className="font-display text-lg font-semibold text-ink sm:text-xl">{report.title}</h3>
       <dl className="mt-4 flex flex-col gap-3">
         <div>
-          <dt className="font-hero-mono mb-1 text-[12px] tracking-wide text-ink-400">THE CLAIM</dt>
-          <dd className="text-[14px] leading-relaxed text-ink-300">{report.claim}</dd>
+          <dt className="font-hero-mono mb-1 text-[12px] tracking-wide text-ink-soft">THE CLAIM</dt>
+          <dd className="text-[14px] leading-relaxed text-ink-mid">{report.claim}</dd>
         </div>
         <div className="border-l-2 border-rust-500 bg-rust-500/10 px-4 py-3">
           <dt className="font-hero-mono mb-1 text-[12px] tracking-wide text-rust-400">WHAT WE FOUND</dt>
-          <dd className="text-[14px] leading-relaxed text-ink-200">{report.found}</dd>
+          <dd className="text-[14px] leading-relaxed text-ink">{report.found}</dd>
         </div>
         {"evidence" in report && <EvidenceBox evidence={report.evidence} />}
         <div>
-          <dt className="font-hero-mono mb-1 text-[12px] tracking-wide text-neon-300">{report.fixLabel.toUpperCase()}</dt>
-          <dd className="text-[14px] leading-relaxed text-ink-300">{report.fix}</dd>
+          <dt className="font-hero-mono mb-1 text-[12px] tracking-wide text-i3">{report.fixLabel.toUpperCase()}</dt>
+          <dd className="text-[14px] leading-relaxed text-ink-mid">{report.fix}</dd>
         </div>
         <div className="border-l-2 border-green-600 bg-green-500/10 px-4 py-3">
           <dt className="font-hero-mono mb-1 text-[12px] tracking-wide text-green-400">VERIFIED</dt>
-          <dd className="flex gap-2 text-[14px] leading-relaxed text-ink-200">
+          <dd className="flex gap-2 text-[14px] leading-relaxed text-ink">
             <Check size={15} className="mt-0.5 shrink-0 text-green-400" />
             <span>{report.verified}</span>
           </dd>
@@ -231,13 +231,13 @@ export function Evolution() {
   }, []);
 
   return (
-    <div className="scanlines min-h-screen bg-ink-950">
+    <div className="min-h-screen bg-paper">
       <SignalBar />
 
       <header className="mx-auto flex max-w-3xl items-center justify-between px-6 py-6">
         <Link
           to="/case-study/techdrishti"
-          className="font-hero-mono inline-flex items-center gap-2 text-[12px] tracking-wide text-ink-300 transition-colors hover:text-neon-300"
+          className="font-hero-mono inline-flex items-center gap-2 text-[12px] tracking-wide text-ink-mid transition-colors hover:text-i3"
         >
           <ArrowLeft size={13} /> Back to case study
         </Link>
@@ -245,24 +245,24 @@ export function Evolution() {
           href="https://github.com/aditya0701/Local_news_aggregator"
           target="_blank"
           rel="noreferrer"
-          className="font-hero-mono inline-flex items-center gap-1.5 text-[12px] tracking-wide text-ink-300 transition-colors hover:text-neon-300"
+          className="font-hero-mono inline-flex items-center gap-1.5 text-[12px] tracking-wide text-ink-mid transition-colors hover:text-i3"
         >
           Source <ExternalLink size={12} />
         </a>
       </header>
 
       <main className="mx-auto max-w-3xl px-6 pb-28">
-        <p className="font-hero-mono mb-4 text-[12px] tracking-wider text-neon-300">TECHDRISHTI &middot; NINE FIELD REPORTS</p>
-        <h1 className="font-display text-3xl font-semibold text-ink-50 sm:text-4xl">The evolution, bug by bug</h1>
-        <p className="mt-4 max-w-2xl text-sm leading-relaxed text-ink-400">
+        <p className="font-hero-mono mb-4 text-[12px] tracking-wider text-i3">TECHDRISHTI &middot; NINE FIELD REPORTS</p>
+        <h1 className="font-display text-3xl font-semibold text-ink sm:text-4xl">The evolution, bug by bug</h1>
+        <p className="mt-4 max-w-2xl text-sm leading-relaxed text-ink-soft">
           Nine real failures found while building the pipeline, each with what was claimed, what actually broke, the
           fix, and how it was verified. Where a real before/after artifact survives, it's quoted directly rather than
           paraphrased, an empty API response, a wrong query the model actually sent, a Hindi sentence it actually
           wrote.
         </p>
 
-        <div className="mt-6 notch-corner border border-ink-700 border-l-2 border-l-ink-500 bg-ink-900/60 p-4 text-[13px] leading-relaxed text-ink-400">
-          <b className="text-ink-200">On these quotes.</b> They're pulled from this project's own build log, test
+        <div className="mt-6 notch-corner border border-rule-hard border-l-2 border-l-ink-500 bg-panel p-4 text-[13px] leading-relaxed text-ink-soft">
+          <b className="text-ink">On these quotes.</b> They're pulled from this project's own build log, test
           fixtures, and one raw experiment output captured at the time each bug was live, not re-created after the
           fact for this page.
         </div>
@@ -273,10 +273,10 @@ export function Evolution() {
           ))}
         </div>
 
-        <footer className="mt-16 border-t border-ink-700 pt-8">
+        <footer className="mt-16 border-t border-rule-hard pt-8">
           <Link
             to="/case-study/techdrishti"
-            className="font-hero-mono inline-flex items-center gap-2 text-[12px] tracking-wide text-ink-300 transition-colors hover:text-neon-300"
+            className="font-hero-mono inline-flex items-center gap-2 text-[12px] tracking-wide text-ink-mid transition-colors hover:text-i3"
           >
             <ArrowLeft size={13} /> Back to the TechDrishti case study
           </Link>

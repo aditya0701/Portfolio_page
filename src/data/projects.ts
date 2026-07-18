@@ -1,3 +1,11 @@
+export type Track = "cv" | "llm" | "both";
+
+export type Figure = {
+  src: string;
+  alt: string;
+  caption: string;
+};
+
 export type Project = {
   slug: string;
   title: string;
@@ -6,62 +14,84 @@ export type Project = {
   bullets: string[];
   tags: string[];
   links: { label: string; href: string }[];
-  featured: boolean;
+  /** `lead` gets the full-width treatment; `flagship` gets a large card;
+   *  `supporting` stays deliberately lightweight so it cannot dilute the
+   *  work above it. */
+  weight: "lead" | "flagship" | "supporting";
+  track: Track;
   period: string;
+  figures?: Figure[];
+};
+
+export const TRACK_LABEL: Record<Track, string> = {
+  cv: "Computer vision",
+  llm: "LLM systems",
+  both: "Vision + LLM",
 };
 
 export const projects: Project[] = [
   {
     slug: "microglomeruli-segmentation",
     title: "Microglomeruli Segmentation",
-    tagline: "Instance segmentation of synaptic boutons in Drosophila brain microscopy",
-    period: "11/2025 – present · Master's Thesis, RWTH Aachen",
+    tagline:
+      "Instance segmentation of synaptic boutons in Drosophila brain microscopy, and the tool that ships it to the lab",
+    period: "11/2025 – present · Master's thesis, RWTH Aachen",
+    track: "cv",
     description:
-      "Master's thesis building a fully reproducible deep-learning pipeline to segment and quantify synaptic markers (puncta and boutons) in confocal Z-stacks of the Drosophila mushroom body calyx.",
+      "A fully reproducible deep-learning pipeline that segments and quantifies synaptic boutons in confocal Z-stacks of the Drosophila mushroom body calyx, plus BoutonViewer: the napari desktop tool that puts the model in the hands of the biologists it was built for. Research and delivery as one project, because a model nobody can run is not a result.",
     bullets: [
-      "Fine-tuned MicroSAM (vit_l_lm) with custom post-processing on a hand-annotated 3D dataset built in napari",
-      "Benchmarked state-of-the-art 3D instance segmentation backbones: Cellpose 3D, nnU-Net v2, StarDist 3D, and SwinUNETR",
-      "Trained across multiple preprocessing variants (raw, difference-of-Gaussians, PSF-deconvolved) and evaluated with instance-matching metrics accounting for physical voxel volume",
+      "Fine-tuned MicroSAM (vit_l_lm) with custom post-processing on a hand-annotated 3D dataset built from scratch in napari",
+      "Benchmarked four SOTA 3D instance-segmentation backbones head to head: Cellpose 3D, nnU-Net v2, StarDist 3D and SwinUNETR",
+      "Trained across three preprocessing variants (raw, difference-of-Gaussians, PSF-deconvolved) and evaluated with instance-matching metrics that account for physical voxel volume, not pixel counts",
+      "BoutonViewer reports per-bouton volume and surface area in µm³ / µm², auto-derives voxel calibration from acquisition type, and lets a biologist click away a false positive without touching code",
       "Final checkpoints published on Hugging Face for reuse",
     ],
-    tags: ["PyTorch", "MicroSAM", "Cellpose 3D", "nnU-Net v2", "SwinUNETR", "napari"],
+    tags: ["PyTorch", "MicroSAM", "Cellpose 3D", "nnU-Net v2", "SwinUNETR", "MONAI", "napari", "PyQt"],
+    figures: [
+      {
+        src: "figures/original.webp",
+        alt: "Raw confocal microscopy volume of the Drosophila mushroom body calyx, rotating in 3D.",
+        caption: "Raw input",
+      },
+      {
+        src: "figures/ground_truth.webp",
+        alt: "Hand-annotated ground-truth instance labels for the same volume, each bouton a distinct colour.",
+        caption: "Ground truth",
+      },
+      {
+        src: "figures/prediction.webp",
+        alt: "Predicted instance segmentation from the fine-tuned MicroSAM model on a held-out volume.",
+        caption: "Prediction (held out)",
+      },
+    ],
     links: [
-      { label: "GitHub", href: "https://github.com/aditya0701/Image_segmentation_thesis" },
-      { label: "Model weights (Hugging Face)", href: "https://huggingface.co/aditya0701/Drosophilla_melanogaster_Bouton_3d_segmentation" },
+      { label: "Case Study", href: "/case-study/microglomeruli-segmentation" },
+      { label: "Thesis code", href: "https://github.com/aditya0701/Image_segmentation_thesis" },
+      {
+        label: "BoutonViewer",
+        href: "https://github.com/aditya0701/Fluorescent-Microscopy-Image-Segmentation-and-Quantification",
+      },
+      {
+        label: "Model weights",
+        href: "https://huggingface.co/aditya0701/Drosophilla_melanogaster_Bouton_3d_segmentation",
+      },
     ],
-    featured: true,
-  },
-  {
-    slug: "boutonviewer",
-    title: "BoutonViewer",
-    tagline: "Desktop tool that puts the thesis model in front of real biologists",
-    period: "11/2025 – present · Companion tool to the thesis above",
-    description:
-      "A napari-based desktop application that runs the MicroSAM segmentation pipeline on confocal or Airyscan TIFF stacks, visualizes raw channels and predicted labels in 3D, and reports per-bouton volume and surface area in physical units (µm³ / µm²).",
-    bullets: [
-      "Supports both LSM (full rolling-ball + Richardson-Lucy deconvolution) and Airyscan (lightweight normalization) acquisition pipelines",
-      "Auto-derives voxel calibration from acquisition type and image size, with live-recomputed stats on manual override",
-      "Interactive stats table: hover/click a bouton in the viewer to inspect or delete it, with prediction caching to avoid re-running inference unnecessarily",
-      "Built for non-technical end users — the Tavosanis lab biologists this was designed for",
-    ],
-    tags: ["napari", "MicroSAM", "PyQt", "Python", "Desktop GUI"],
-    links: [
-      { label: "GitHub", href: "https://github.com/aditya0701/Fluorescent-Microscopy-Image-Segmentation-and-Quantification" },
-    ],
-    featured: true,
+    weight: "lead",
   },
   {
     slug: "techdrishti",
     title: "TechDrishti (टेकदृष्टि)",
-    tagline: "An agentic AI workflow for Hindi tech journalism, running unattended daily on GitHub Actions",
+    tagline: "An agentic AI workflow for Hindi tech journalism, running unattended every day on GitHub Actions",
     period: "06/2026 – present · Solo project",
+    track: "llm",
     description:
-      "A fully autonomous, agentic newsroom: every morning it collects English tech news, decides for itself what's genuine news versus job listings or SEO spam, calls out to its own research agent for anything a keyword search can't answer, and writes an original Hindi article per story through a multi-stage LLM pipeline, not machine translation. Zero servers, zero hosting cost.",
+      "A fully autonomous newsroom. Every morning it collects English tech news, decides for itself what is genuine news versus a job listing or SEO spam, calls out to its own research agent for anything a keyword search cannot answer, and writes an original Hindi article per story through a multi-stage LLM pipeline. Not machine translation. Zero servers, zero hosting cost.",
     bullets: [
-      "Agentic, multi-stage plan-execute LLM pipeline (research → editorial strategy → prose) across sarvam-30b/105b, engineered around real token-starvation and hallucination failure modes found in production",
-      "Autonomous research-agent routing for ambiguous entities and comparison questions, backed by a persistent entity knowledge cache (45-day TTL) so the same name is never re-researched twice",
-      "Sentence-embedding clustering to merge duplicate coverage of the same story across 8 RSS feeds + GitHub trending",
-      "Every fix backed by a documented claim → root cause → fix → verified-on-real-articles case study, not just a passing test",
+      "Agentic multi-stage plan-execute pipeline across sarvam-30b/105b, engineered around real token-starvation and hallucination failure modes found in production, not anticipated in design",
+      "Cheap-model triage filters non-news before the expensive model ever sees it, which is what makes the economics work at roughly a cent per run",
+      "Persistent entity cache with a 45-day TTL and sense disambiguation, so the same name is never researched twice",
+      "Sentence-embedding clustering merges duplicate coverage of one story across 8 RSS feeds and GitHub trending",
+      "Every fix documented as claim, root cause, fix, verified on real articles, rather than a green test",
     ],
     tags: ["Agentic AI", "Python", "LLM Pipelines", "Sarvam AI", "sentence-transformers", "GitHub Actions"],
     links: [
@@ -69,63 +99,88 @@ export const projects: Project[] = [
       { label: "Live Edition", href: "https://aditya0701.github.io/Local_news_aggregator/" },
       { label: "GitHub", href: "https://github.com/aditya0701/Local_news_aggregator" },
     ],
-    featured: true,
+    weight: "flagship",
   },
   {
     slug: "deep-research-agent",
     title: "Deep Research Agent",
-    tagline: "An autonomous research loop — Tavily-grade cited answers on a free search stack",
+    tagline: "An autonomous research loop where grounding is enforced by code, not requested in a prompt",
     period: "06/2026 – present · Solo project, spun out of TechDrishti",
+    track: "llm",
     description:
-      "Given a research question, this agent decides for itself how many searches to run, what to search next based on what it already found, and when it has enough grounded evidence to stop, then hands back a cited report with every comparison claim checked in code against what it actually retrieved. Built directly out of a measured limitation in TechDrishti's fixed, single-shot search pipeline.",
+      "Given a research question, the agent decides how many searches to run, what to search next based on what it already found, and when it has enough grounded evidence to stop. It hands back a cited report with every comparison claim checked in code against what was actually retrieved. Built directly out of a measured limitation in TechDrishti's fixed, single-shot search pipeline.",
     bullets: [
-      "Code-enforced iteration budget (8 turns) and a grounding check that flags any comparison claim whose named target wasn't found in retrieved sources, not trusted to a 'don't hallucinate' prompt",
-      "Free, keyless retrieval layer (DuckDuckGo + Google News RSS + page/PDF fetch) instead of a metered search API, with only the LLM calls themselves as a real cost",
-      "Three task framings on one loop: direct Q&A, article-gap enrichment, and a classify-then-answer concise mode",
-      "Provider-swappable backend (DeepSeek V4 Flash / Sarvam) behind one env var, plus a recovery path for tool calls a model leaks as raw text instead of a structured call",
+      "Code-enforced iteration budget (MAX_ITERATIONS = 8): when it is exhausted the search tools are forcibly removed, but calculate survives so the report can still finish",
+      "A grounding check flags any comparison claim whose named target was not found in retrieved sources, because two rounds of increasingly explicit 'don't hallucinate' prompting failed reproducibly",
+      "AST-based calculator, structured tool errors, and evidence-tool separation, so a fabricated number cannot launder itself into looking grounded",
+      "Measured against TechDrishti integration and consciously left out of production. The case study does not spin that as a win",
+      "Free keyless retrieval layer (DuckDuckGo + Google News RSS + page/PDF fetch) instead of a metered search API",
     ],
     tags: ["Python", "DeepSeek V4 Flash", "Sarvam", "Chainlit", "FastAPI", "Agentic Search"],
     links: [
       { label: "Case Study", href: "/case-study/deep-research-agent" },
       { label: "Live Demo", href: "https://huggingface.co/spaces/aditya0701/DeepSeek_Mini_research_tool" },
     ],
-    featured: true,
+    weight: "flagship",
+  },
+  {
+    slug: "chitragupt",
+    title: "Chitragupt",
+    tagline: "A vision-language agent that can see, reason and use tools",
+    period: "07/2026 – present · Solo project",
+    track: "both",
+    description:
+      "An agentic assistant built on a vision-language model: it takes images, reasons about them, calls tools and holds conversation context. The VLM runs on Colab's free GPU tier, bridged through a FastAPI server to a web UI, a desktop app and a CLI. The project where the two tracks meet.",
+    bullets: [
+      "VLM inference on a free Colab GPU, bridged to a local FastAPI server so no client ever talks to Colab directly",
+      "Tool use and conversation context on top of a vision model, with three clients (web, Tkinter desktop, CLI) against one API",
+    ],
+    tags: ["VLM", "Agentic AI", "FastAPI", "Python", "Computer Vision"],
+    links: [{ label: "GitHub", href: "https://github.com/aditya0701/Chitragupta---A-Vision-based-AI-helper" }],
+    weight: "supporting",
   },
   {
     slug: "human-detection-and-counting",
     title: "Realtime Human Detection & Counting",
     tagline: "YOLOv3-based distance enforcement during COVID-19",
-    period: "10/2020 – 05/2021 · Bachelor's Project",
+    period: "10/2020 – 05/2021 · Bachelor's project",
+    track: "cv",
     description:
       "Led a team of 3 building a real-time human detection system to help enforce COVID-19 distancing restrictions, combining object detection with geometric distance estimation.",
     bullets: [
       "Real-time human detection using YOLOv3",
-      "Perspective transformation to convert image-space distances into accurate real-world distance measurements between individuals",
+      "Perspective transformation to convert image-space distances into real-world distances between individuals",
     ],
     tags: ["YOLOv3", "OpenCV", "Python", "Computer Vision"],
     links: [{ label: "GitHub", href: "https://github.com/aditya0701/Human_Detection_and_Counting" }],
-    featured: false,
+    weight: "supporting",
   },
   {
     slug: "celonis-cohort-discovery",
     title: "Cohort Discovery & Analysis Web App",
     tagline: "Process-mining cohort analysis, built with Celonis",
-    period: "04/2024 – 07/2025 · Interdisciplinary Lab Course with Celonis",
+    period: "04/2024 – 07/2025 · Interdisciplinary lab course with Celonis",
+    track: "llm",
     description:
-      "Designed and implemented a data-driven algorithm, based on a research paper, to parse and segment Celonis process/event data into distinct cohorts, wrapped in a full-stack web app for interactive analysis.",
+      "Implemented a data-driven algorithm from a research paper to parse and segment Celonis process/event data into distinct cohorts, wrapped in a full-stack web app for interactive analysis.",
     bullets: [
-      "Full-stack app in React + Flask, tested with PyTest, for filtering, visualizing, and comparing discovered cohorts",
-      "Ran on bi-weekly Agile sprints with test-driven development",
-      "Grade: 1.7",
+      "Full-stack app in React + Flask, tested with PyTest, for filtering, visualizing and comparing discovered cohorts",
+      "Bi-weekly Agile sprints, test-driven development. Grade: 1.7",
     ],
     tags: ["React", "Flask", "PyTest", "Process Mining"],
     links: [],
-    featured: false,
+    weight: "supporting",
   },
 ];
 
 export const coursework = [
   { label: "FastAI / fastbook course exercises", href: "https://github.com/aditya0701/Fastbook_codes_course_2022" },
-  { label: "Introduction to TensorFlow (Coursera)", href: "https://github.com/aditya0701/Introduction_to_Tensorflow_my_Solutions" },
-  { label: "Stable Diffusion & foundations — study notes", href: "https://github.com/aditya0701/Stable_Diffusion_and_Foundations" },
+  {
+    label: "Introduction to TensorFlow (Coursera)",
+    href: "https://github.com/aditya0701/Introduction_to_Tensorflow_my_Solutions",
+  },
+  {
+    label: "Stable Diffusion & foundations — study notes",
+    href: "https://github.com/aditya0701/Stable_Diffusion_and_Foundations",
+  },
 ];

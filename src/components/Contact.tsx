@@ -7,16 +7,16 @@ export function Contact() {
     <section id="contact" className="relative overflow-hidden border-t border-ink-700">
       <div className="neon-glow-bg pointer-events-none absolute inset-0 opacity-40" />
       <div className="relative mx-auto max-w-5xl px-6 py-20 text-center sm:py-28">
-        <p className="font-hero-mono mb-4 flex items-center justify-center gap-2 text-[10px] uppercase tracking-[0.25em] text-neon-300">
+        <p className="font-hero-mono mb-4 flex items-center justify-center gap-2 text-[13px] uppercase tracking-[0.22em] text-neon-300">
           <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-magenta-500" aria-hidden="true" />
           Get in touch
         </p>
         <h2 className="font-display text-balance text-2xl font-semibold text-ink-50 sm:text-3xl">
-          Open to computer vision & ML roles
+          Open to AI / ML engineering and computer vision roles
         </h2>
-        <p className="mx-auto mt-4 max-w-xl text-[13px] leading-loose text-ink-300">
-          Based in {profile.location}. Reach out if you'd like to talk about a role, a project, or
-          just computer vision.
+        <p className="mx-auto mt-4 max-w-xl text-[14px] leading-relaxed text-ink-200">
+          Based in {profile.location}, graduating 06/2026. Reach out about a role, a project, or
+          anything on this page you want to argue with.
         </p>
         <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
           <a
@@ -46,7 +46,7 @@ export function Contact() {
           </a>
         </div>
       </div>
-      <footer className="relative flex items-center justify-center gap-2 border-t border-ink-700 py-6 text-center font-hero-mono text-[9px] tracking-wide text-ink-500">
+      <footer className="relative flex items-center justify-center gap-2 border-t border-ink-700 py-6 text-center font-hero-mono text-[13px] tracking-wide text-ink-400">
         <TerminalMark size={12} />© {new Date().getFullYear()} {profile.name}
       </footer>
     </section>

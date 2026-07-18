@@ -1,12 +1,12 @@
 export const profile = {
   name: "Aditya Rawat",
-  role: "Computer Vision & Machine Learning",
+  role: "ML Systems · Computer Vision · LLM Engineering",
   location: "Aachen, Germany",
   email: "aditya.rawat@rwth-aachen.de",
   github: "https://github.com/aditya0701",
   huggingface: "https://huggingface.co/aditya0701",
   summary:
-    "M.Sc. Data Science candidate at RWTH Aachen focused on computer vision and foundation models. I build reproducible deep-learning pipelines for scientific imaging — from fine-tuning segmentation models on custom 3D microscopy data to shipping the tools that put them in front of real end users.",
+    "M.Sc. Data Science candidate at RWTH Aachen. Two tracks, one habit: measure the thing, then decide. I fine-tune and benchmark 3D segmentation models on custom confocal microscopy data and ship the tools that put them in front of the biologists who need them. I also build LLM systems that run unattended in production, where grounding is enforced in code rather than requested in a prompt.",
 };
 
 export const education = [
@@ -57,8 +57,29 @@ export const experience = [
 ];
 
 export const skills = {
-  "Languages": ["Python", "Java", "C++"],
-  "ML / CV": ["PyTorch", "Transformers", "LLMs", "Foundation Models", "SAM", "OpenCV", "Scikit-learn"],
-  "Data": ["Pandas", "Seaborn", "Matplotlib"],
-  "Tools": ["Git", "Docker", "napari", "Postman", "Celonis", "ProM"],
+  "Languages": ["Python", "TypeScript", "Java", "C++"],
+  "Computer Vision": [
+    "PyTorch",
+    "MicroSAM / SAM",
+    "nnU-Net v2",
+    "SwinUNETR",
+    "Cellpose 3D",
+    "MONAI",
+    "YOLO",
+    "OpenCV",
+    "napari",
+    "3D instance segmentation",
+  ],
+  "LLM & Agents": [
+    "Agentic tool use",
+    "LLM pipeline design",
+    "Grounding & hallucination mitigation",
+    "Prompt / token-budget engineering",
+    "sentence-transformers",
+    "Chainlit",
+    "Vision-language models",
+    "Evals",
+  ],
+  "ML & Data": ["Transformers", "Foundation models", "Scikit-learn", "Pandas", "Matplotlib", "Seaborn"],
+  "Infra & Tools": ["Git", "Docker", "GitHub Actions", "FastAPI", "Hugging Face", "Postman", "Celonis"],
 };

@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft, ExternalLink, Check, X } from "lucide-react";
 import { SignalBar } from "../components/SignalBar";
+import { usePageTitle } from "../hooks/usePageTitle";
 
 const REPORTS = [
   {
@@ -177,11 +178,11 @@ function EvidenceBox({ evidence }: { evidence: (typeof REPORTS)[number]["evidenc
               ) : (
                 <Check size={12} className="shrink-0 text-green-400" aria-hidden="true" />
               )}
-              <span className={`font-hero-mono text-[9px] tracking-wide ${isBefore ? "text-rust-400" : "text-green-400"}`}>
+              <span className={`font-hero-mono text-[12px] tracking-wide ${isBefore ? "text-rust-400" : "text-green-400"}`}>
                 {e.label}
               </span>
             </div>
-            <p className="text-[12px] leading-relaxed whitespace-pre-wrap text-ink-200">{e.text}</p>
+            <p className="text-[13px] leading-relaxed whitespace-pre-wrap text-ink-200">{e.text}</p>
           </div>
         );
       })}
@@ -193,26 +194,26 @@ function ReportCard({ report }: { report: (typeof REPORTS)[number] }) {
   return (
     <article className="notch-corner border border-ink-700 bg-ink-900/60 p-6 sm:p-7">
       <div className="mb-3 flex items-baseline gap-3">
-        <span className="font-hero-mono text-[9px] tracking-wide text-ink-500">FIELD REPORT {report.no}</span>
+        <span className="font-hero-mono text-[12px] tracking-wide text-ink-400">FIELD REPORT {report.no}</span>
       </div>
       <h3 className="font-display text-lg font-semibold text-ink-50 sm:text-xl">{report.title}</h3>
       <dl className="mt-4 flex flex-col gap-3">
         <div>
-          <dt className="font-hero-mono mb-1 text-[9px] tracking-wide text-ink-500">THE CLAIM</dt>
-          <dd className="text-[13px] leading-relaxed text-ink-300">{report.claim}</dd>
+          <dt className="font-hero-mono mb-1 text-[12px] tracking-wide text-ink-400">THE CLAIM</dt>
+          <dd className="text-[14px] leading-relaxed text-ink-300">{report.claim}</dd>
         </div>
         <div className="border-l-2 border-rust-500 bg-rust-500/10 px-4 py-3">
-          <dt className="font-hero-mono mb-1 text-[9px] tracking-wide text-rust-400">WHAT WE FOUND</dt>
-          <dd className="text-[13px] leading-relaxed text-ink-200">{report.found}</dd>
+          <dt className="font-hero-mono mb-1 text-[12px] tracking-wide text-rust-400">WHAT WE FOUND</dt>
+          <dd className="text-[14px] leading-relaxed text-ink-200">{report.found}</dd>
         </div>
         {"evidence" in report && <EvidenceBox evidence={report.evidence} />}
         <div>
-          <dt className="font-hero-mono mb-1 text-[9px] tracking-wide text-neon-300">{report.fixLabel.toUpperCase()}</dt>
-          <dd className="text-[13px] leading-relaxed text-ink-300">{report.fix}</dd>
+          <dt className="font-hero-mono mb-1 text-[12px] tracking-wide text-neon-300">{report.fixLabel.toUpperCase()}</dt>
+          <dd className="text-[14px] leading-relaxed text-ink-300">{report.fix}</dd>
         </div>
         <div className="border-l-2 border-green-600 bg-green-500/10 px-4 py-3">
-          <dt className="font-hero-mono mb-1 text-[9px] tracking-wide text-green-400">VERIFIED</dt>
-          <dd className="flex gap-2 text-[13px] leading-relaxed text-ink-200">
+          <dt className="font-hero-mono mb-1 text-[12px] tracking-wide text-green-400">VERIFIED</dt>
+          <dd className="flex gap-2 text-[14px] leading-relaxed text-ink-200">
             <Check size={15} className="mt-0.5 shrink-0 text-green-400" />
             <span>{report.verified}</span>
           </dd>
@@ -223,6 +224,8 @@ function ReportCard({ report }: { report: (typeof REPORTS)[number] }) {
 }
 
 export function Evolution() {
+  usePageTitle("TechDrishti — nine field reports | Aditya Rawat");
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -234,7 +237,7 @@ export function Evolution() {
       <header className="mx-auto flex max-w-3xl items-center justify-between px-6 py-6">
         <Link
           to="/case-study/techdrishti"
-          className="font-hero-mono inline-flex items-center gap-2 text-[10px] tracking-wide text-ink-300 transition-colors hover:text-neon-300"
+          className="font-hero-mono inline-flex items-center gap-2 text-[12px] tracking-wide text-ink-300 transition-colors hover:text-neon-300"
         >
           <ArrowLeft size={13} /> Back to case study
         </Link>
@@ -242,14 +245,14 @@ export function Evolution() {
           href="https://github.com/aditya0701/Local_news_aggregator"
           target="_blank"
           rel="noreferrer"
-          className="font-hero-mono inline-flex items-center gap-1.5 text-[10px] tracking-wide text-ink-300 transition-colors hover:text-neon-300"
+          className="font-hero-mono inline-flex items-center gap-1.5 text-[12px] tracking-wide text-ink-300 transition-colors hover:text-neon-300"
         >
           Source <ExternalLink size={12} />
         </a>
       </header>
 
       <main className="mx-auto max-w-3xl px-6 pb-28">
-        <p className="font-hero-mono mb-4 text-[10px] tracking-wider text-neon-300">TECHDRISHTI &middot; NINE FIELD REPORTS</p>
+        <p className="font-hero-mono mb-4 text-[12px] tracking-wider text-neon-300">TECHDRISHTI &middot; NINE FIELD REPORTS</p>
         <h1 className="font-display text-3xl font-semibold text-ink-50 sm:text-4xl">The evolution, bug by bug</h1>
         <p className="mt-4 max-w-2xl text-sm leading-relaxed text-ink-400">
           Nine real failures found while building the pipeline, each with what was claimed, what actually broke, the
@@ -258,7 +261,7 @@ export function Evolution() {
           wrote.
         </p>
 
-        <div className="mt-6 notch-corner border border-ink-700 border-l-2 border-l-ink-500 bg-ink-900/60 p-4 text-[12px] leading-relaxed text-ink-400">
+        <div className="mt-6 notch-corner border border-ink-700 border-l-2 border-l-ink-500 bg-ink-900/60 p-4 text-[13px] leading-relaxed text-ink-400">
           <b className="text-ink-200">On these quotes.</b> They're pulled from this project's own build log, test
           fixtures, and one raw experiment output captured at the time each bug was live, not re-created after the
           fact for this page.
@@ -273,7 +276,7 @@ export function Evolution() {
         <footer className="mt-16 border-t border-ink-700 pt-8">
           <Link
             to="/case-study/techdrishti"
-            className="font-hero-mono inline-flex items-center gap-2 text-[10px] tracking-wide text-ink-300 transition-colors hover:text-neon-300"
+            className="font-hero-mono inline-flex items-center gap-2 text-[12px] tracking-wide text-ink-300 transition-colors hover:text-neon-300"
           >
             <ArrowLeft size={13} /> Back to the TechDrishti case study
           </Link>

@@ -96,9 +96,9 @@ const VARIANTS = [
 function SectionHead({ num, title }: { num: string; title: string }) {
   return (
     <div className="mb-6 flex items-baseline gap-3">
-      <span className="font-mono text-[14px] text-ink-400">{num}</span>
-      <h2 className="font-display text-2xl font-semibold text-ink-50 sm:text-3xl">{title}</h2>
-      <span className="h-px flex-1 bg-ink-700" aria-hidden="true" />
+      <span className="font-mono text-[14px] text-ink-soft">{num}</span>
+      <h2 className="font-display text-2xl font-semibold text-ink sm:text-3xl">{title}</h2>
+      <span className="h-px flex-1 bg-rule-hard" aria-hidden="true" />
     </div>
   );
 }
@@ -111,13 +111,13 @@ export function CaseStudySegmentation() {
   }, []);
 
   return (
-    <div className="scanlines min-h-screen bg-ink-950">
+    <div className="min-h-screen bg-paper">
       <SignalBar />
 
       <header className="mx-auto flex max-w-3xl items-center justify-between px-6 py-6">
         <Link
           to="/"
-          className="font-hero-mono inline-flex items-center gap-2 text-[13px] tracking-wide text-ink-300 transition-colors hover:text-neon-300"
+          className="font-hero-mono inline-flex items-center gap-2 text-[13px] tracking-wide text-ink-mid transition-colors hover:text-i3"
         >
           <ArrowLeft size={13} /> Back to portfolio
         </Link>
@@ -125,36 +125,36 @@ export function CaseStudySegmentation() {
           href="https://huggingface.co/aditya0701/Drosophilla_melanogaster_Bouton_3d_segmentation"
           target="_blank"
           rel="noreferrer"
-          className="font-hero-mono inline-flex items-center gap-1.5 text-[13px] tracking-wide text-ink-300 transition-colors hover:text-neon-300"
+          className="font-hero-mono inline-flex items-center gap-1.5 text-[13px] tracking-wide text-ink-mid transition-colors hover:text-i3"
         >
           Model weights <ExternalLink size={12} />
         </a>
       </header>
 
       <main className="mx-auto max-w-3xl px-6 pb-28">
-        <div className="neon-glow-bg notch-corner relative overflow-hidden border border-ink-700 bg-ink-900/60 px-6 py-12 text-center">
-          <p className="font-hero-mono mb-4 text-[13px] tracking-wider text-neon-300">
+        <div className="notch-corner relative overflow-hidden border border-rule-hard bg-panel px-6 py-12 text-center">
+          <p className="font-hero-mono mb-4 text-[13px] tracking-wider text-i3">
             RESEARCH CASE STUDY
           </p>
-          <h1 className="font-display text-4xl font-semibold text-ink-50 sm:text-5xl">
+          <h1 className="font-display text-4xl font-semibold text-ink sm:text-5xl">
             Microglomeruli Segmentation
           </h1>
-          <p className="font-display mt-2 text-lg italic text-ink-300">
+          <p className="font-display mt-2 text-lg italic text-ink-mid">
             Counting synaptic boutons in a fly brain, and handing the result to the people who
             actually need it
           </p>
           <div className="signal-bar mx-auto mt-5 w-24" />
-          <p className="font-hero-mono mt-4 text-[12px] tracking-wide text-ink-400">
+          <p className="font-hero-mono mt-4 text-[12px] tracking-wide text-ink-soft">
             M.SC. THESIS · RWTH AACHEN · 3D INSTANCE SEGMENTATION · MICROSAM / NNU-NET V2 / SWINUNETR
           </p>
         </div>
 
-        <p className="font-display mt-10 text-xl leading-relaxed text-ink-100 sm:text-2xl">
+        <p className="font-display mt-10 text-xl leading-relaxed text-ink sm:text-2xl">
           Segment and quantify synaptic boutons in confocal Z-stacks of the Drosophila mushroom
           body calyx, benchmark four SOTA architectures honestly against each other, and ship the
           winner as a desktop tool a biologist can run without writing code.
         </p>
-        <p className="mt-4 text-[14px] leading-relaxed text-ink-300">
+        <p className="mt-4 text-[14px] leading-relaxed text-ink-mid">
           Supervised by Prof. Dr. Abigail Morrison (Software Engineering Group, RWTH Aachen), with
           Prof. Dr.-Ing. Johannes Stegmaier as second examiner. Built for the Tavosanis lab, who
           count these structures by hand today.
@@ -165,7 +165,7 @@ export function CaseStudySegmentation() {
             href="https://github.com/aditya0701/Image_segmentation_thesis"
             target="_blank"
             rel="noreferrer"
-            className="notch-corner-sm inline-flex items-center gap-2 bg-neon-500 px-5 py-2.5 text-[14px] font-medium text-ink-950 shadow-[4px_4px_0_var(--color-ink-700)] transition-transform hover:-translate-y-0.5"
+            className="notch-corner-sm inline-flex items-center gap-2 bg-i3 px-5 py-2.5 text-[14px] font-medium text-paper transition-transform hover:-translate-y-0.5"
           >
             Thesis code <ExternalLink size={14} />
           </a>
@@ -173,7 +173,7 @@ export function CaseStudySegmentation() {
             href="https://github.com/aditya0701/Fluorescent-Microscopy-Image-Segmentation-and-Quantification"
             target="_blank"
             rel="noreferrer"
-            className="notch-corner-sm inline-flex items-center gap-2 border border-neon-700 bg-ink-900 px-5 py-2.5 text-[14px] font-medium text-ink-100 transition-colors hover:border-neon-400 hover:text-neon-300"
+            className="notch-corner-sm inline-flex items-center gap-2 border border-rule-hard bg-panel px-5 py-2.5 text-[14px] font-medium text-ink transition-colors hover:border-i3/60 hover:text-i3"
           >
             BoutonViewer <ExternalLink size={14} />
           </a>
@@ -185,7 +185,7 @@ export function CaseStudySegmentation() {
           <figure>
             <div className="grid gap-3 sm:grid-cols-3">
               {FIGURES.map((f) => (
-                <div key={f.src} className="notch-corner-sm border border-ink-700 bg-black">
+                <div key={f.src} className="notch-corner-sm border border-rule-hard bg-black">
                   <img
                     src={asset(f.src)}
                     alt={f.alt}
@@ -195,16 +195,16 @@ export function CaseStudySegmentation() {
                     height={560}
                     className="aspect-square w-full object-cover"
                   />
-                  <figcaption className="border-t border-ink-700 px-3 py-2">
-                    <div className="font-hero-mono text-[12px] uppercase tracking-wide text-neon-300">
+                  <figcaption className="border-t border-rule-hard px-3 py-2">
+                    <div className="font-hero-mono text-[12px] uppercase tracking-wide text-i3">
                       {f.caption}
                     </div>
-                    <div className="mt-0.5 text-[13px] text-ink-400">{f.note}</div>
+                    <div className="mt-0.5 text-[13px] text-ink-soft">{f.note}</div>
                   </figcaption>
                 </div>
               ))}
             </div>
-            <figcaption className="mt-4 text-[14px] leading-relaxed text-ink-400">
+            <figcaption className="mt-4 text-[14px] leading-relaxed text-ink-soft">
               One held-out volume, rotating. Left is what the microscope produces. Middle is what a
               human said the answer was. Right is what the fine-tuned model said, having never seen
               this volume. Each colour is one bouton instance.
@@ -219,11 +219,11 @@ export function CaseStudySegmentation() {
             {HARD.map((h) => (
               <div
                 key={h.tag}
-                className="notch-corner border border-ink-700 bg-ink-900/60 p-4 pl-5 sm:p-5 sm:pl-6"
+                className="notch-corner border border-rule-hard bg-panel p-4 pl-5 sm:p-5 sm:pl-6"
               >
-                <span className="font-hero-mono text-[12px] tracking-wide text-neon-300">{h.tag}</span>
-                <div className="mt-1 font-display text-base font-semibold text-ink-50">{h.title}</div>
-                <p className="mt-1.5 text-[14px] leading-relaxed text-ink-300">{h.desc}</p>
+                <span className="font-hero-mono text-[12px] tracking-wide text-i3">{h.tag}</span>
+                <div className="mt-1 font-display text-base font-semibold text-ink">{h.title}</div>
+                <p className="mt-1.5 text-[14px] leading-relaxed text-ink-mid">{h.desc}</p>
               </div>
             ))}
           </div>
@@ -232,7 +232,7 @@ export function CaseStudySegmentation() {
         {/* ------------------------------------------------------------ */}
         <section className="mt-20">
           <SectionHead num="03" title="The benchmark, and why each model is in it" />
-          <p className="mb-6 text-[14px] leading-relaxed text-ink-300">
+          <p className="mb-6 text-[14px] leading-relaxed text-ink-mid">
             Four architectures, one dataset, one evaluation protocol. The point of including
             nnU-Net v2 and Cellpose 3D is not to have them lose. It is that a fine-tuned foundation
             model beating a self-configuring U-Net and the community default is a claim worth
@@ -243,40 +243,40 @@ export function CaseStudySegmentation() {
               <div
                 key={a.name}
                 className={`notch-corner border p-5 ${
-                  a.selected ? "border-neon-700 bg-ink-900" : "border-ink-700 bg-ink-900/50"
+                  a.selected ? "border-rule-hard bg-panel" : "border-rule-hard bg-panel"
                 }`}
               >
                 <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-                  <span className="font-display text-lg font-semibold text-ink-50">{a.name}</span>
-                  <span className="font-hero-mono text-[12px] uppercase tracking-wide text-ink-400">
+                  <span className="font-display text-lg font-semibold text-ink">{a.name}</span>
+                  <span className="font-hero-mono text-[12px] uppercase tracking-wide text-ink-soft">
                     {a.kind}
                   </span>
                   {a.selected && (
-                    <span className="notch-corner-sm border border-neon-700 px-2 py-0.5 font-hero-mono text-[12px] uppercase tracking-wide text-neon-300">
+                    <span className="notch-corner-sm border border-rule-hard px-2 py-0.5 font-hero-mono text-[12px] uppercase tracking-wide text-i3">
                       selected
                     </span>
                   )}
                 </div>
-                <p className="mt-2 text-[14px] leading-relaxed text-ink-300">{a.why}</p>
+                <p className="mt-2 text-[14px] leading-relaxed text-ink-mid">{a.why}</p>
               </div>
             ))}
           </div>
 
-          <h3 className="font-hero-mono mt-10 mb-4 text-[13px] uppercase tracking-[0.2em] text-ink-300">
+          <h3 className="font-hero-mono mt-10 mb-4 text-[13px] uppercase tracking-[0.2em] text-ink-mid">
             Each trained across four preprocessing variants
           </h3>
           <div className="grid gap-3 sm:grid-cols-2">
             {VARIANTS.map((v) => (
-              <div key={v.key} className="notch-corner-sm border border-ink-700 bg-ink-900/50 p-4">
+              <div key={v.key} className="notch-corner-sm border border-rule-hard bg-panel p-4">
                 <div className="flex items-baseline gap-2">
-                  <code className="font-mono text-[13px] text-neon-300">{v.key}</code>
-                  <span className="font-display text-[15px] text-ink-100">{v.label}</span>
+                  <code className="font-mono text-[13px] text-i3">{v.key}</code>
+                  <span className="font-display text-[15px] text-ink">{v.label}</span>
                 </div>
-                <p className="mt-1 text-[14px] leading-relaxed text-ink-400">{v.desc}</p>
+                <p className="mt-1 text-[14px] leading-relaxed text-ink-soft">{v.desc}</p>
               </div>
             ))}
           </div>
-          <p className="mt-4 text-[14px] leading-relaxed text-ink-400">
+          <p className="mt-4 text-[14px] leading-relaxed text-ink-soft">
             Four architectures times four variants is a grid, not a single run, which is why
             training is launched through HTCondor submit files on the LFB cluster rather than by
             hand.
@@ -287,7 +287,7 @@ export function CaseStudySegmentation() {
         <section className="mt-20">
           <SectionHead num="04" title="Results" />
 
-          <p className="text-[14px] leading-relaxed text-ink-300">
+          <p className="text-[14px] leading-relaxed text-ink-mid">
             Recall is the headline metric, not accuracy or Dice, and that is deliberate: a missed
             bouton is a permanent counting error, while a false positive can be filtered
             downstream. Evaluation prioritises recall, matched-instance mIoU, and a recall-weighted
@@ -301,11 +301,11 @@ export function CaseStudySegmentation() {
                 panoptic quality and false-positive count across models.
               </caption>
               <thead>
-                <tr className="border-b border-ink-600">
+                <tr className="border-b border-rule-hard">
                   {["Model", "Recall", "Matched mIoU", "RWPQ", "False pos."].map((h) => (
                     <th
                       key={h}
-                      className="py-3 pr-4 font-hero-mono text-[12px] uppercase tracking-wide text-ink-300"
+                      className="py-3 pr-4 font-hero-mono text-[12px] uppercase tracking-wide text-ink-mid"
                     >
                       {h}
                     </th>
@@ -316,26 +316,26 @@ export function CaseStudySegmentation() {
                 {thesisResults.map((m) => (
                   <tr
                     key={m.name}
-                    className={`border-b border-ink-800 ${m.selected ? "bg-neon-500/[0.06]" : ""}`}
+                    className={`border-b border-ink-800 ${m.selected ? "bg-i3/[0.06]" : ""}`}
                   >
                     <td
-                      className={`py-4 pr-4 text-[14px] text-ink-100 ${
-                        m.selected ? "border-l-2 border-neon-500 pl-3" : ""
+                      className={`py-4 pr-4 text-[14px] text-ink ${
+                        m.selected ? "border-l-2 border-i3 pl-3" : ""
                       }`}
                     >
                       {m.name}
-                      {m.variant && <span className="ml-2 text-[12px] text-ink-400">{m.variant}</span>}
+                      {m.variant && <span className="ml-2 text-[12px] text-ink-soft">{m.variant}</span>}
                     </td>
                     {m.role ? (
-                      <td colSpan={4} className="py-4 text-[13px] text-ink-400">
+                      <td colSpan={4} className="py-4 text-[13px] text-ink-soft">
                         {m.role}
                       </td>
                     ) : (
                       <>
-                        <td className="py-4 pr-4 text-[14px] text-ink-100">{m.recall}</td>
-                        <td className="py-4 pr-4 text-[14px] font-semibold text-neon-300">{m.miou}</td>
-                        <td className="py-4 pr-4 text-[14px] text-ink-100">{m.rwpq}</td>
-                        <td className="py-4 text-[14px] text-ink-100">{m.fp}</td>
+                        <td className="py-4 pr-4 text-[14px] text-ink">{m.recall}</td>
+                        <td className="py-4 pr-4 text-[14px] font-semibold text-i3">{m.miou}</td>
+                        <td className="py-4 pr-4 text-[14px] text-ink">{m.rwpq}</td>
+                        <td className="py-4 text-[14px] text-ink">{m.fp}</td>
                       </>
                     )}
                   </tr>
@@ -344,8 +344,8 @@ export function CaseStudySegmentation() {
             </table>
           </div>
 
-          <p className="mt-5 text-[14px] leading-relaxed text-ink-300">{thesisResultsMeta.headline}</p>
-          <p className="mt-3 text-[14px] leading-relaxed text-ink-400">
+          <p className="mt-5 text-[14px] leading-relaxed text-ink-mid">{thesisResultsMeta.headline}</p>
+          <p className="mt-3 text-[14px] leading-relaxed text-ink-soft">
             The honest limitation, stated on the card: Large carries a higher false-positive count
             (30 in aggregate), several of which are large boutons split into multiple predicted
             components rather than spurious detections in empty regions. Predictions should be
@@ -353,21 +353,21 @@ export function CaseStudySegmentation() {
             oversized and merged predictions instead of silently filtering them. Per-model baseline
             figures are not broken out on the card, so those rows claim only what the card supports.
           </p>
-          <p className="mt-4 font-mono text-[12px] text-ink-400">{thesisResultsMeta.rwpqNote}</p>
+          <p className="mt-4 font-mono text-[12px] text-ink-soft">{thesisResultsMeta.rwpqNote}</p>
           <a
             href={thesisResultsMeta.source}
             target="_blank"
             rel="noreferrer"
-            className="mt-4 inline-flex items-center gap-1.5 text-[14px] font-medium text-neon-300 hover:text-neon-200"
+            className="mt-4 inline-flex items-center gap-1.5 text-[14px] font-medium text-i3 hover:text-i3"
           >
             Full model card <ExternalLink size={13} />
           </a>
 
-          <p className="mt-8 text-[14px] leading-relaxed text-ink-400">
+          <p className="mt-8 text-[14px] leading-relaxed text-ink-soft">
             Evaluation is instance matching, not per-pixel overlap, and it weights by physical
             voxel volume so that anisotropic Z spacing does not quietly inflate or deflate a score.
             The code is in{" "}
-            <code className="font-mono text-[14px] text-neon-300">tools/evaluate_segmentation.py</code>.
+            <code className="font-mono text-[14px] text-i3">tools/evaluate_segmentation.py</code>.
           </p>
         </section>
 
@@ -375,14 +375,14 @@ export function CaseStudySegmentation() {
         <section className="mt-20">
           <SectionHead num="05" title="Two decisions worth defending" />
 
-          <div className="notch-corner border border-ink-700 bg-ink-900/60 p-5 sm:p-6">
-            <span className="font-hero-mono text-[12px] tracking-wide text-neon-300">
+          <div className="notch-corner border border-rule-hard bg-panel p-5 sm:p-6">
+            <span className="font-hero-mono text-[12px] tracking-wide text-i3">
               DECISION 1 · A 2D FOUNDATION MODEL FOR A 3D PROBLEM
             </span>
-            <div className="mt-1 font-display text-lg font-semibold text-ink-50">
+            <div className="mt-1 font-display text-lg font-semibold text-ink">
               Prior beats dimensionality when the dataset is hand-made
             </div>
-            <p className="mt-2 text-[14px] leading-relaxed text-ink-300">
+            <p className="mt-2 text-[14px] leading-relaxed text-ink-mid">
               The obvious move on a 3D problem is a native 3D architecture, which is why SwinUNETR
               and nnU-Net v2 are in the benchmark. But every training example here was annotated by
               hand, which puts a hard ceiling on n. A model carrying a strong microscopy prior can
@@ -392,14 +392,14 @@ export function CaseStudySegmentation() {
             </p>
           </div>
 
-          <div className="notch-corner mt-4 border border-ink-700 bg-ink-900/60 p-5 sm:p-6">
-            <span className="font-hero-mono text-[12px] tracking-wide text-neon-300">
+          <div className="notch-corner mt-4 border border-rule-hard bg-panel p-5 sm:p-6">
+            <span className="font-hero-mono text-[12px] tracking-wide text-i3">
               DECISION 2 · TWO ACQUISITION PIPELINES, NOT ONE AVERAGE
             </span>
-            <div className="mt-1 font-display text-lg font-semibold text-ink-50">
+            <div className="mt-1 font-display text-lg font-semibold text-ink">
               LSM and Airyscan are different instruments and get different preprocessing
             </div>
-            <p className="mt-2 text-[14px] leading-relaxed text-ink-300">
+            <p className="mt-2 text-[14px] leading-relaxed text-ink-mid">
               BoutonViewer runs rolling-ball background subtraction plus Richardson-Lucy
               deconvolution for confocal LSM stacks, and lightweight normalisation for Airyscan,
               which is already deconvolved by the microscope. Collapsing both into one path would
@@ -418,7 +418,7 @@ export function CaseStudySegmentation() {
         {/* ------------------------------------------------------------ */}
         <section className="mt-20">
           <SectionHead num="06" title="Shipping it: BoutonViewer" />
-          <p className="text-[14px] leading-relaxed text-ink-300">
+          <p className="text-[14px] leading-relaxed text-ink-mid">
             A napari desktop application that runs the pipeline on a confocal or Airyscan TIFF
             stack, shows the raw channels and predicted labels in 3D, and reports per-bouton volume
             and surface area in µm³ and µm². A biologist loads a file and gets a table.
@@ -430,8 +430,8 @@ export function CaseStudySegmentation() {
               "Oversized and merged predictions are deliberately not auto-removed. A silent filter would hide exactly the failure mode that matters, so the tool surfaces them and lets a human decide",
               "Model and data notes shipped alongside the tool: what it was trained on, at which voxel sizes, and where it should not be trusted",
             ].map((b) => (
-              <li key={b} className="flex gap-2.5 text-[14px] leading-relaxed text-ink-300">
-                <span className="square-dot mt-2 h-1.5 w-1.5 shrink-0 bg-neon-500" />
+              <li key={b} className="flex gap-2.5 text-[14px] leading-relaxed text-ink-mid">
+                <span className="square-dot mt-2 h-1.5 w-1.5 shrink-0 bg-i3" />
                 {b}
               </li>
             ))}
@@ -440,7 +440,7 @@ export function CaseStudySegmentation() {
             href="https://aditya0701.github.io/Fluorescent-Microscopy-Image-Segmentation-and-Quantification/model_notes.html"
             target="_blank"
             rel="noreferrer"
-            className="mt-6 inline-flex items-center gap-1.5 text-[14px] font-medium text-neon-300 hover:text-neon-200"
+            className="mt-6 inline-flex items-center gap-1.5 text-[14px] font-medium text-i3 hover:text-i3"
           >
             Model &amp; data notes <ExternalLink size={13} />
           </a>
@@ -449,10 +449,10 @@ export function CaseStudySegmentation() {
         {/* ------------------------------------------------------------ */}
         <section className="mt-20">
           <SectionHead num="07" title="Reproducibility" />
-          <p className="text-[14px] leading-relaxed text-ink-300">
+          <p className="text-[14px] leading-relaxed text-ink-mid">
             The thesis claim is reproducibility, so the repo has to earn it. Training, inference
             and evaluation are separate scripts with a{" "}
-            <code className="font-mono text-[14px] text-neon-300">--dataset</code> flag selecting
+            <code className="font-mono text-[14px] text-i3">--dataset</code> flag selecting
             the preprocessing variant, cluster jobs are committed as submit files rather than
             remembered, and the selected checkpoints are published on Hugging Face with the
             rejected experiment runs left out. Two environment definitions exist on purpose: the
@@ -465,41 +465,41 @@ export function CaseStudySegmentation() {
               href="https://huggingface.co/aditya0701/Drosophilla_melanogaster_Bouton_3d_segmentation"
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center gap-1.5 text-[14px] font-medium text-neon-300 hover:text-neon-200"
+              className="inline-flex items-center gap-1.5 text-[14px] font-medium text-i3 hover:text-i3"
             >
               Checkpoints on Hugging Face <ExternalLink size={13} />
             </a>
           </div>
         </section>
 
-        <div className="mt-20 border-t border-ink-700 pt-8">
+        <div className="mt-20 border-t border-rule-hard pt-8">
           <div className="mb-8 flex flex-col gap-3 sm:flex-row">
             <Link
               to="/case-study/techdrishti"
-              className="notch-corner flex-1 border border-ink-700 bg-ink-900/60 p-4 transition-colors hover:border-neon-400/60"
+              className="notch-corner flex-1 border border-rule-hard bg-panel p-4 transition-colors hover:border-i3/60"
             >
-              <span className="font-hero-mono text-[12px] tracking-wide text-neon-300">LLM SYSTEMS</span>
-              <div className="mt-1 font-display text-[15px] font-semibold text-ink-50">TechDrishti &rarr;</div>
-              <p className="mt-1 text-[13px] leading-relaxed text-ink-400">
+              <span className="font-hero-mono text-[12px] tracking-wide text-i3">LLM SYSTEMS</span>
+              <div className="mt-1 font-display text-[15px] font-semibold text-ink">TechDrishti &rarr;</div>
+              <p className="mt-1 text-[13px] leading-relaxed text-ink-soft">
                 The other track: an autonomous Hindi newsroom running daily on GitHub Actions.
               </p>
             </Link>
             <Link
               to="/case-study/deep-research-agent"
-              className="notch-corner flex-1 border border-ink-700 bg-ink-900/60 p-4 transition-colors hover:border-neon-400/60"
+              className="notch-corner flex-1 border border-rule-hard bg-panel p-4 transition-colors hover:border-i3/60"
             >
-              <span className="font-hero-mono text-[12px] tracking-wide text-neon-300">LLM SYSTEMS</span>
-              <div className="mt-1 font-display text-[15px] font-semibold text-ink-50">
+              <span className="font-hero-mono text-[12px] tracking-wide text-i3">LLM SYSTEMS</span>
+              <div className="mt-1 font-display text-[15px] font-semibold text-ink">
                 Deep Research Agent &rarr;
               </div>
-              <p className="mt-1 text-[13px] leading-relaxed text-ink-400">
+              <p className="mt-1 text-[13px] leading-relaxed text-ink-soft">
                 An autonomous research loop with grounding enforced in code.
               </p>
             </Link>
           </div>
           <Link
             to="/"
-            className="font-hero-mono inline-flex items-center gap-2 text-[13px] tracking-wide text-ink-300 transition-colors hover:text-neon-300"
+            className="font-hero-mono inline-flex items-center gap-2 text-[13px] tracking-wide text-ink-mid transition-colors hover:text-i3"
           >
             <ArrowLeft size={13} /> Back to portfolio
           </Link>

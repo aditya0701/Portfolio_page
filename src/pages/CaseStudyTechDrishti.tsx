@@ -112,9 +112,9 @@ const PRICES = [
 function SectionHead({ num, title }: { num: string; title: string }) {
   return (
     <div className="mb-6 flex items-baseline gap-3">
-      <span className="font-mono text-xs text-ink-400">{num}</span>
-      <h2 className="font-display text-2xl font-semibold text-ink-50 sm:text-3xl">{title}</h2>
-      <span className="h-px flex-1 bg-ink-700" aria-hidden="true" />
+      <span className="font-mono text-xs text-ink-soft">{num}</span>
+      <h2 className="font-display text-2xl font-semibold text-ink sm:text-3xl">{title}</h2>
+      <span className="h-px flex-1 bg-rule-hard" aria-hidden="true" />
     </div>
   );
 }
@@ -129,13 +129,13 @@ export function CaseStudyTechDrishti() {
   }, []);
 
   return (
-    <div className="scanlines min-h-screen bg-ink-950">
+    <div className="min-h-screen bg-paper">
       <SignalBar />
 
       <header className="mx-auto flex max-w-3xl items-center justify-between px-6 py-6">
         <Link
           to="/"
-          className="font-hero-mono inline-flex items-center gap-2 text-[12px] tracking-wide text-ink-300 transition-colors hover:text-neon-300"
+          className="font-hero-mono inline-flex items-center gap-2 text-[12px] tracking-wide text-ink-mid transition-colors hover:text-i3"
         >
           <ArrowLeft size={13} /> Back to portfolio
         </Link>
@@ -143,32 +143,32 @@ export function CaseStudyTechDrishti() {
           href="https://github.com/aditya0701/Local_news_aggregator"
           target="_blank"
           rel="noreferrer"
-          className="font-hero-mono inline-flex items-center gap-1.5 text-[12px] tracking-wide text-ink-300 transition-colors hover:text-neon-300"
+          className="font-hero-mono inline-flex items-center gap-1.5 text-[12px] tracking-wide text-ink-mid transition-colors hover:text-i3"
         >
           Source <ExternalLink size={12} />
         </a>
       </header>
 
       <main className="mx-auto max-w-3xl px-6 pb-28">
-        <div className="neon-glow-bg notch-corner relative overflow-hidden border border-ink-700 bg-ink-900/60 px-6 py-12 text-center">
-          <p className="font-hero-mono mb-4 text-[12px] tracking-wider text-neon-300">AGENTIC AI ENGINEERING CASE STUDY</p>
+        <div className="notch-corner relative overflow-hidden border border-rule-hard bg-panel px-6 py-12 text-center">
+          <p className="font-hero-mono mb-4 text-[12px] tracking-wider text-i3">AGENTIC AI ENGINEERING CASE STUDY</p>
           <TechDrishtiIcon size={48} className="mx-auto mb-3" />
-          <h1 className="font-display text-4xl font-semibold text-ink-50 sm:text-5xl">टेकदृष्टि</h1>
-          <p className="font-display mt-2 text-lg italic text-ink-300">TechDrishti, an autonomous AI news agent</p>
+          <h1 className="font-display text-4xl font-semibold text-ink sm:text-5xl">टेकदृष्टि</h1>
+          <p className="font-display mt-2 text-lg italic text-ink-mid">TechDrishti, an autonomous AI news agent</p>
           <div className="signal-bar mx-auto mt-5 w-24" />
-          <p className="font-hero-mono mt-4 text-[12px] tracking-wide text-ink-400">
+          <p className="font-hero-mono mt-4 text-[12px] tracking-wide text-ink-soft">
             PUBLISHES DAILY AT 8:00 AM IST &middot; BUILDING SINCE JUNE 2026
           </p>
         </div>
 
-        <p className="font-display mt-10 text-xl leading-relaxed text-ink-100 sm:text-2xl">
+        <p className="font-display mt-10 text-xl leading-relaxed text-ink sm:text-2xl">
           Every morning, before most of India is awake, an agentic AI workflow running unattended on GitHub Actions
           reads the day's English tech news, decides for itself which stories are worth covering, calls out to its
           own research agent when a fact needs real investigation, and writes each one from scratch, in original
           Hindi prose rather than machine translation, through a multi-stage LLM pipeline it has to be caught
           arguing with itself along the way.
         </p>
-        <p className="mt-4 text-[14px] leading-relaxed text-ink-400">
+        <p className="mt-4 text-[14px] leading-relaxed text-ink-soft">
           This page is the log of that build: why the agentic workflow exists, what the AI architecture does today,
           and nine real bugs found along the way, each with what was claimed, what broke, what fixed it, and how it
           was verified. Nothing below is hypothetical.
@@ -179,7 +179,7 @@ export function CaseStudyTechDrishti() {
             href="https://aditya0701.github.io/Local_news_aggregator/"
             target="_blank"
             rel="noreferrer"
-            className="notch-corner-sm inline-flex items-center gap-2 bg-neon-500 px-5 py-2.5 text-[13px] font-medium text-ink-950 shadow-[4px_4px_0_var(--color-ink-700)] transition-transform hover:-translate-y-0.5"
+            className="notch-corner-sm inline-flex items-center gap-2 bg-i3 px-5 py-2.5 text-[13px] font-medium text-paper transition-transform hover:-translate-y-0.5"
           >
             Read today's edition <ExternalLink size={14} />
           </a>
@@ -187,7 +187,7 @@ export function CaseStudyTechDrishti() {
             href="https://github.com/aditya0701/Local_news_aggregator"
             target="_blank"
             rel="noreferrer"
-            className="notch-corner-sm inline-flex items-center gap-2 border border-ink-700 bg-ink-900 px-5 py-2.5 text-[13px] font-medium text-ink-100 transition-colors hover:border-ink-500"
+            className="notch-corner-sm inline-flex items-center gap-2 border border-rule-hard bg-panel px-5 py-2.5 text-[13px] font-medium text-ink transition-colors hover:border-ink-500"
           >
             View source <ExternalLink size={14} />
           </a>
@@ -195,7 +195,7 @@ export function CaseStudyTechDrishti() {
 
         <section className="mt-20">
           <SectionHead num="01" title="Why this exists" />
-          <p className="mb-6 text-[14px] leading-relaxed text-ink-300">
+          <p className="mb-6 text-[14px] leading-relaxed text-ink-mid">
             There's no shortage of Hindi tech coverage, but almost all of it is either wire-service translation or a
             human editor's fast rewrite. The bet here was different: could an agentic AI workflow make its own
             editorial calls, autonomously research what it doesn't know by calling out to a second AI agent, and
@@ -206,10 +206,10 @@ export function CaseStudyTechDrishti() {
           </p>
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             {WHY.map((w) => (
-              <div key={w.tag} className="notch-corner border border-ink-700 bg-ink-900/60 p-4 pl-5 sm:p-5 sm:pl-6">
-                <span className="font-hero-mono text-[12px] tracking-wide text-neon-300">{w.tag}</span>
-                <div className="mt-1 font-display text-base font-semibold text-ink-50">{w.title}</div>
-                <p className="mt-1 text-[14px] leading-relaxed text-ink-400">{w.desc}</p>
+              <div key={w.tag} className="notch-corner border border-rule-hard bg-panel p-4 pl-5 sm:p-5 sm:pl-6">
+                <span className="font-hero-mono text-[12px] tracking-wide text-i3">{w.tag}</span>
+                <div className="mt-1 font-display text-base font-semibold text-ink">{w.title}</div>
+                <p className="mt-1 text-[14px] leading-relaxed text-ink-soft">{w.desc}</p>
               </div>
             ))}
           </div>
@@ -217,7 +217,7 @@ export function CaseStudyTechDrishti() {
 
         <section className="mt-20">
           <SectionHead num="02" title="Research, not translation" />
-          <p className="mb-6 text-[14px] leading-relaxed text-ink-300">
+          <p className="mb-6 text-[14px] leading-relaxed text-ink-mid">
             The differentiator isn't the writing, it's what feeds it. The pipeline doesn't rephrase the source
             article: it researches the topic the way a reporter would, and hands the writer real, grounded facts the
             source article never mentioned. That's also a deliberate copyright and originality choice, not just a
@@ -226,11 +226,11 @@ export function CaseStudyTechDrishti() {
           </p>
           <div className="flex flex-col gap-3">
             {RESEARCH_STRATEGY.map((r) => (
-              <div key={r.tag} className="notch-corner border border-ink-700 bg-ink-900/60 p-4 pl-5 sm:p-5 sm:pl-6">
-                <span className="font-hero-mono text-[12px] tracking-wide text-neon-300">{r.tag}</span>
-                <div className="mt-1 font-display text-base font-semibold text-ink-50">{r.title}</div>
-                <p className="mt-1 text-[14px] leading-relaxed text-ink-400">{r.desc}</p>
-                <p className="mt-3 border-t border-ink-800 pt-3 text-[14px] leading-relaxed text-ink-300">
+              <div key={r.tag} className="notch-corner border border-rule-hard bg-panel p-4 pl-5 sm:p-5 sm:pl-6">
+                <span className="font-hero-mono text-[12px] tracking-wide text-i3">{r.tag}</span>
+                <div className="mt-1 font-display text-base font-semibold text-ink">{r.title}</div>
+                <p className="mt-1 text-[14px] leading-relaxed text-ink-soft">{r.desc}</p>
+                <p className="mt-3 border-t border-ink-800 pt-3 text-[14px] leading-relaxed text-ink-mid">
                   {r.detail}
                 </p>
               </div>
@@ -240,17 +240,17 @@ export function CaseStudyTechDrishti() {
 
         <section className="mt-20">
           <SectionHead num="03" title="How the agentic workflow thinks today" />
-          <p className="mb-6 text-[14px] leading-relaxed text-ink-300">
+          <p className="mb-6 text-[14px] leading-relaxed text-ink-mid">
             No server, no database, no standing infrastructure: the entire agentic AI workflow runs inside a daily
             GitHub Actions job, chains through collection, an LLM editorial gate, a self-built research agent, and a
             two-stage writing pipeline, then pushes its own output back to the repo, unattended, end to end.
           </p>
-          <p className="mb-4 text-[13px] text-ink-400">Click a step for how it actually works.</p>
+          <p className="mb-4 text-[13px] text-ink-soft">Click a step for how it actually works.</p>
           <div className="flex flex-col gap-3">
             {STAGES.map((s, i) => {
               const isOpen = openStage === i;
               return (
-                <div key={s.tag} className="notch-corner border border-ink-700 bg-ink-900/60">
+                <div key={s.tag} className="notch-corner border border-rule-hard bg-panel">
                   <button
                     type="button"
                     onClick={() => setOpenStage(isOpen ? null : i)}
@@ -258,16 +258,16 @@ export function CaseStudyTechDrishti() {
                     className="flex w-full items-start gap-3 p-4 pl-5 text-left sm:p-5 sm:pl-6"
                   >
                     <div className="flex-1">
-                      <span className="font-hero-mono text-[12px] tracking-wide text-neon-300">{s.tag}</span>
-                      <div className="mt-1 font-display text-base font-semibold text-ink-50">{s.title}</div>
-                      <p className="mt-1 text-[14px] leading-relaxed text-ink-400">{s.desc}</p>
+                      <span className="font-hero-mono text-[12px] tracking-wide text-i3">{s.tag}</span>
+                      <div className="mt-1 font-display text-base font-semibold text-ink">{s.title}</div>
+                      <p className="mt-1 text-[14px] leading-relaxed text-ink-soft">{s.desc}</p>
                       {s.model && (
                         <span className="font-mono mt-2 inline-block text-[12px] text-green-400">{s.model}</span>
                       )}
                     </div>
                     <ChevronDown
                       size={16}
-                      className={`mt-1 shrink-0 text-ink-400 transition-transform duration-200 motion-reduce:transition-none ${
+                      className={`mt-1 shrink-0 text-ink-soft transition-transform duration-200 motion-reduce:transition-none ${
                         isOpen ? "rotate-180" : ""
                       }`}
                       aria-hidden="true"
@@ -279,13 +279,13 @@ export function CaseStudyTechDrishti() {
                   >
                     <div className="overflow-hidden">
                       <div className="border-t border-ink-800 px-4 pb-4 pl-5 pt-3 sm:px-5 sm:pb-5 sm:pl-6">
-                        <p className="text-[14px] leading-relaxed text-ink-300">{s.detail}</p>
+                        <p className="text-[14px] leading-relaxed text-ink-mid">{s.detail}</p>
                         {s.tag === "RESEARCH" && (
-                          <div className="mt-3 notch-corner-sm border border-neon-400/30 bg-neon-500/[0.06] p-3 pl-4">
-                            <span className="font-hero-mono text-[12px] tracking-wide text-neon-300">
+                          <div className="mt-3 notch-corner-sm border border-i3/30 bg-i3/[0.06] p-3 pl-4">
+                            <span className="font-hero-mono text-[12px] tracking-wide text-i3">
                               CUSTOM BUILD &middot; 45-DAY ENTITY CACHE
                             </span>
-                            <p className="mt-1.5 text-[13px] leading-relaxed text-ink-300">
+                            <p className="mt-1.5 text-[13px] leading-relaxed text-ink-mid">
                               A self-built local cache keyed by resolved entity, not raw string, so "Python (language)"
                               and "Python (snake)" never collide. Every entity checks the cache before a single search
                               or model call fires: a hit costs nothing at all, no DDG fetch, no sarvam-30b synthesis
@@ -301,7 +301,7 @@ export function CaseStudyTechDrishti() {
                             href={s.link.url}
                             target="_blank"
                             rel="noreferrer"
-                            className="mt-3 inline-flex items-center gap-1.5 text-[13px] text-neon-300 transition-colors hover:text-neon-200"
+                            className="mt-3 inline-flex items-center gap-1.5 text-[13px] text-i3 transition-colors hover:text-i3"
                           >
                             {s.link.label} <ExternalLink size={12} />
                           </a>
@@ -309,7 +309,7 @@ export function CaseStudyTechDrishti() {
                         {s.tag === "RESEARCH" && (
                           <Link
                             to="/case-study/techdrishti/sarvam-vs-deepseek"
-                            className="mt-3 block text-[13px] text-neon-300 transition-colors hover:text-neon-200"
+                            className="mt-3 block text-[13px] text-i3 transition-colors hover:text-i3"
                           >
                             Why Sarvam over DeepSeek for this stage: a 74-call side-by-side &rarr;
                           </Link>
@@ -324,8 +324,8 @@ export function CaseStudyTechDrishti() {
         </section>
 
         <section className="mt-16">
-          <div className="notch-corner overflow-hidden border border-green-500/40 bg-black font-mono text-[13px] shadow-[0_0_18px_-4px_rgba(74,222,128,0.35)]">
-            <div className="flex items-center gap-1.5 border-b border-green-500/30 bg-ink-950 px-3 py-2">
+          <div className="notch-corner overflow-hidden border border-green-500/40 bg-black font-mono text-[13px]">
+            <div className="flex items-center gap-1.5 border-b border-green-500/30 bg-paper/90 px-3 py-2">
               <span className="h-2.5 w-2.5 rounded-full bg-red-500/70" />
               <span className="h-2.5 w-2.5 rounded-full bg-yellow-500/70" />
               <span className="h-2.5 w-2.5 rounded-full bg-green-500/70" />
@@ -359,86 +359,86 @@ export function CaseStudyTechDrishti() {
 
         <section className="mt-20">
           <SectionHead num="04" title="Nine bugs that shaped the evolution" />
-          <p className="mb-6 text-[14px] leading-relaxed text-ink-300">
+          <p className="mb-6 text-[14px] leading-relaxed text-ink-mid">
             Every fix was reproduced against real articles, not synthetic test cases, the honest failure rate
             included alongside the fix. Real before/after artifacts where they survive: an empty API response, a
             wrong query the model actually sent, a Hindi sentence it actually wrote.
           </p>
           <Link
             to="/case-study/techdrishti/evolution"
-            className="notch-corner flex items-center justify-between gap-4 border border-ink-700 bg-ink-900/60 p-5 transition-colors hover:border-neon-400/60 sm:p-6"
+            className="notch-corner flex items-center justify-between gap-4 border border-rule-hard bg-panel p-5 transition-colors hover:border-i3/60 sm:p-6"
           >
             <div>
-              <div className="font-display text-lg font-semibold text-ink-50">Read all nine field reports &rarr;</div>
-              <p className="mt-1 text-[14px] leading-relaxed text-ink-400">
+              <div className="font-display text-lg font-semibold text-ink">Read all nine field reports &rarr;</div>
+              <p className="mt-1 text-[14px] leading-relaxed text-ink-soft">
                 Claim, what broke, the fix, and how it was verified, each with the real captured evidence.
               </p>
             </div>
-            <ExternalLink size={18} className="shrink-0 text-neon-300" aria-hidden="true" />
+            <ExternalLink size={18} className="shrink-0 text-i3" aria-hidden="true" />
           </Link>
         </section>
 
         <section className="mt-20">
           <SectionHead num="05" title="By the numbers" />
-          <div className="grid grid-cols-2 gap-px border border-ink-700 bg-ink-700 sm:grid-cols-4">
+          <div className="grid grid-cols-2 gap-px border border-rule-hard bg-rule-hard sm:grid-cols-4">
             {STATS.map((s) => (
-              <div key={s.label} className="bg-ink-900 p-5">
-                <div className="font-display text-2xl font-semibold text-ink-50">
+              <div key={s.label} className="bg-panel p-5">
+                <div className="font-display text-2xl font-semibold text-ink">
                   {s.num}
-                  <span className="font-mono text-sm text-ink-400">{s.unit}</span>
+                  <span className="font-mono text-sm text-ink-soft">{s.unit}</span>
                 </div>
-                <div className="mt-2 text-[12px] leading-relaxed text-ink-400">{s.label}</div>
+                <div className="mt-2 text-[12px] leading-relaxed text-ink-soft">{s.label}</div>
               </div>
             ))}
           </div>
 
-          <p className="mb-4 mt-8 text-sm text-ink-400">
+          <p className="mb-4 mt-8 text-sm text-ink-soft">
             Model choice was a cost decision, checked against the obvious alternative rather than assumed:
           </p>
-          <div className="overflow-x-auto border border-ink-700">
+          <div className="overflow-x-auto border border-rule-hard">
             <table className="w-full min-w-[480px] border-collapse text-[14px]">
               <thead>
-                <tr className="border-b border-ink-700 bg-ink-900/60">
-                  <th className="font-hero-mono px-4 py-3 text-left text-[12px] tracking-wide text-ink-400">Per 1M tokens</th>
-                  <th className="font-hero-mono px-4 py-3 text-right text-[12px] tracking-wide text-ink-400">Input</th>
-                  <th className="font-hero-mono px-4 py-3 text-right text-[12px] tracking-wide text-ink-400">Cached</th>
-                  <th className="font-hero-mono px-4 py-3 text-right text-[12px] tracking-wide text-ink-400">Discount</th>
-                  <th className="font-hero-mono px-4 py-3 text-right text-[12px] tracking-wide text-ink-400">Output</th>
+                <tr className="border-b border-rule-hard bg-panel">
+                  <th className="font-hero-mono px-4 py-3 text-left text-[12px] tracking-wide text-ink-soft">Per 1M tokens</th>
+                  <th className="font-hero-mono px-4 py-3 text-right text-[12px] tracking-wide text-ink-soft">Input</th>
+                  <th className="font-hero-mono px-4 py-3 text-right text-[12px] tracking-wide text-ink-soft">Cached</th>
+                  <th className="font-hero-mono px-4 py-3 text-right text-[12px] tracking-wide text-ink-soft">Discount</th>
+                  <th className="font-hero-mono px-4 py-3 text-right text-[12px] tracking-wide text-ink-soft">Output</th>
                 </tr>
               </thead>
               <tbody>
                 {PRICES.map((p, i) => (
                   <tr key={p.model} className={i !== PRICES.length - 1 ? "border-b border-ink-800" : ""}>
-                    <td className="px-4 py-2.5 text-ink-200">{p.model}</td>
-                    <td className="px-4 py-2.5 text-right font-mono text-ink-300 tabular-nums">{p.input}</td>
-                    <td className="px-4 py-2.5 text-right font-mono text-ink-300 tabular-nums">{p.cached}</td>
+                    <td className="px-4 py-2.5 text-ink">{p.model}</td>
+                    <td className="px-4 py-2.5 text-right font-mono text-ink-mid tabular-nums">{p.input}</td>
+                    <td className="px-4 py-2.5 text-right font-mono text-ink-mid tabular-nums">{p.cached}</td>
                     <td className="px-4 py-2.5 text-right font-mono text-green-400 tabular-nums">{p.discount}</td>
-                    <td className="px-4 py-2.5 text-right font-mono text-ink-300 tabular-nums">{p.output}</td>
+                    <td className="px-4 py-2.5 text-right font-mono text-ink-mid tabular-nums">{p.output}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
-          <p className="mt-3 text-[13px] text-ink-400">
+          <p className="mt-3 text-[13px] text-ink-soft">
             Sarvam runs 5–9× cheaper per raw token than the closest DeepSeek equivalent: the reason it was kept
             even though its own cache discount is far shallower than DeepSeek's.
           </p>
           <Link
             to="/case-study/techdrishti/sarvam-vs-deepseek"
-            className="notch-corner mt-4 flex items-center justify-between gap-4 border border-ink-700 bg-ink-900/60 p-5 transition-colors hover:border-neon-400/60 sm:p-6"
+            className="notch-corner mt-4 flex items-center justify-between gap-4 border border-rule-hard bg-panel p-5 transition-colors hover:border-i3/60 sm:p-6"
           >
             <div>
-              <div className="font-display text-lg font-semibold text-ink-50">
+              <div className="font-display text-lg font-semibold text-ink">
                 Full quality comparison: Sarvam vs DeepSeek &rarr;
               </div>
-              <p className="mt-1 text-[14px] leading-relaxed text-ink-400">74 live calls, judged head to head.</p>
+              <p className="mt-1 text-[14px] leading-relaxed text-ink-soft">74 live calls, judged head to head.</p>
             </div>
-            <ExternalLink size={18} className="shrink-0 text-neon-300" aria-hidden="true" />
+            <ExternalLink size={18} className="shrink-0 text-i3" aria-hidden="true" />
           </Link>
         </section>
 
-        <footer className="mt-20 border-t border-ink-700 pt-8">
-          <p className="text-[14px] leading-relaxed text-ink-400">
+        <footer className="mt-20 border-t border-rule-hard pt-8">
+          <p className="text-[14px] leading-relaxed text-ink-soft">
             Built solo, end to end: an agentic AI workflow covering collection, deduplication, a multi-stage LLM
             writing pipeline, an entity knowledge cache, and the reading frontend, running on GitHub Actions with no
             server and no hosting cost. The autonomous research agent it calls out to for ambiguous entities and
@@ -456,7 +456,7 @@ export function CaseStudyTechDrishti() {
               "pytest",
             ].map(
               (t) => (
-                <span key={t} className="notch-corner-sm border border-ink-700 bg-ink-800 px-2.5 py-1 text-[12px] text-ink-400">
+                <span key={t} className="notch-corner-sm border border-rule-hard bg-panel px-2.5 py-1 text-[12px] text-ink-soft">
                   {t}
                 </span>
               ),
@@ -466,7 +466,7 @@ export function CaseStudyTechDrishti() {
             href="https://huggingface.co/spaces/aditya0701/DeepSeek_Mini_research_tool"
             target="_blank"
             rel="noreferrer"
-            className="font-hero-mono mt-5 inline-flex items-center gap-1.5 text-[12px] tracking-wide text-ink-300 transition-colors hover:text-neon-300"
+            className="font-hero-mono mt-5 inline-flex items-center gap-1.5 text-[12px] tracking-wide text-ink-mid transition-colors hover:text-i3"
           >
             The research agent, live <ExternalLink size={12} />
           </a>
@@ -474,25 +474,25 @@ export function CaseStudyTechDrishti() {
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <Link
               to="/case-study/deep-research-agent"
-              className="notch-corner flex-1 border border-ink-700 bg-ink-900/60 p-4 transition-colors hover:border-neon-400/60"
+              className="notch-corner flex-1 border border-rule-hard bg-panel p-4 transition-colors hover:border-i3/60"
             >
-              <span className="font-hero-mono text-[12px] tracking-wide text-neon-300">LLM SYSTEMS</span>
-              <div className="mt-1 font-display text-[15px] font-semibold text-ink-50">
+              <span className="font-hero-mono text-[12px] tracking-wide text-i3">LLM SYSTEMS</span>
+              <div className="mt-1 font-display text-[15px] font-semibold text-ink">
                 Deep Research Agent &rarr;
               </div>
-              <p className="mt-1 text-[13px] leading-relaxed text-ink-400">
+              <p className="mt-1 text-[13px] leading-relaxed text-ink-soft">
                 The autonomous agent this pipeline calls out to, as its own case study.
               </p>
             </Link>
             <Link
               to="/case-study/microglomeruli-segmentation"
-              className="notch-corner flex-1 border border-ink-700 bg-ink-900/60 p-4 transition-colors hover:border-neon-400/60"
+              className="notch-corner flex-1 border border-rule-hard bg-panel p-4 transition-colors hover:border-i3/60"
             >
-              <span className="font-hero-mono text-[12px] tracking-wide text-neon-300">COMPUTER VISION</span>
-              <div className="mt-1 font-display text-[15px] font-semibold text-ink-50">
+              <span className="font-hero-mono text-[12px] tracking-wide text-i3">COMPUTER VISION</span>
+              <div className="mt-1 font-display text-[15px] font-semibold text-ink">
                 Microglomeruli Segmentation &rarr;
               </div>
-              <p className="mt-1 text-[13px] leading-relaxed text-ink-400">
+              <p className="mt-1 text-[13px] leading-relaxed text-ink-soft">
                 The other track: 3D instance segmentation and the tool built on it.
               </p>
             </Link>

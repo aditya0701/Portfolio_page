@@ -1,27 +1,28 @@
 import { Mail, ExternalLink } from "lucide-react";
 import { profile } from "../data/profile";
-import { GithubIcon, TerminalMark } from "./icons";
+import { GithubIcon } from "./icons";
 
 export function Contact() {
   return (
-    <section id="contact" className="relative overflow-hidden border-t border-ink-700">
-      <div className="neon-glow-bg pointer-events-none absolute inset-0 opacity-40" />
-      <div className="relative mx-auto max-w-5xl px-6 py-20 text-center sm:py-28">
-        <p className="font-hero-mono mb-4 flex items-center justify-center gap-2 text-[13px] uppercase tracking-[0.22em] text-neon-300">
-          <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-magenta-500" aria-hidden="true" />
+    <section id="contact" className="border-t border-rule-hard">
+      <div className="mx-auto max-w-[74rem] px-[var(--gutter,clamp(1.25rem,4vw,3.5rem))] py-[clamp(3rem,6vw,5rem)] text-center">
+        <p className="font-hero-mono mb-4 text-[0.7rem] uppercase tracking-[0.11em] text-ink-mid">
           Get in touch
         </p>
-        <h2 className="font-display text-balance text-2xl font-semibold text-ink-50 sm:text-3xl">
+        <h2
+          className="font-display text-balance m-0 text-[clamp(1.5rem,3vw,2.2rem)] font-[800] uppercase tracking-[-0.01em] text-ink"
+          style={{ fontVariationSettings: '"wdth" 118, "wght" 800' }}
+        >
           Open to AI / ML engineering and computer vision roles
         </h2>
-        <p className="mx-auto mt-4 max-w-xl text-[14px] leading-relaxed text-ink-200">
+        <p className="mx-auto mt-4 max-w-[50ch] text-[0.92rem] leading-[1.6] text-ink-mid">
           Based in {profile.location}, graduating 06/2026. Reach out about a role, a project, or
           anything on this page you want to argue with.
         </p>
         <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
           <a
             href={`mailto:${profile.email}`}
-            className="notch-corner-sm inline-flex items-center gap-2 bg-neon-500 px-5 py-2.5 text-xs font-hero-mono uppercase tracking-wider text-ink-950 transition-[background-color,box-shadow] hover:bg-neon-400 hover:shadow-[0_0_24px_color-mix(in_oklch,var(--color-neon-500)_55%,transparent)]"
+            className="inline-flex items-center gap-2 border border-rule-hard bg-ink px-5 py-2.5 font-hero-mono text-[0.72rem] uppercase tracking-[0.05em] text-paper transition-colors hover:bg-i5 hover:border-i5"
           >
             <Mail size={15} />
             {profile.email}
@@ -30,7 +31,7 @@ export function Contact() {
             href={profile.github}
             target="_blank"
             rel="noreferrer"
-            className="notch-corner-sm inline-flex items-center gap-2 border border-neon-700 bg-ink-900 px-5 py-2.5 text-xs font-hero-mono uppercase tracking-wider text-phosphor-100 transition-colors hover:border-neon-400 hover:text-neon-300"
+            className="inline-flex items-center gap-2 border border-rule-hard px-5 py-2.5 font-hero-mono text-[0.72rem] uppercase tracking-[0.05em] text-ink transition-colors hover:bg-ink hover:text-paper"
           >
             <GithubIcon size={15} />
             GitHub
@@ -39,15 +40,15 @@ export function Contact() {
             href={profile.huggingface}
             target="_blank"
             rel="noreferrer"
-            className="notch-corner-sm inline-flex items-center gap-2 border border-neon-700 bg-ink-900 px-5 py-2.5 text-xs font-hero-mono uppercase tracking-wider text-phosphor-100 transition-colors hover:border-neon-400 hover:text-neon-300"
+            className="inline-flex items-center gap-2 border border-rule-hard px-5 py-2.5 font-hero-mono text-[0.72rem] uppercase tracking-[0.05em] text-ink transition-colors hover:bg-ink hover:text-paper"
           >
             Hugging Face
             <ExternalLink size={13} />
           </a>
         </div>
       </div>
-      <footer className="relative flex items-center justify-center gap-2 border-t border-ink-700 py-6 text-center font-hero-mono text-[13px] tracking-wide text-ink-400">
-        <TerminalMark size={12} />© {new Date().getFullYear()} {profile.name}
+      <footer className="flex items-center justify-center gap-2 border-t border-rule py-6 text-center font-hero-mono text-[0.72rem] tracking-[0.05em] text-ink-soft">
+        &copy; {new Date().getFullYear()} {profile.name}
       </footer>
     </section>
   );

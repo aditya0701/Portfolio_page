@@ -22,3 +22,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Design exploration scratch. Kept out of the public repo: a recruiter
+# browsing this repo should hit code, not 7.7 MB of concept art.
+concept_images/
+.impeccable/

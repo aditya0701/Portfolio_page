@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft, ExternalLink, ChevronDown } from "lucide-react";
 import { SignalBar } from "../components/SignalBar";
+import { usePageTitle } from "../hooks/usePageTitle";
 
 const STATS = [
   { label: "Avg. latency", unit: "s", sarvam: 20.2, deepseek: 33.4, note: "lower is faster" },
@@ -78,36 +79,36 @@ function StatTile({ stat }: { stat: (typeof STATS)[number] }) {
   const fmt = (v: number) => (Number.isInteger(v) ? v.toString() : v.toFixed(1));
   return (
     <div className="notch-corner border border-ink-700 bg-ink-900/60 p-4 sm:p-5">
-      <div className="font-hero-mono mb-3 text-[9px] tracking-wide text-ink-500">{stat.label.toUpperCase()}</div>
+      <div className="font-hero-mono mb-3 text-[12px] tracking-wide text-ink-400">{stat.label.toUpperCase()}</div>
       <div className="flex flex-col gap-2">
         <div className="flex items-center gap-3">
-          <span className="w-20 shrink-0 whitespace-nowrap text-[11px] text-[color:var(--color-sarvam-500)]">sarvam</span>
+          <span className="w-20 shrink-0 whitespace-nowrap text-[12px] text-[color:var(--color-sarvam-500)]">sarvam</span>
           <div className="h-2 flex-1 rounded-full bg-ink-700">
             <div
               className="h-full rounded-full bg-[color:var(--color-sarvam-500)]"
               style={{ width: `${(stat.sarvam / max) * 100}%` }}
             />
           </div>
-          <span className="w-14 shrink-0 text-right text-[12px] tabular-nums text-ink-100">
+          <span className="w-14 shrink-0 text-right text-[13px] tabular-nums text-ink-100">
             {fmt(stat.sarvam)}
             {stat.unit}
           </span>
         </div>
         <div className="flex items-center gap-3">
-          <span className="w-20 shrink-0 whitespace-nowrap text-[11px] text-[color:var(--color-deepseek-500)]">deepseek</span>
+          <span className="w-20 shrink-0 whitespace-nowrap text-[12px] text-[color:var(--color-deepseek-500)]">deepseek</span>
           <div className="h-2 flex-1 rounded-full bg-ink-700">
             <div
               className="h-full rounded-full bg-[color:var(--color-deepseek-500)]"
               style={{ width: `${(stat.deepseek / max) * 100}%` }}
             />
           </div>
-          <span className="w-14 shrink-0 text-right text-[12px] tabular-nums text-ink-100">
+          <span className="w-14 shrink-0 text-right text-[13px] tabular-nums text-ink-100">
             {fmt(stat.deepseek)}
             {stat.unit}
           </span>
         </div>
       </div>
-      <p className="mt-3 text-[11px] text-ink-500">{stat.note}</p>
+      <p className="mt-3 text-[12px] text-ink-400">{stat.note}</p>
     </div>
   );
 }
@@ -115,7 +116,7 @@ function StatTile({ stat }: { stat: (typeof STATS)[number] }) {
 function SectionHead({ num, title }: { num: string; title: string }) {
   return (
     <div className="mb-6 flex items-baseline gap-3">
-      <span className="font-mono text-xs text-ink-500">{num}</span>
+      <span className="font-mono text-xs text-ink-400">{num}</span>
       <h2 className="font-display text-2xl font-semibold text-ink-50 sm:text-3xl">{title}</h2>
       <span className="h-px flex-1 bg-ink-700" aria-hidden="true" />
     </div>
@@ -124,6 +125,8 @@ function SectionHead({ num, title }: { num: string; title: string }) {
 
 export function SarvamVsDeepseek() {
   const [openCase, setOpenCase] = useState<number | null>(null);
+
+  usePageTitle("Sarvam vs DeepSeek, measured | Aditya Rawat");
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -136,7 +139,7 @@ export function SarvamVsDeepseek() {
       <header className="mx-auto flex max-w-3xl items-center justify-between px-6 py-6">
         <Link
           to="/case-study/techdrishti"
-          className="font-hero-mono inline-flex items-center gap-2 text-[10px] tracking-wide text-ink-300 transition-colors hover:text-neon-300"
+          className="font-hero-mono inline-flex items-center gap-2 text-[12px] tracking-wide text-ink-300 transition-colors hover:text-neon-300"
         >
           <ArrowLeft size={13} /> Back to case study
         </Link>
@@ -144,14 +147,14 @@ export function SarvamVsDeepseek() {
           href="https://huggingface.co/spaces/aditya0701/DeepSeek_Mini_research_tool"
           target="_blank"
           rel="noreferrer"
-          className="font-hero-mono inline-flex items-center gap-1.5 text-[10px] tracking-wide text-ink-300 transition-colors hover:text-neon-300"
+          className="font-hero-mono inline-flex items-center gap-1.5 text-[12px] tracking-wide text-ink-300 transition-colors hover:text-neon-300"
         >
           Research agent, live <ExternalLink size={12} />
         </a>
       </header>
 
       <main className="mx-auto max-w-3xl px-6 pb-28">
-        <p className="font-hero-mono mb-4 text-[10px] tracking-wider text-neon-300">
+        <p className="font-hero-mono mb-4 text-[12px] tracking-wider text-neon-300">
           TECHDRISHTI RESEARCH INFRA &middot; PROVIDER EVALUATION
         </p>
         <h1 className="font-display text-3xl font-semibold text-ink-50 sm:text-4xl">Sarvam vs DeepSeek, side by side</h1>
@@ -162,7 +165,7 @@ export function SarvamVsDeepseek() {
           article. This page is the evidence behind choosing Sarvam for that stage, not just an assertion of it.
         </p>
 
-        <div className="mt-6 notch-corner border border-ink-700 border-l-2 border-l-ink-500 bg-ink-900/60 p-4 text-[12px] leading-relaxed text-ink-400">
+        <div className="mt-6 notch-corner border border-ink-700 border-l-2 border-l-ink-500 bg-ink-900/60 p-4 text-[13px] leading-relaxed text-ink-400">
           <b className="text-ink-200">Reproducibility.</b> Every number on this page is read directly from two raw
           result files, one per provider, produced by running the same question set against both and merging the
           results, no number here was typed by hand.{" "}
@@ -182,7 +185,7 @@ export function SarvamVsDeepseek() {
 
         <div className="mt-14">
           <SectionHead num="02" title="Answer quality, judged independently" />
-          <p className="mb-6 text-sm text-ink-400">
+          <p className="mb-6 text-[14px] leading-relaxed text-ink-300">
             Scored by an external GPT judge, not by this pipeline and not by me, on the 4 context/gap questions where
             quality is genuinely hard to call by eye (the 33 identity lookups weren't scored this way, most of them
             are plain factual overviews with an obvious right answer). Included as a transparent second opinion the
@@ -191,22 +194,22 @@ export function SarvamVsDeepseek() {
           <div className="mb-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
             <StatTile stat={{ label: "Avg. judge score (/10)", unit: "", sarvam: 8.5, deepseek: 9.2, note: "4 of 37 cases judged" }} />
             <div className="notch-corner border border-ink-700 bg-ink-900/60 p-4 sm:p-5">
-              <div className="font-hero-mono mb-3 text-[9px] tracking-wide text-ink-500">WINS (4 JUDGED)</div>
+              <div className="font-hero-mono mb-3 text-[12px] tracking-wide text-ink-400">WINS (4 JUDGED)</div>
               <div className="flex items-baseline gap-6">
                 <div>
                   <div className="font-display text-2xl font-semibold text-ink-50">0</div>
-                  <div className="text-[11px] text-[color:var(--color-sarvam-500)]">sarvam</div>
+                  <div className="text-[12px] text-[color:var(--color-sarvam-500)]">sarvam</div>
                 </div>
                 <div>
                   <div className="font-display text-2xl font-semibold text-ink-50">4</div>
-                  <div className="text-[11px] text-[color:var(--color-deepseek-500)]">deepseek</div>
+                  <div className="text-[12px] text-[color:var(--color-deepseek-500)]">deepseek</div>
                 </div>
               </div>
-              <p className="mt-3 text-[11px] text-ink-500">DeepSeek wins every judged case outright, by margin.</p>
+              <p className="mt-3 text-[12px] text-ink-400">DeepSeek wins every judged case outright, by margin.</p>
             </div>
           </div>
 
-          <p className="mb-4 text-[12px] text-ink-500">Click a question to see the actual answers and what the judge flagged.</p>
+          <p className="mb-4 text-[13px] text-ink-400">Click a question to see the actual answers and what the judge flagged.</p>
           <div className="flex flex-col gap-3">
             {JUDGED.map((j, i) => {
               const isOpen = openCase === i;
@@ -219,18 +222,18 @@ export function SarvamVsDeepseek() {
                     className="flex w-full items-start gap-3 p-4 text-left sm:p-5"
                   >
                     <div className="flex-1">
-                      <p className="text-[13px] leading-relaxed text-ink-300">{j.question}</p>
-                      <div className="mt-3 flex items-center gap-4 text-[12px] tabular-nums">
+                      <p className="text-[14px] leading-relaxed text-ink-300">{j.question}</p>
+                      <div className="mt-3 flex items-center gap-4 text-[13px] tabular-nums">
                         <span className="text-[color:var(--color-sarvam-500)]">sarvam {j.sarvam.toFixed(1)}</span>
                         <span className="text-[color:var(--color-deepseek-500)]">deepseek {j.deepseek.toFixed(1)}</span>
                       </div>
-                      <p className="mt-2 border-t border-ink-800 pt-2 text-[12px] italic leading-relaxed text-ink-500">
+                      <p className="mt-2 border-t border-ink-800 pt-2 text-[13px] italic leading-relaxed text-ink-400">
                         {j.summary}
                       </p>
                     </div>
                     <ChevronDown
                       size={16}
-                      className={`mt-1 shrink-0 text-ink-500 transition-transform duration-200 motion-reduce:transition-none ${
+                      className={`mt-1 shrink-0 text-ink-400 transition-transform duration-200 motion-reduce:transition-none ${
                         isOpen ? "rotate-180" : ""
                       }`}
                       aria-hidden="true"
@@ -244,22 +247,22 @@ export function SarvamVsDeepseek() {
                       <div className="grid grid-cols-1 gap-4 border-t border-ink-800 p-4 sm:grid-cols-2 sm:p-5">
                         <div>
                           <div className="mb-2 flex items-center justify-between">
-                            <span className="font-hero-mono text-[9px] tracking-wide text-[color:var(--color-sarvam-500)]">
+                            <span className="font-hero-mono text-[12px] tracking-wide text-[color:var(--color-sarvam-500)]">
                               SARVAM &middot; WHAT THE JUDGE SAID
                             </span>
                           </div>
-                          <p className="text-[12px] leading-relaxed text-ink-300">{j.sarvamNote}</p>
+                          <p className="text-[13px] leading-relaxed text-ink-300">{j.sarvamNote}</p>
                           <div className="mt-3 max-h-64 overflow-y-auto rounded border border-ink-800 bg-ink-950/60 p-3 text-[11.5px] leading-relaxed whitespace-pre-wrap text-ink-400">
                             {j.sarvamAnswer}
                           </div>
                         </div>
                         <div>
                           <div className="mb-2 flex items-center justify-between">
-                            <span className="font-hero-mono text-[9px] tracking-wide text-[color:var(--color-deepseek-500)]">
+                            <span className="font-hero-mono text-[12px] tracking-wide text-[color:var(--color-deepseek-500)]">
                               DEEPSEEK &middot; WHAT THE JUDGE SAID
                             </span>
                           </div>
-                          <p className="text-[12px] leading-relaxed text-ink-300">{j.deepseekNote}</p>
+                          <p className="text-[13px] leading-relaxed text-ink-300">{j.deepseekNote}</p>
                           <div className="mt-3 max-h-64 overflow-y-auto rounded border border-ink-800 bg-ink-950/60 p-3 text-[11.5px] leading-relaxed whitespace-pre-wrap text-ink-400">
                             {j.deepseekAnswer}
                           </div>
@@ -296,7 +299,7 @@ export function SarvamVsDeepseek() {
         <footer className="mt-16 border-t border-ink-700 pt-8">
           <Link
             to="/case-study/techdrishti"
-            className="font-hero-mono inline-flex items-center gap-2 text-[10px] tracking-wide text-ink-300 transition-colors hover:text-neon-300"
+            className="font-hero-mono inline-flex items-center gap-2 text-[12px] tracking-wide text-ink-300 transition-colors hover:text-neon-300"
           >
             <ArrowLeft size={13} /> Back to the TechDrishti case study
           </Link>

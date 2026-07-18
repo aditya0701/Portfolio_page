@@ -6,11 +6,20 @@ brand
 
 ## Users
 
-Recruiters, hiring managers, and technical interviewers screening for AI/Computer Vision and ML roles. They arrive from a CV, LinkedIn, or GitHub link, spend a short window deciding whether to dig deeper, and are evaluating both technical rigor (can this person actually do the work) and communication quality (can they explain it clearly). Deep-diving visitors read the full case studies (e.g. the TechDrishti / thesis write-up); most others scan.
+Recruiters, hiring managers, and technical interviewers screening for AI engineering, ML engineering, and computer vision roles. Two distinct screener audiences read this site: one is looking for model-training and CV depth, the other for LLM systems that survive production. They arrive from a CV, LinkedIn, or GitHub link, spend a short window deciding whether to dig deeper, and are evaluating both technical rigor (can this person actually do the work) and communication quality (can they explain it clearly). Deep-diving visitors read the full case studies; most others scan.
 
 ## Product Purpose
 
-A portfolio for Aditya Rawat (M.Sc. Data Science, RWTH Aachen, expected 06/2026) targeting AI/Computer Vision engineering roles. It showcases flagship work — the master's thesis (microglomeruli/synaptic bouton segmentation in Drosophila confocal microscopy, benchmarking MicroSAM/Cellpose3D/nnU-Net v2/SwinUNETR) paired with BoutonViewer, the napari-based tool built on top of it — plus supporting projects (NLP news aggregator, YOLO-based detection, full-stack lab work). Success is a recruiter or hiring manager reaching out for an interview.
+A portfolio for Aditya Rawat (M.Sc. Data Science, RWTH Aachen, expected 06/2026) targeting AI engineering, ML engineering, and computer vision roles.
+
+**Positioning: dual-track.** Two flagship tracks carry equal weight, because the combination is the differentiator: the thesis is model-training credibility that most AI-engineering applicants do not have, and the LLM systems are shipping evidence that most CV applicants do not have. Splitting them would waste that. The hero names both explicitly rather than picking one.
+
+- **Computer vision track (lead):** the master's thesis (microglomeruli/synaptic bouton segmentation in Drosophila confocal microscopy, benchmarking MicroSAM/Cellpose3D/nnU-Net v2/SwinUNETR) paired with BoutonViewer, the napari tool built on top of it. Research and delivery as one project.
+- **LLM systems track:** TechDrishti (a fully autonomous Hindi tech-news publication running daily on GitHub Actions with cost-tiered model routing) and the Deep Research Agent (an autonomous research loop with code-enforced grounding verification). Both are production systems with measured behaviour, not demos.
+- **Bridge:** Chitragupt, a vision-language agent with tool use, is the project where the tracks meet.
+- **Supporting projects** (YOLO-based detection, full-stack lab work) stay lightweight so they do not dilute the flagships.
+
+The dual track is carried by structure, not by two competing headlines: track labels on each project card, a skills block grouped into named tracks, and a project order that leads with the thesis. Success is a recruiter or hiring manager reaching out for an interview.
 
 ## Brand Personality
 
@@ -25,12 +34,12 @@ Precise & technical, hacker-terminal, 90s-cyberpunk. The voice is an engineer wh
 
 ## Design Principles
 
-- Show, don't tell: benchmarks, architecture diagrams, and concrete metrics carry more weight than adjectives.
-- Depth on demand: flagship work (thesis + BoutonViewer) gets full case-study treatment; supporting projects stay lightweight so they don't dilute the top two.
-- Precision as aesthetic: technical rigor should be visible in the craft of the page itself, not just claimed in the copy.
+- Show, don't tell: benchmarks, architecture diagrams, and concrete metrics carry more weight than adjectives. Research work in particular must have something clickable: a figure, a demo, or a table, never a bullet list standing in for evidence.
+- Depth on demand: each of the three flagships gets full case-study treatment; supporting projects stay lightweight so they don't dilute them.
+- Precision as aesthetic: technical rigor should be visible in the craft of the page itself, not just claimed in the copy. This is why the build refuses to ship an unresolved metric placeholder: the page holds itself to the standard its copy claims.
 - Terminal as identity: the hacker/CRT aesthetic should surface through real UI logic (a terminal-window frame, a blinking cursor, monospace type, scanline texture) rather than being pasted on as a color swap over a generic layout.
 - One clear conversion path: every surface should make it obvious how to reach out (email/GitHub), without ever publishing personal contact info like a phone number.
 
 ## Accessibility & Inclusion
 
-WCAG AA baseline: contrast ratios, keyboard navigation, and reduced-motion alternatives for all animation. Chart/data-viz colors must remain colorblind-safe (already evidenced by the CVD-safe two-series chart palette in the codebase) — carry that standard forward into any future visualizations.
+WCAG AA baseline: contrast ratios, keyboard navigation, and reduced-motion alternatives for all animation. Reduced motion is handled globally (framer-motion MotionConfig set to reducedMotion "user", plus Tailwind motion-safe: for CSS animation) rather than per-component. Body copy sits at 14px and never below 12px: the audience is skimming under time pressure, and unreadable-but-atmospheric is a failure of the "precision as aesthetic" principle, not an expression of it. Chart/data-viz colors must remain colorblind-safe (already evidenced by the CVD-safe two-series chart palette in the codebase) — carry that standard forward into any future visualizations.

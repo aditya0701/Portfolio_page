@@ -99,16 +99,16 @@ export function Hero() {
             <span className="h-2.5 w-2.5 rounded-full bg-rust-500" aria-hidden="true" />
             <span className="h-2.5 w-2.5 rounded-full bg-[#e0c02e]" aria-hidden="true" />
             <span className="h-2.5 w-2.5 rounded-full bg-green-500" aria-hidden="true" />
-            <span className="font-hero-mono ml-2 text-[11px] tracking-wide text-ink-400">
+            <span className="font-hero-mono ml-2 text-[13px] tracking-wide text-ink-300">
               ~/portfolio/aditya-rawat — zsh
             </span>
           </div>
 
           {/* terminal body */}
           <div className="px-6 py-10 sm:px-10 sm:py-12">
-            <p className="font-hero-mono text-[13px] text-neon-400">
+            <p className="font-hero-mono text-[14px] text-neon-400">
               <span className="text-ink-400">guest@aditya-rawat</span>
-              <span className="text-ink-500">:~$</span> whoami
+              <span className="text-ink-400">:~$</span> whoami
             </p>
 
             <motion.h1
@@ -124,19 +124,19 @@ export function Hero() {
               initial={reduceMotion ? { opacity: 1 } : { opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: reduceMotion ? 0 : textDelay + 0.08 }}
-              className="font-hero-mono mt-3 flex items-center gap-2 text-[13px] uppercase tracking-[0.15em] text-magenta-500"
+              className="font-hero-mono mt-3 flex flex-wrap items-center gap-2 text-[14px] uppercase tracking-[0.15em] text-magenta-500"
             >
               &gt; {profile.role}
-              <span className="inline-block h-4 w-2 animate-pulse bg-neon-500" aria-hidden="true" />
+              <span className="inline-block h-4 w-2 bg-neon-500 motion-safe:animate-pulse" aria-hidden="true" />
             </motion.p>
 
             <motion.p
               initial={reduceMotion ? { opacity: 1 } : { opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: reduceMotion ? 0 : textDelay + 0.16 }}
-              className="mt-6 max-w-2xl text-balance text-[13px] leading-loose text-ink-300"
+              className="mt-6 max-w-2xl text-[14px] leading-relaxed text-ink-200"
             >
-              <span className="text-ink-500"># </span>
+              <span className="text-ink-400"># </span>
               {profile.summary}
             </motion.p>
 

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft, ExternalLink, ChevronDown } from "lucide-react";
 import { SignalBar } from "../components/SignalBar";
+import { usePageTitle } from "../hooks/usePageTitle";
 
 const WHY = [
   {
@@ -36,13 +37,13 @@ const CORE_RULES = [
       "The final report is often consumed programmatically — by another model, or an API caller — with no separate numbered source list attached. So every claim gets its actual source URL written inline, next to the claim, not a footnote marker.",
   },
   {
-    tag: "RULE 5 · RETRY BEFORE GIVING UP",
+    tag: "RULE 4 · RETRY BEFORE GIVING UP",
     title: "A dead link isn't a dead trail",
     example:
       "web_search and news_search return several results per query for free — if fetch_page fails on one URL, try another from the same result set before concluding the information isn't available, and rephrase the query itself before spending a whole extra search on it.",
   },
   {
-    tag: "RULE 6 · NEVER DO MATH IN YOUR HEAD",
+    tag: "RULE 5 · NEVER DO MATH IN YOUR HEAD",
     title: "A CAGR calculation done in reasoning is error-prone, even when the model is confident",
     example:
       "calculate() evaluates arithmetic through Python's ast module, not eval() — it can't execute anything beyond + - * / ** % and parentheses, so it's safe to expose directly as a tool with no sandboxing risk.",
@@ -105,7 +106,7 @@ const MODES = [
 
 const STATS = [
   { num: "8", unit: "-turn", label: "hard iteration cap (MAX_ITERATIONS), code-enforced regardless of what the model wants" },
-  { num: "6", unit: "", label: "CORE_RULES shared across every mode — questions, quick answers, article research, article writing" },
+  { num: "5", unit: "", label: "CORE_RULES shared verbatim across every mode: ask, quick answer, research an article, write an article" },
   { num: "4", unit: "", label: "chat modes on one agent loop: ask, quick grounded answer, research an article, write an article" },
   { num: "2", unit: "", label: "swappable backends (DeepSeek V4 Flash / Sarvam) behind one LLM_PROVIDER env var" },
 ];
@@ -113,7 +114,7 @@ const STATS = [
 function SectionHead({ num, title }: { num: string; title: string }) {
   return (
     <div className="mb-6 flex items-baseline gap-3">
-      <span className="font-mono text-xs text-ink-500">{num}</span>
+      <span className="font-mono text-xs text-ink-400">{num}</span>
       <h2 className="font-display text-2xl font-semibold text-ink-50 sm:text-3xl">{title}</h2>
       <span className="h-px flex-1 bg-ink-700" aria-hidden="true" />
     </div>
@@ -123,8 +124,8 @@ function SectionHead({ num, title }: { num: string; title: string }) {
 function FlowStep({ label, sub }: { label: string; sub: string }) {
   return (
     <div className="notch-corner-sm flex-1 border border-ink-700 bg-ink-900/60 px-3 py-3 text-center">
-      <div className="font-hero-mono text-[10px] tracking-wide text-neon-300">{label}</div>
-      <div className="mt-1 text-[11px] text-ink-400">{sub}</div>
+      <div className="font-hero-mono text-[12px] tracking-wide text-neon-300">{label}</div>
+      <div className="mt-1 text-[12px] text-ink-400">{sub}</div>
     </div>
   );
 }
@@ -135,6 +136,8 @@ function FlowArrow() {
 
 export function CaseStudyDeepResearch() {
   const [openQuirk, setOpenQuirk] = useState<number | null>(null);
+
+  usePageTitle("Deep Research Agent — code-enforced grounding | Aditya Rawat");
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -147,7 +150,7 @@ export function CaseStudyDeepResearch() {
       <header className="mx-auto flex max-w-3xl items-center justify-between px-6 py-6">
         <Link
           to="/"
-          className="font-hero-mono inline-flex items-center gap-2 text-[10px] tracking-wide text-ink-300 transition-colors hover:text-neon-300"
+          className="font-hero-mono inline-flex items-center gap-2 text-[12px] tracking-wide text-ink-300 transition-colors hover:text-neon-300"
         >
           <ArrowLeft size={13} /> Back to portfolio
         </Link>
@@ -155,7 +158,7 @@ export function CaseStudyDeepResearch() {
           href="https://huggingface.co/spaces/aditya0701/DeepSeek_Mini_research_tool"
           target="_blank"
           rel="noreferrer"
-          className="font-hero-mono inline-flex items-center gap-1.5 text-[10px] tracking-wide text-ink-300 transition-colors hover:text-neon-300"
+          className="font-hero-mono inline-flex items-center gap-1.5 text-[12px] tracking-wide text-ink-300 transition-colors hover:text-neon-300"
         >
           Live demo <ExternalLink size={12} />
         </a>
@@ -163,13 +166,13 @@ export function CaseStudyDeepResearch() {
 
       <main className="mx-auto max-w-3xl px-6 pb-28">
         <div className="neon-glow-bg notch-corner relative overflow-hidden border border-ink-700 bg-ink-900/60 px-6 py-12 text-center">
-          <p className="font-hero-mono mb-4 text-[10px] tracking-wider text-neon-300">ENGINEERING CASE STUDY</p>
+          <p className="font-hero-mono mb-4 text-[12px] tracking-wider text-neon-300">ENGINEERING CASE STUDY</p>
           <h1 className="font-display text-4xl font-semibold text-ink-50 sm:text-5xl">Deep Research Agent</h1>
           <p className="font-display mt-2 text-lg italic text-ink-300">
             A Tavily-grade research answer, for the cost of one LLM call and a free search stack
           </p>
           <div className="signal-bar mx-auto mt-5 w-24" />
-          <p className="font-hero-mono mt-4 text-[9px] tracking-wide text-ink-500">
+          <p className="font-hero-mono mt-4 text-[12px] tracking-wide text-ink-400">
             AUTONOMOUS AGENT LOOP · CODE-ENFORCED GROUNDING · DEEPSEEK V4 / SARVAM
           </p>
         </div>
@@ -180,7 +183,7 @@ export function CaseStudyDeepResearch() {
           to stop — then hands back a cited report with every comparison claim checked in code
           against what it actually retrieved, not what the model merely says it retrieved.
         </p>
-        <p className="mt-4 text-[13px] leading-loose text-ink-400">
+        <p className="mt-4 text-[14px] leading-relaxed text-ink-400">
           It was born directly out of a measured limitation in{" "}
           <Link to="/case-study/techdrishti" className="text-neon-300 transition-colors hover:text-neon-200">
             TechDrishti
@@ -196,7 +199,7 @@ export function CaseStudyDeepResearch() {
             href="https://huggingface.co/spaces/aditya0701/DeepSeek_Mini_research_tool"
             target="_blank"
             rel="noreferrer"
-            className="notch-corner-sm inline-flex items-center gap-2 bg-neon-500 px-5 py-2.5 text-xs font-medium text-ink-950 shadow-[4px_4px_0_var(--color-ink-700)] transition-transform hover:-translate-y-0.5"
+            className="notch-corner-sm inline-flex items-center gap-2 bg-neon-500 px-5 py-2.5 text-[13px] font-medium text-ink-950 shadow-[4px_4px_0_var(--color-ink-700)] transition-transform hover:-translate-y-0.5"
           >
             Try the live agent <ExternalLink size={14} />
           </a>
@@ -204,7 +207,7 @@ export function CaseStudyDeepResearch() {
 
         <section className="mt-20">
           <SectionHead num="01" title="Why an agent, not another pipeline" />
-          <p className="mb-6 text-sm text-ink-400">
+          <p className="mb-6 text-[14px] leading-relaxed text-ink-300">
             TechDrishti is deliberately a cost-controlled, deterministic workflow — it has to run
             unattended every day on a fixed budget, so predictable behavior beats research depth.
             This project inverts that trade-off on purpose: research depth is inherently unbounded
@@ -213,9 +216,9 @@ export function CaseStudyDeepResearch() {
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             {WHY.map((w) => (
               <div key={w.tag} className="notch-corner border border-ink-700 bg-ink-900/60 p-4 pl-5 sm:p-5 sm:pl-6">
-                <span className="font-hero-mono text-[9px] tracking-wide text-neon-300">{w.tag}</span>
+                <span className="font-hero-mono text-[12px] tracking-wide text-neon-300">{w.tag}</span>
                 <div className="mt-1 font-display text-base font-semibold text-ink-50">{w.title}</div>
-                <p className="mt-1 text-[13px] leading-relaxed text-ink-400">{w.desc}</p>
+                <p className="mt-1 text-[14px] leading-relaxed text-ink-400">{w.desc}</p>
               </div>
             ))}
           </div>
@@ -223,7 +226,7 @@ export function CaseStudyDeepResearch() {
 
         <section className="mt-20">
           <SectionHead num="02" title="The research loop" />
-          <p className="mb-6 text-sm text-ink-400">
+          <p className="mb-6 text-[14px] leading-relaxed text-ink-300">
             One orchestration loop underneath all three modes. The model owns the reasoning —
             deciding what to search, whether a result is enough, when to stop. Everything the
             model cannot itself do — actually making the HTTP request, enforcing a hard budget
@@ -238,22 +241,22 @@ export function CaseStudyDeepResearch() {
             <FlowArrow />
             <FlowStep label="GROUND" sub="claims checked vs. sources" />
           </div>
-          <p className="mt-3 text-center text-[11px] text-ink-500">
+          <p className="mt-3 text-center text-[12px] text-ink-400">
             THINK &rarr; ACT &rarr; EVALUATE repeats up to 8 times; GROUND runs once, on the final report only.
           </p>
 
           <div className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-2">
             <div className="notch-corner border border-ink-700 bg-ink-900/60 p-4 pl-5 sm:p-5 sm:pl-6">
-              <span className="font-hero-mono text-[9px] tracking-wide text-neon-300">TOOLS AVAILABLE</span>
-              <p className="mt-2 text-[13px] leading-relaxed text-ink-300">
+              <span className="font-hero-mono text-[12px] tracking-wide text-neon-300">TOOLS AVAILABLE</span>
+              <p className="mt-2 text-[14px] leading-relaxed text-ink-300">
                 web_search (DuckDuckGo via ddgs), news_search (Google News RSS, recency-sensitive),
                 fetch_page (full body text of a URL, HTML or PDF), get_current_date (the model's
                 training cutoff isn't "now"), calculate (AST-evaluated arithmetic only, no eval()).
               </p>
             </div>
             <div className="notch-corner border border-ink-700 bg-ink-900/60 p-4 pl-5 sm:p-5 sm:pl-6">
-              <span className="font-hero-mono text-[9px] tracking-wide text-neon-300">BUDGET ENFORCEMENT</span>
-              <p className="mt-2 text-[13px] leading-relaxed text-ink-300">
+              <span className="font-hero-mono text-[12px] tracking-wide text-neon-300">BUDGET ENFORCEMENT</span>
+              <p className="mt-2 text-[14px] leading-relaxed text-ink-300">
                 At iteration 8, web_search/news_search/fetch_page are forcibly removed from the
                 request — calculate stays available so the model can still finish computing
                 something it already retrieved, rather than being cut off mid-writeup.
@@ -264,7 +267,7 @@ export function CaseStudyDeepResearch() {
 
         <section className="mt-20">
           <SectionHead num="03" title="The rules that came from getting it wrong once already" />
-          <p className="mb-6 text-sm text-ink-400">
+          <p className="mb-6 text-[14px] leading-relaxed text-ink-300">
             CORE_RULES is shared verbatim across every mode. Each one exists because a specific
             failure was reproduced and fixed in TechDrishti first — this is what carrying that
             lesson forward into a system built to do real research actually looks like.
@@ -272,9 +275,9 @@ export function CaseStudyDeepResearch() {
           <div className="flex flex-col gap-3">
             {CORE_RULES.map((r) => (
               <div key={r.tag} className="notch-corner border border-ink-700 bg-ink-900/60 p-4 pl-5 sm:p-5 sm:pl-6">
-                <span className="font-hero-mono text-[9px] tracking-wide text-neon-300">{r.tag}</span>
+                <span className="font-hero-mono text-[12px] tracking-wide text-neon-300">{r.tag}</span>
                 <div className="mt-1 font-display text-base font-semibold text-ink-50">{r.title}</div>
-                <p className="mt-2 text-[13px] leading-relaxed text-ink-300">{r.example}</p>
+                <p className="mt-2 text-[14px] leading-relaxed text-ink-300">{r.example}</p>
               </div>
             ))}
           </div>
@@ -282,7 +285,7 @@ export function CaseStudyDeepResearch() {
 
         <section className="mt-20">
           <SectionHead num="04" title="Prompt quirks that make it hold up" />
-          <p className="mb-6 text-sm text-ink-400">
+          <p className="mb-6 text-[14px] leading-relaxed text-ink-300">
             Click a card for how it actually works. Every one of these exists because of a live,
             reproduced failure — not a hypothetical edge case.
           </p>
@@ -298,13 +301,13 @@ export function CaseStudyDeepResearch() {
                     className="flex w-full items-start gap-3 p-4 pl-5 text-left sm:p-5 sm:pl-6"
                   >
                     <div className="flex-1">
-                      <span className="font-hero-mono text-[9px] tracking-wide text-neon-300">{q.tag}</span>
+                      <span className="font-hero-mono text-[12px] tracking-wide text-neon-300">{q.tag}</span>
                       <div className="mt-1 font-display text-base font-semibold text-ink-50">{q.title}</div>
-                      <p className="mt-1 text-[13px] leading-relaxed text-ink-400">{q.desc}</p>
+                      <p className="mt-1 text-[14px] leading-relaxed text-ink-400">{q.desc}</p>
                     </div>
                     <ChevronDown
                       size={16}
-                      className={`mt-1 shrink-0 text-ink-500 transition-transform duration-200 motion-reduce:transition-none ${
+                      className={`mt-1 shrink-0 text-ink-400 transition-transform duration-200 motion-reduce:transition-none ${
                         isOpen ? "rotate-180" : ""
                       }`}
                       aria-hidden="true"
@@ -316,7 +319,7 @@ export function CaseStudyDeepResearch() {
                   >
                     <div className="overflow-hidden">
                       <div className="border-t border-ink-800 px-4 pb-4 pl-5 pt-3 sm:px-5 sm:pb-5 sm:pl-6">
-                        <p className="text-[13px] leading-relaxed text-ink-300">{q.detail}</p>
+                        <p className="text-[14px] leading-relaxed text-ink-300">{q.detail}</p>
                       </div>
                     </div>
                   </div>
@@ -328,7 +331,7 @@ export function CaseStudyDeepResearch() {
 
         <section className="mt-20">
           <SectionHead num="05" title="Four modes, one loop" />
-          <p className="mb-6 text-sm text-ink-400">
+          <p className="mb-6 text-[14px] leading-relaxed text-ink-300">
             Every mode is the same ResearchAgent with a different system prompt and a different
             final-answer contract — not four separate codepaths to keep in sync. "Research an
             article" and "Write an article" are even the same function under the hood, one
@@ -337,19 +340,19 @@ export function CaseStudyDeepResearch() {
           <div className="flex flex-col gap-3">
             {MODES.map((m) => (
               <div key={m.tag} className="notch-corner border border-ink-700 bg-ink-900/60 p-4 pl-5 sm:p-5 sm:pl-6">
-                <span className="font-hero-mono text-[9px] tracking-wide text-neon-300">{m.tag}</span>
+                <span className="font-hero-mono text-[12px] tracking-wide text-neon-300">{m.tag}</span>
                 <div className="mt-1 font-display text-base font-semibold text-ink-50">{m.title}</div>
-                <p className="mt-1 text-[13px] leading-relaxed text-ink-400">{m.desc}</p>
+                <p className="mt-1 text-[14px] leading-relaxed text-ink-400">{m.desc}</p>
               </div>
             ))}
           </div>
 
           <div className="notch-corner mt-3 border border-ink-700 bg-ink-900/60 p-4 pl-5 sm:p-5 sm:pl-6">
-            <span className="font-hero-mono text-[9px] tracking-wide text-neon-300">ALSO CALLABLE OVER PLAIN HTTP</span>
+            <span className="font-hero-mono text-[12px] tracking-wide text-neon-300">ALSO CALLABLE OVER PLAIN HTTP</span>
             <div className="mt-1 font-display text-base font-semibold text-ink-50">
               Not chat-only — a GitHub Actions job or another model can call this directly
             </div>
-            <p className="mt-2 text-[13px] leading-relaxed text-ink-300">
+            <p className="mt-2 text-[14px] leading-relaxed text-ink-300">
               Three POST routes (<code className="text-ink-300">/api/concise</code>,{" "}
               <code className="text-ink-300">/api/research</code>,{" "}
               <code className="text-ink-300">/api/article</code>) mirror the quick-answer, ask,
@@ -369,7 +372,7 @@ export function CaseStudyDeepResearch() {
 
         <section className="mt-20">
           <SectionHead num="06" title="Why this is the cheap alternative to a paid search API" />
-          <p className="mb-6 text-sm text-ink-400">
+          <p className="mb-6 text-[14px] leading-relaxed text-ink-300">
             A service like Tavily charges per search call — the metered cost scales with how many
             queries an agent fires. This project's retrieval layer (DuckDuckGo via{" "}
             <code className="text-ink-300">ddgs</code>, Google News RSS, direct page/PDF fetches)
@@ -386,16 +389,16 @@ export function CaseStudyDeepResearch() {
           </p>
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <div className="notch-corner border border-ink-700 bg-ink-900/60 p-4 pl-5 sm:p-5 sm:pl-6">
-              <span className="font-hero-mono text-[9px] tracking-wide text-neon-300">FREE RETRIEVAL LAYER</span>
-              <p className="mt-2 text-[13px] leading-relaxed text-ink-300">
+              <span className="font-hero-mono text-[12px] tracking-wide text-neon-300">FREE RETRIEVAL LAYER</span>
+              <p className="mt-2 text-[14px] leading-relaxed text-ink-300">
                 web_search and news_search cost nothing per call — no API key, no per-query
                 metering. The only real cost is the reasoning wrapped around them, which is
                 exactly where a research agent's value actually lives.
               </p>
             </div>
             <div className="notch-corner border border-ink-700 bg-ink-900/60 p-4 pl-5 sm:p-5 sm:pl-6">
-              <span className="font-hero-mono text-[9px] tracking-wide text-neon-300">SWAPPABLE BACKEND</span>
-              <p className="mt-2 text-[13px] leading-relaxed text-ink-300">
+              <span className="font-hero-mono text-[12px] tracking-wide text-neon-300">SWAPPABLE BACKEND</span>
+              <p className="mt-2 text-[14px] leading-relaxed text-ink-300">
                 llm_client.py is a thin, provider-generic wrapper — one <code className="text-ink-300">LLM_PROVIDER</code>{" "}
                 env var switches the entire agent between DeepSeek V4 Flash (default, cheap and
                 fast) and Sarvam, with no other code change, so the model behind the loop can
@@ -403,7 +406,7 @@ export function CaseStudyDeepResearch() {
               </p>
             </div>
           </div>
-          <p className="mt-4 text-[12px] text-ink-500">
+          <p className="mt-4 text-[13px] text-ink-400">
             The budget cap (MAX_ITERATIONS = 8) is also a cost control, not just a runaway-loop
             guard: it bounds the maximum number of paid LLM calls any single question can ever
             trigger, regardless of how open-ended the question is.
@@ -412,7 +415,7 @@ export function CaseStudyDeepResearch() {
 
         <section className="mt-20">
           <SectionHead num="07" title="Sarvam vs DeepSeek, measured head-to-head" />
-          <p className="mb-6 text-sm text-ink-400">
+          <p className="mb-6 text-[14px] leading-relaxed text-ink-300">
             Since this agent runs on either backend behind one <code className="text-ink-300">LLM_PROVIDER</code>{" "}
             switch, the two were put through the same fixed question set and compared on identical metrics rather
             than picked by feel. Three kinds of questions were run: basic factual questions, open-ended research
@@ -432,22 +435,68 @@ export function CaseStudyDeepResearch() {
         </section>
 
         <section className="mt-20">
-          <SectionHead num="08" title="By the numbers" />
+          <SectionHead num="08" title="Measured it, then chose not to ship it" />
+          <p className="mb-6 text-[14px] leading-relaxed text-ink-300">
+            The obvious next move was to wire this agent back into{" "}
+            <Link to="/case-study/techdrishti" className="text-neon-300 transition-colors hover:text-neon-200">
+              TechDrishti
+            </Link>{" "}
+            as its research layer, so every ambiguous entity and comparison question got the full
+            reasoning loop instead of a flat search. I built that integration and measured it against
+            the production pipeline rather than guessing whether it was worth it. The numbers are why
+            it is not in production.
+          </p>
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            <div className="notch-corner border border-ink-700 bg-ink-900/60 p-5">
+              <span className="font-hero-mono text-[12px] tracking-wide text-ink-300">
+                CURRENT BUILD · DDG-ONLY
+              </span>
+              <div className="mt-2 font-display text-2xl font-semibold text-neon-300">
+                ~$0.01<span className="font-mono text-sm text-ink-400"> / run</span>
+              </div>
+              <p className="mt-1 font-mono text-[13px] text-ink-300">9&ndash;20 min per run</p>
+            </div>
+            <div className="notch-corner border border-ink-700 bg-ink-900/60 p-5">
+              <span className="font-hero-mono text-[12px] tracking-wide text-ink-300">
+                WITH THIS AGENT WIRED IN
+              </span>
+              <div className="mt-2 font-display text-2xl font-semibold text-ink-100">
+                ~$0.17<span className="font-mono text-sm text-ink-400"> / run</span>
+              </div>
+              <p className="mt-1 font-mono text-[13px] text-ink-300">+~81 min onto the same run</p>
+            </div>
+          </div>
+          <p className="mt-4 text-[14px] leading-relaxed text-ink-300">
+            Roughly 17&times; the cost and over an hour of extra runtime, for a marginal gain in
+            research depth on a small share of a daily article's questions. TechDrishti has to finish
+            unattended every morning on a fixed budget, so predictability wins there. The routing code
+            is left in the repo, disabled, not deleted, because the tradeoff could flip for a use case
+            that is not a daily deadline.
+          </p>
+          <p className="mt-3 text-[13px] leading-relaxed text-ink-400">
+            The figures above are my own measurements, stated as approximate. The honest framing is
+            the point: knowing when not to ship the more impressive thing is the same discipline as
+            the code-level grounding check above, applied to a build decision instead of a claim.
+          </p>
+        </section>
+
+        <section className="mt-20">
+          <SectionHead num="09" title="By the numbers" />
           <div className="grid grid-cols-2 gap-px border border-ink-700 bg-ink-700 sm:grid-cols-4">
             {STATS.map((s) => (
               <div key={s.label} className="bg-ink-900 p-5">
                 <div className="font-display text-2xl font-semibold text-ink-50">
                   {s.num}
-                  <span className="font-mono text-sm text-ink-500">{s.unit}</span>
+                  <span className="font-mono text-sm text-ink-400">{s.unit}</span>
                 </div>
-                <div className="mt-2 text-[11px] leading-relaxed text-ink-400">{s.label}</div>
+                <div className="mt-2 text-[12px] leading-relaxed text-ink-400">{s.label}</div>
               </div>
             ))}
           </div>
         </section>
 
         <footer className="mt-20 border-t border-ink-700 pt-8">
-          <p className="text-[13px] leading-relaxed text-ink-400">
+          <p className="text-[14px] leading-relaxed text-ink-400">
             Built solo, end to end: the orchestration loop, the free-tier search layer, the
             code-level grounding check, and three task framings (ask / article enrichment /
             concise) on top of it, served through a Chainlit UI and a small FastAPI route for
@@ -460,7 +509,7 @@ export function CaseStudyDeepResearch() {
           </p>
           <div className="mt-4 flex flex-wrap gap-2">
             {["Python", "DeepSeek V4 Flash", "Sarvam", "Chainlit", "FastAPI", "ddgs", "pytest"].map((t) => (
-              <span key={t} className="notch-corner-sm border border-ink-700 bg-ink-800 px-2.5 py-1 text-[11px] text-ink-400">
+              <span key={t} className="notch-corner-sm border border-ink-700 bg-ink-800 px-2.5 py-1 text-[12px] text-ink-400">
                 {t}
               </span>
             ))}
@@ -469,10 +518,37 @@ export function CaseStudyDeepResearch() {
             href="https://huggingface.co/spaces/aditya0701/DeepSeek_Mini_research_tool"
             target="_blank"
             rel="noreferrer"
-            className="font-hero-mono mt-5 inline-flex items-center gap-1.5 text-[10px] tracking-wide text-ink-300 transition-colors hover:text-neon-300"
+            className="font-hero-mono mt-5 inline-flex items-center gap-1.5 text-[12px] tracking-wide text-ink-300 transition-colors hover:text-neon-300"
           >
             The agent, live <ExternalLink size={12} />
           </a>
+
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+            <Link
+              to="/case-study/techdrishti"
+              className="notch-corner flex-1 border border-ink-700 bg-ink-900/60 p-4 transition-colors hover:border-neon-400/60"
+            >
+              <span className="font-hero-mono text-[12px] tracking-wide text-neon-300">LLM SYSTEMS</span>
+              <div className="mt-1 font-display text-[15px] font-semibold text-ink-50">
+                TechDrishti &rarr;
+              </div>
+              <p className="mt-1 text-[13px] leading-relaxed text-ink-400">
+                The production pipeline this agent was built out of, as its own case study.
+              </p>
+            </Link>
+            <Link
+              to="/case-study/microglomeruli-segmentation"
+              className="notch-corner flex-1 border border-ink-700 bg-ink-900/60 p-4 transition-colors hover:border-neon-400/60"
+            >
+              <span className="font-hero-mono text-[12px] tracking-wide text-neon-300">COMPUTER VISION</span>
+              <div className="mt-1 font-display text-[15px] font-semibold text-ink-50">
+                Microglomeruli Segmentation &rarr;
+              </div>
+              <p className="mt-1 text-[13px] leading-relaxed text-ink-400">
+                The other track: 3D instance segmentation and the tool built on it.
+              </p>
+            </Link>
+          </div>
         </footer>
       </main>
     </div>

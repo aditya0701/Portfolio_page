@@ -35,7 +35,7 @@ export function Nav() {
             <li key={l.href}>
               <a
                 href={l.href}
-                className="font-hero-mono text-[10px] tracking-wide text-ink-300 transition-colors hover:text-neon-300"
+                className="font-hero-mono text-[13px] tracking-wide text-ink-200 transition-colors hover:text-neon-300"
               >
                 {l.label}
               </a>

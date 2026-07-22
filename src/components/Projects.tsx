@@ -12,8 +12,8 @@ export function Projects() {
   return (
     <Section
       id="projects"
-      eyebrow="Selected work"
-      title="Flagship &amp; supporting projects"
+      title="Selected work"
+      sub="Flagship &amp; supporting projects"
       intro="Segmentation models trained and benchmarked on real 3D scientific data, and LLM systems that run in production without me watching them."
     >
       {lead.map((p) => (

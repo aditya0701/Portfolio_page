@@ -13,16 +13,28 @@
   --color-ink-soft: #636c67;
   --color-rule: #c5cec8;
   --color-rule-hard: #7f8a83;
-  --color-panel: #050906;
+  /* Panel: a subtle off-white card that sits on the paper ground.
+     No dark backgrounds — the site is a light, open figure-plate. */
+  --color-panel: #f3f6f2;
+  --color-panel-text: #0b120e;
+  --color-panel-mid: #525c56;
+  --color-panel-border: #c5cec8;
 
   /* Categorical scale, sampled from the instance labels in prediction.webp.
-     Data colours — never decoration. */
+     Data colours — never decoration. The base hues are kept; brighter
+     variants are added for legibility on dark panel surfaces. */
   --color-i1: #a8434a;
+  --color-i1-bright: #d46a6a;
   --color-i2: #8b6300;
+  --color-i2-bright: #c49420;
   --color-i3: #37733f;
+  --color-i3-bright: #5bbf68;
   --color-i4: #2a7079;
+  --color-i4-bright: #4ab0bc;
   --color-i5: #3a5b9e;
+  --color-i5-bright: #6a8fd6;
   --color-i6: #653c96;
+  --color-i6-bright: #9a6acc;
 
   /* Status colours */
   --color-measured: var(--color-i3);
@@ -162,3 +174,4 @@ body {
 .track-badge.cv { background: var(--color-i4); }
 .track-badge.llm { background: var(--color-i6); }
 .track-badge.both { background: var(--color-ink); }
+.track-badge.data { background: var(--color-ink-mid); }

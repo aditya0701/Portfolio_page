@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft, ExternalLink } from "lucide-react";
 import { SignalBar } from "../components/SignalBar";
+import { SectionHead } from "../components/SectionHead";
 import { usePageTitle } from "../hooks/usePageTitle";
 import { thesisResults, thesisResultsMeta } from "../data/thesisResults";
 
@@ -93,16 +94,6 @@ const VARIANTS = [
   { key: "all", label: "Combined", desc: "All variants pooled into one training set." },
 ];
 
-function SectionHead({ num, title }: { num: string; title: string }) {
-  return (
-    <div className="mb-6 flex items-baseline gap-3">
-      <span className="font-mono text-[14px] text-ink-soft">{num}</span>
-      <h2 className="font-display text-2xl font-semibold text-ink sm:text-3xl">{title}</h2>
-      <span className="h-px flex-1 bg-rule-hard" aria-hidden="true" />
-    </div>
-  );
-}
-
 export function CaseStudySegmentation() {
   usePageTitle("Microglomeruli Segmentation — M.Sc. thesis | Aditya Rawat");
 
@@ -139,20 +130,23 @@ export function CaseStudySegmentation() {
           <h1 className="font-display text-4xl font-semibold text-ink sm:text-5xl">
             Microglomeruli Segmentation
           </h1>
-          <p className="font-display mt-2 text-lg italic text-ink-mid">
+          <p className="font-display mt-2 text-lg italic text-panel-text">
             Counting synaptic boutons in a fly brain, and handing the result to the people who
             actually need it
           </p>
           <div className="signal-bar mx-auto mt-5 w-24" />
-          <p className="font-hero-mono mt-4 text-[12px] tracking-wide text-ink-soft">
+          <p className="font-hero-mono mt-4 text-[12px] tracking-wide text-panel-mid">
             M.SC. THESIS · RWTH AACHEN · 3D INSTANCE SEGMENTATION · MICROSAM / NNU-NET V2 / SWINUNETR
           </p>
         </div>
 
-        <p className="font-display mt-10 text-xl leading-relaxed text-ink sm:text-2xl">
+        <p className="font-display mt-10 text-lg leading-relaxed text-ink sm:text-xl">
           Segment and quantify synaptic boutons in confocal Z-stacks of the Drosophila mushroom
-          body calyx, benchmark four SOTA architectures honestly against each other, and ship the
-          winner as a desktop tool a biologist can run without writing code.
+          body calyx, benchmark four SOTA architectures honestly against each other, and{" "}
+          <mark className="box-decoration-clone bg-i3/20 px-1 text-ink">
+            ship the winner as a desktop tool a biologist can run without writing code
+          </mark>
+          .
         </p>
         <p className="mt-4 text-[14px] leading-relaxed text-ink-mid">
           Supervised by Prof. Dr. Abigail Morrison (Software Engineering Group, RWTH Aachen), with
@@ -173,7 +167,7 @@ export function CaseStudySegmentation() {
             href="https://github.com/aditya0701/Fluorescent-Microscopy-Image-Segmentation-and-Quantification"
             target="_blank"
             rel="noreferrer"
-            className="notch-corner-sm inline-flex items-center gap-2 border border-rule-hard bg-panel px-5 py-2.5 text-[14px] font-medium text-ink transition-colors hover:border-i3/60 hover:text-i3"
+            className="notch-corner-sm inline-flex items-center gap-2 border border-panel-border bg-panel px-5 py-2.5 text-[14px] font-medium text-panel-text transition-colors hover:border-i3 hover:text-i3"
           >
             BoutonViewer <ExternalLink size={14} />
           </a>
@@ -223,7 +217,7 @@ export function CaseStudySegmentation() {
               >
                 <span className="font-hero-mono text-[12px] tracking-wide text-i3">{h.tag}</span>
                 <div className="mt-1 font-display text-base font-semibold text-ink">{h.title}</div>
-                <p className="mt-1.5 text-[14px] leading-relaxed text-ink-mid">{h.desc}</p>
+                <p className="mt-1.5 text-[14px] leading-relaxed text-panel-text">{h.desc}</p>
               </div>
             ))}
           </div>
@@ -243,12 +237,12 @@ export function CaseStudySegmentation() {
               <div
                 key={a.name}
                 className={`notch-corner border p-5 ${
-                  a.selected ? "border-rule-hard bg-panel" : "border-rule-hard bg-panel"
+                  a.selected ? "border-i3 bg-i3/[0.06]" : "border-rule-hard bg-panel"
                 }`}
               >
                 <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
                   <span className="font-display text-lg font-semibold text-ink">{a.name}</span>
-                  <span className="font-hero-mono text-[12px] uppercase tracking-wide text-ink-soft">
+                  <span className="font-hero-mono text-[12px] uppercase tracking-wide text-panel-mid">
                     {a.kind}
                   </span>
                   {a.selected && (
@@ -257,7 +251,7 @@ export function CaseStudySegmentation() {
                     </span>
                   )}
                 </div>
-                <p className="mt-2 text-[14px] leading-relaxed text-ink-mid">{a.why}</p>
+                <p className="mt-2 text-[14px] leading-relaxed text-panel-text">{a.why}</p>
               </div>
             ))}
           </div>
@@ -272,7 +266,7 @@ export function CaseStudySegmentation() {
                   <code className="font-mono text-[13px] text-i3">{v.key}</code>
                   <span className="font-display text-[15px] text-ink">{v.label}</span>
                 </div>
-                <p className="mt-1 text-[14px] leading-relaxed text-ink-soft">{v.desc}</p>
+                <p className="mt-1 text-[14px] leading-relaxed text-panel-mid">{v.desc}</p>
               </div>
             ))}
           </div>
@@ -316,11 +310,11 @@ export function CaseStudySegmentation() {
                 {thesisResults.map((m) => (
                   <tr
                     key={m.name}
-                    className={`border-b border-ink-800 ${m.selected ? "bg-i3/[0.06]" : ""}`}
+                    className={`border-b border-panel-border ${m.selected ? "bg-i3/[0.06]" : ""}`}
                   >
                     <td
-                      className={`py-4 pr-4 text-[14px] text-ink ${
-                        m.selected ? "border-l-2 border-i3 pl-3" : ""
+                      className={`py-4 pr-4 text-[14px] ${
+                        m.selected ? "font-semibold text-i3" : "text-ink"
                       }`}
                     >
                       {m.name}
@@ -382,7 +376,7 @@ export function CaseStudySegmentation() {
             <div className="mt-1 font-display text-lg font-semibold text-ink">
               Prior beats dimensionality when the dataset is hand-made
             </div>
-            <p className="mt-2 text-[14px] leading-relaxed text-ink-mid">
+            <p className="mt-2 text-[14px] leading-relaxed text-panel-text">
               The obvious move on a 3D problem is a native 3D architecture, which is why SwinUNETR
               and nnU-Net v2 are in the benchmark. But every training example here was annotated by
               hand, which puts a hard ceiling on n. A model carrying a strong microscopy prior can
@@ -399,7 +393,7 @@ export function CaseStudySegmentation() {
             <div className="mt-1 font-display text-lg font-semibold text-ink">
               LSM and Airyscan are different instruments and get different preprocessing
             </div>
-            <p className="mt-2 text-[14px] leading-relaxed text-ink-mid">
+            <p className="mt-2 text-[14px] leading-relaxed text-panel-text">
               BoutonViewer runs rolling-ball background subtraction plus Richardson-Lucy
               deconvolution for confocal LSM stacks, and lightweight normalisation for Airyscan,
               which is already deconvolved by the microscope. Collapsing both into one path would
@@ -430,7 +424,7 @@ export function CaseStudySegmentation() {
               "Oversized and merged predictions are deliberately not auto-removed. A silent filter would hide exactly the failure mode that matters, so the tool surfaces them and lets a human decide",
               "Model and data notes shipped alongside the tool: what it was trained on, at which voxel sizes, and where it should not be trusted",
             ].map((b) => (
-              <li key={b} className="flex gap-2.5 text-[14px] leading-relaxed text-ink-mid">
+              <li key={b} className="flex gap-2.5 text-[14px] leading-relaxed text-panel-text">
                 <span className="square-dot mt-2 h-1.5 w-1.5 shrink-0 bg-i3" />
                 {b}
               </li>
@@ -480,7 +474,7 @@ export function CaseStudySegmentation() {
             >
               <span className="font-hero-mono text-[12px] tracking-wide text-i3">LLM SYSTEMS</span>
               <div className="mt-1 font-display text-[15px] font-semibold text-ink">TechDrishti &rarr;</div>
-              <p className="mt-1 text-[13px] leading-relaxed text-ink-soft">
+              <p className="mt-1 text-[13px] leading-relaxed text-panel-mid">
                 The other track: an autonomous Hindi newsroom running daily on GitHub Actions.
               </p>
             </Link>
@@ -492,7 +486,7 @@ export function CaseStudySegmentation() {
               <div className="mt-1 font-display text-[15px] font-semibold text-ink">
                 Deep Research Agent &rarr;
               </div>
-              <p className="mt-1 text-[13px] leading-relaxed text-ink-soft">
+              <p className="mt-1 text-[13px] leading-relaxed text-panel-mid">
                 An autonomous research loop with grounding enforced in code.
               </p>
             </Link>

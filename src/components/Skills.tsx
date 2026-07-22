@@ -3,7 +3,7 @@ import { skills } from "../data/profile";
 
 export function Skills() {
   return (
-    <Section id="skills" eyebrow="Toolbox" title="Skills &amp; tools">
+    <Section id="skills" title="Skills" sub="Languages, frameworks &amp; tools">
       <div className="grid gap-4 sm:grid-cols-2">
         {Object.entries(skills).map(([group, items]) => (
           <div key={group} className="border border-ink p-5">

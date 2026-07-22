@@ -1,4 +1,8 @@
-export type Track = "cv" | "llm" | "both";
+export type Track = "cv" | "llm" | "both" | "data";
+
+/** Epistemic status, mirrored in the hero legend. `not-shipped` renders with the
+ *  muted `excluded` style: built and measured, but deliberately left out. */
+export type EpistemicStatus = "measured" | "shipped" | "pending" | "not-shipped";
 
 export type Figure = {
   src: string;
@@ -18,6 +22,8 @@ export type Project = {
    *  `supporting` stays lightweight; `pending` marks a project still in progress. */
   weight: "lead" | "flagship" | "supporting" | "pending";
   track: Track;
+  /** Real epistemic status for the badge. Omit on lightweight older work. */
+  status?: EpistemicStatus;
   period: string;
   figures?: Figure[];
 };
@@ -26,11 +32,13 @@ export const TRACK_LABEL: Record<Track, string> = {
   cv: "Computer vision",
   llm: "LLM systems",
   both: "Vision + LLM",
+  data: "Data & process mining",
 };
 
 export const projects: Project[] = [
   {
     slug: "microglomeruli-segmentation",
+    status: "measured",
     title: "Microglomeruli Segmentation",
     tagline:
       "Instance segmentation of synaptic boutons in Drosophila brain microscopy, and the tool that ships it to the lab",
@@ -79,7 +87,8 @@ export const projects: Project[] = [
   },
   {
     slug: "techdrishti",
-    title: "TechDrishti (टेकदृष्टि)",
+    status: "shipped",
+    title: "TechDrishti",
     tagline: "An agentic AI workflow for Hindi tech journalism, running unattended every day on GitHub Actions",
     period: "06/2026 – present · Solo project",
     track: "llm",
@@ -102,12 +111,13 @@ export const projects: Project[] = [
   },
   {
     slug: "deep-research-agent",
+    status: "shipped",
     title: "Deep Research Agent",
-    tagline: "An autonomous research loop where grounding is enforced by code, not requested in a prompt",
+    tagline: "An autonomous ReAct agent that plans its own searches and enforces grounding in code, not in a prompt",
     period: "06/2026 – present · Solo project, spun out of TechDrishti",
     track: "llm",
     description:
-      "Given a research question, the agent decides how many searches to run, what to search next based on what it already found, and when it has enough grounded evidence to stop. It hands back a cited report with every comparison claim checked in code against what was actually retrieved. Built directly out of a measured limitation in TechDrishti's fixed, single-shot search pipeline.",
+      "An autonomous ReAct agent that plans its own searches, reasons over what each result adds, and decides for itself when the evidence is enough — then returns a cited report with every comparison claim verified in code, not just promised in a prompt. It began as a free-search extension for TechDrishti and grew into a standalone, four-mode system: ask, quick grounded answer, research an article, and an automated Hindi article writer. Live and usable on Hugging Face Spaces.",
     bullets: [
       "Code-enforced iteration budget (MAX_ITERATIONS = 8): when it is exhausted the search tools are forcibly removed, but calculate survives so the report can still finish",
       "A grounding check flags any comparison claim whose named target was not found in retrieved sources, because two rounds of increasingly explicit 'don't hallucinate' prompting failed reproducibly",
@@ -115,7 +125,7 @@ export const projects: Project[] = [
       "Measured against TechDrishti integration and consciously left out of production. The case study does not spin that as a win",
       "Free keyless retrieval layer (DuckDuckGo + Google News RSS + page/PDF fetch) instead of a metered search API",
     ],
-    tags: ["Python", "DeepSeek V4 Flash", "Sarvam", "Chainlit", "FastAPI", "Agentic Search"],
+    tags: ["ReAct agents", "Tool use / function calling", "LLM orchestration", "Python", "DeepSeek V4 Flash", "Sarvam", "Chainlit", "FastAPI"],
     links: [
       { label: "Case Study", href: "/case-study/deep-research-agent" },
       { label: "Live Demo", href: "https://huggingface.co/spaces/aditya0701/DeepSeek_Mini_research_tool" },
@@ -124,12 +134,13 @@ export const projects: Project[] = [
   },
   {
     slug: "chitragupt",
+    status: "pending",
     title: "Chitragupt",
     tagline: "A vision-language agent that can see, reason and use tools",
     period: "07/2026 – present · Solo project",
     track: "both",
     description:
-      "An agentic assistant built on a vision-language model: it takes images, reasons about them, calls tools and holds conversation context. The VLM runs on Colab's free GPU tier, bridged through a FastAPI server to a web UI, a desktop app and a CLI.",
+      "An agentic assistant built on a vision-language model: it takes images, reasons about them, calls tools and holds conversation context. The VLM runs on Colab's free GPU tier, bridged through a FastAPI server to a web UI, a desktop app and a CLI. Under active construction — the core pipeline runs end to end; broader testing is in progress.",
     bullets: [
       "VLM inference on a free Colab GPU, bridged to a local FastAPI server so no client ever talks to Colab directly",
       "Tool use and conversation context on top of a vision model, with three clients (web, Tkinter desktop, CLI) against one API",
@@ -155,18 +166,48 @@ export const projects: Project[] = [
     weight: "supporting",
   },
   {
+    slug: "boutonviewer",
+    status: "shipped",
+    title: "BoutonViewer",
+    tagline: "The napari desktop tool that puts the thesis segmentation model in biologists' hands",
+    period: "2025 – present · Thesis delivery tool",
+    track: "cv",
+    description:
+      "The delivery half of the thesis, packaged as its own tool: a napari app that runs the bouton-segmentation pipeline on a confocal or Airyscan stack, reports per-bouton volume and surface area in µm³ / µm², and lets a biologist delete a false positive without touching code. A step-by-step usage manual lives on the repo's GitHub wiki.",
+    bullets: [
+      "One-file-in, table-out workflow for non-programmers, with prediction caching so a display change never re-runs inference",
+      "Usage manual and model/data notes shipped alongside the tool, including where the model should not be trusted",
+    ],
+    tags: ["napari", "PyQt", "Python", "3D segmentation"],
+    links: [
+      {
+        label: "GitHub",
+        href: "https://github.com/aditya0701/Fluorescent-Microscopy-Image-Segmentation-and-Quantification",
+      },
+      {
+        label: "Usage manual (wiki)",
+        href: "https://github.com/aditya0701/Fluorescent-Microscopy-Image-Segmentation-and-Quantification/wiki",
+      },
+      {
+        label: "Model & data notes",
+        href: "https://aditya0701.github.io/Fluorescent-Microscopy-Image-Segmentation-and-Quantification/model_notes.html",
+      },
+    ],
+    weight: "supporting",
+  },
+  {
     slug: "celonis-cohort-discovery",
     title: "Cohort Discovery & Analysis Web App",
-    tagline: "Process-mining cohort analysis, built with Celonis",
+    tagline: "Cohort discovery on event data — a proof-of-concept built for Celonis",
     period: "04/2024 – 07/2025 · Interdisciplinary lab course with Celonis",
-    track: "llm",
+    track: "data",
     description:
-      "Implemented a data-driven algorithm from a research paper to parse and segment Celonis process/event data into distinct cohorts, wrapped in a full-stack web app for interactive analysis.",
+      "A proof-of-concept for Celonis: an event-data application that segments event logs into behavioural cohorts by implementing a cohort-discovery research paper — data clustering over event sequences, then interactive analysis of the cohorts it finds. A light LLM assist sits on the analysis options, but the work is event-data mining, not an LLM system.",
     bullets: [
       "Full-stack app in React + Flask, tested with PyTest, for filtering, visualizing and comparing discovered cohorts",
       "Bi-weekly Agile sprints, test-driven development. Grade: 1.7",
     ],
-    tags: ["React", "Flask", "PyTest", "Process Mining"],
+    tags: ["React", "Flask", "PyTest", "Process mining", "Event data", "Clustering"],
     links: [],
     weight: "supporting",
   },

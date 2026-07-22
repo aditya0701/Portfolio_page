@@ -33,7 +33,7 @@ export function Hero() {
             initial={reduceMotion ? { opacity: 1 } : { opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: reduceMotion ? 0 : textDelay }}
-            className="font-hero-mono mt-[1.1rem] flex flex-wrap gap-x-[1rem] gap-y-[0.5rem text-[clamp(0.7rem,1.5vw,0.82rem)] uppercase tracking-[0.16em] text-ink-mid"
+            className="font-hero-mono mt-[1.1rem] flex flex-wrap gap-x-[1rem] gap-y-[0.5rem] text-[clamp(0.7rem,1.5vw,0.82rem)] uppercase tracking-[0.16em] text-ink-mid"
           >
             <span>ML systems</span>
             <span className="text-rule-hard">/</span>
@@ -98,7 +98,7 @@ export function Hero() {
           <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 border-t border-rule pt-4">
             {[
               { label: "Measured", cls: "measured", desc: "a real number from a real run" },
-              { label: "Shipped", cls: "shipped", desc: "in production, running unattended" },
+              { label: "Shipped", cls: "shipped", desc: "deployed and usable now, in production or hosted" },
               { label: "Pending", cls: "pending", desc: "not measured yet, and says so" },
               { label: "Not shipped", cls: "excluded", desc: "built, measured, left out on purpose" },
             ].map((s) => (

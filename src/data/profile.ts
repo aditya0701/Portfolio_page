@@ -11,7 +11,7 @@ export const profile = {
 
 export const education = [
   {
-    period: "10/2023 – 06/2026 (expected)",
+    period: "10/2023 – 09/2026 (expected)",
     title: "M.Sc. Data Science",
     place: "RWTH Aachen University",
     detail:
@@ -27,7 +27,7 @@ export const education = [
 
 export const experience = [
   {
-    period: "11/2025 – 06/2026",
+    period: "11/2025 – 09/2026",
     title: "Master's Thesis — Computer Vision Research",
     place: "Software Engineering Group, RWTH Aachen University",
     detail:

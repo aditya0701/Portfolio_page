@@ -1,5 +1,8 @@
+import { Link } from "react-router-dom";
+import { ArrowUpRight } from "lucide-react";
 import { Section } from "./Section";
 import { experience, education } from "../data/profile";
+import { totalCourseCount } from "../data/certificates";
 
 function TimelineItem({
   period,
@@ -26,7 +29,7 @@ function TimelineItem({
 
 export function Experience() {
   return (
-    <Section id="experience" eyebrow="Background" title="Experience &amp; Education">
+    <Section id="experience" title="Background" sub="Experience &amp; Education">
       <div className="grid gap-12 sm:grid-cols-2">
         <div>
           <h3 className="font-hero-mono mb-6 text-[0.7rem] font-[500] uppercase tracking-[0.11em] text-ink-soft">Experience</h3>
@@ -43,6 +46,24 @@ export function Experience() {
               <TimelineItem key={e.title} {...e} />
             ))}
           </div>
+          <Link
+            to="/certifications"
+            className="notch-corner-sm group mt-8 flex items-center justify-between gap-3 border border-rule-hard bg-panel px-4 py-3 transition-colors hover:border-i3"
+          >
+            <span>
+              <span className="font-hero-mono text-[0.7rem] uppercase tracking-[0.11em] text-i3">
+                Certifications
+              </span>
+              <span className="mt-0.5 block text-[0.82rem] text-ink-mid">
+                {totalCourseCount} verified Coursera credentials — DeepLearning.AI, Stanford, Google, Michigan
+              </span>
+            </span>
+            <ArrowUpRight
+              size={16}
+              className="shrink-0 text-ink-soft transition-colors group-hover:text-i3"
+              aria-hidden="true"
+            />
+          </Link>
         </div>
       </div>
     </Section>

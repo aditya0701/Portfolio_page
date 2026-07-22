@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft, ExternalLink, ChevronDown } from "lucide-react";
 import { SignalBar } from "../components/SignalBar";
+import { SectionHead } from "../components/SectionHead";
 import { usePageTitle } from "../hooks/usePageTitle";
-import { TechDrishtiIcon } from "../components/icons/TechDrishtiIcon";
 
 const WHY = [
   {
@@ -95,6 +95,82 @@ const STAGES = [
   },
 ];
 
+// Each pipeline stage is labeled like an instance in the figure plate: a base
+// hue from the categorical scale, keyed by stage order. GATE is red (it's the
+// reject gate); RESEARCH keeps green, matching the flagship's own links below.
+const STAGE_ACCENT = [
+  { text: "text-i5", dot: "bg-i5", hl: "bg-i5/20" }, // COLLECT
+  { text: "text-i4", dot: "bg-i4", hl: "bg-i4/20" }, // NORMALIZE
+  { text: "text-i6", dot: "bg-i6", hl: "bg-i6/20" }, // CLUSTER
+  { text: "text-i1", dot: "bg-i1", hl: "bg-i1/20" }, // GATE
+  { text: "text-i3", dot: "bg-i3", hl: "bg-i3/20" }, // RESEARCH
+  { text: "text-i2", dot: "bg-i2", hl: "bg-i2/25" }, // PLAN
+  { text: "text-i5", dot: "bg-i5", hl: "bg-i5/20" }, // WRITE
+];
+
+// The design ideology in plain English: each pipeline stage is a desk in a
+// newsroom, kept separate for the same reason a real newsroom keeps it separate.
+// Index-aligned with STAGES / STAGE_ACCENT so the colours match the mechanics below.
+const NEWSROOM = [
+  {
+    role: "The wire desk",
+    line: "reads everything, keeps almost nothing",
+    why: "A mountain of tech news lands every morning and most of it is noise. The first job is simply to scan all of it and throw the junk back, so the rest of the newsroom only ever looks at things that might be real stories.",
+    mark: "throw the junk back",
+  }, // COLLECT
+  {
+    role: "The foreign desk",
+    line: "makes sure a foreign story is actually understood first",
+    why: "If something breaks in another language, you don't report on your rough guess of what it says. You get it properly understood before anyone writes a word, because every step after this is built on top of it.",
+    mark: "properly understood before anyone writes a word",
+  }, // NORMALIZE
+  {
+    role: "The news editor",
+    line: "notices when five outlets are telling one story",
+    why: "One event covered by five sites is still one event. Someone has to catch that and say “we cover this once, and cover it well,” instead of publishing the same thing five times over.",
+    mark: "we cover this once, and cover it well",
+  }, // CLUSTER
+  {
+    role: "The gut check",
+    line: "decides whether it's even worth a story",
+    why: "Not everything that's true is worth writing. This is the editor's “so what?” — a plain yes or no, made before anyone spends effort on a piece that shouldn't exist.",
+    mark: "a plain yes or no",
+  }, // GATE
+  {
+    role: "The reporter",
+    line: "does the legwork the original article didn't",
+    why: "This is the part that makes it reporting and not rewording: chasing down the facts the source left out or took for granted, so the finished piece knows things the article it started from never said.",
+    mark: "reporting and not rewording",
+  }, // RESEARCH
+  {
+    role: "The editorial meeting",
+    line: "agrees what the story is actually about",
+    why: "Before a word is written, the desk settles the angle — what the story is really about, what to lead with, what to cut. Skip this and you get a pile of facts instead of a story.",
+    mark: "a pile of facts instead of a story",
+  }, // PLAN
+  {
+    role: "The writer",
+    line: "writes it fresh, in the paper's own voice",
+    why: "Only now does anyone write — an original Hindi article built from the plan, not a translation of the English source. A brand-new piece, not a reworded one.",
+    mark: "not a translation of the English source",
+  }, // WRITE
+];
+
+// Wrap the key phrase of a sentence in a coloured highlighter mark so a skimmer
+// catches the point without reading the whole line. Falls back to plain text if
+// the phrase isn't found, so copy edits can never break the render.
+function markPhrase(text: string, phrase: string, hl: string) {
+  const idx = text.indexOf(phrase);
+  if (idx === -1) return text;
+  return (
+    <>
+      {text.slice(0, idx)}
+      <mark className={`box-decoration-clone px-0.5 text-ink ${hl}`}>{phrase}</mark>
+      {text.slice(idx + phrase.length)}
+    </>
+  );
+}
+
 const STATS = [
   { num: "61", unit: "/run", label: "usable RSS candidates per run, up from ~15 after expanding 2 feeds to 8" },
   { num: "2.3", unit: "×", label: "article length after fixing the editorial plan, not the token cap (930 → ~2,150 chars)" },
@@ -108,16 +184,6 @@ const PRICES = [
   { model: "deepseek-v4-flash", input: "$0.140", cached: "$0.0028", discount: "98%", output: "$0.280" },
   { model: "deepseek-v4-pro", input: "$0.435", cached: "$0.0036", discount: "~99%", output: "$0.870" },
 ];
-
-function SectionHead({ num, title }: { num: string; title: string }) {
-  return (
-    <div className="mb-6 flex items-baseline gap-3">
-      <span className="font-mono text-xs text-ink-soft">{num}</span>
-      <h2 className="font-display text-2xl font-semibold text-ink sm:text-3xl">{title}</h2>
-      <span className="h-px flex-1 bg-rule-hard" aria-hidden="true" />
-    </div>
-  );
-}
 
 export function CaseStudyTechDrishti() {
   const [openStage, setOpenStage] = useState<number | null>(null);
@@ -152,21 +218,22 @@ export function CaseStudyTechDrishti() {
       <main className="mx-auto max-w-3xl px-6 pb-28">
         <div className="notch-corner relative overflow-hidden border border-rule-hard bg-panel px-6 py-12 text-center">
           <p className="font-hero-mono mb-4 text-[12px] tracking-wider text-i3">AGENTIC AI ENGINEERING CASE STUDY</p>
-          <TechDrishtiIcon size={48} className="mx-auto mb-3" />
-          <h1 className="font-display text-4xl font-semibold text-ink sm:text-5xl">टेकदृष्टि</h1>
-          <p className="font-display mt-2 text-lg italic text-ink-mid">TechDrishti, an autonomous AI news agent</p>
+          <h1 className="font-display text-4xl font-semibold text-ink sm:text-5xl">TechDrishti</h1>
+          <p className="font-display mt-2 text-lg italic text-panel-text">An autonomous AI news agent</p>
           <div className="signal-bar mx-auto mt-5 w-24" />
-          <p className="font-hero-mono mt-4 text-[12px] tracking-wide text-ink-soft">
+          <p className="font-hero-mono mt-4 text-[12px] tracking-wide text-panel-mid">
             PUBLISHES DAILY AT 8:00 AM IST &middot; BUILDING SINCE JUNE 2026
           </p>
         </div>
 
-        <p className="font-display mt-10 text-xl leading-relaxed text-ink sm:text-2xl">
+        <p className="font-display mt-10 text-lg leading-relaxed text-ink sm:text-xl">
           Every morning, before most of India is awake, an agentic AI workflow running unattended on GitHub Actions
           reads the day's English tech news, decides for itself which stories are worth covering, calls out to its
-          own research agent when a fact needs real investigation, and writes each one from scratch, in original
-          Hindi prose rather than machine translation, through a multi-stage LLM pipeline it has to be caught
-          arguing with itself along the way.
+          own research agent when a fact needs real investigation, and writes each one from scratch,{" "}
+          <mark className="box-decoration-clone bg-i3/20 px-1 text-ink">
+            in original Hindi prose rather than machine translation
+          </mark>
+          , through a multi-stage LLM pipeline it has to be caught arguing with itself along the way.
         </p>
         <p className="mt-4 text-[14px] leading-relaxed text-ink-soft">
           This page is the log of that build: why the agentic workflow exists, what the AI architecture does today,
@@ -187,8 +254,7 @@ export function CaseStudyTechDrishti() {
             href="https://github.com/aditya0701/Local_news_aggregator"
             target="_blank"
             rel="noreferrer"
-            className="notch-corner-sm inline-flex items-center gap-2 border border-rule-hard bg-panel px-5 py-2.5 text-[13px] font-medium text-ink transition-colors hover:border-ink-500"
-          >
+            className="notch-corner-sm inline-flex items-center gap-2 border border-panel-border bg-panel px-5 py-2.5 text-[13px] font-medium text-panel-text transition-colors hover:border-panel-text">
             View source <ExternalLink size={14} />
           </a>
         </div>
@@ -209,7 +275,7 @@ export function CaseStudyTechDrishti() {
               <div key={w.tag} className="notch-corner border border-rule-hard bg-panel p-4 pl-5 sm:p-5 sm:pl-6">
                 <span className="font-hero-mono text-[12px] tracking-wide text-i3">{w.tag}</span>
                 <div className="mt-1 font-display text-base font-semibold text-ink">{w.title}</div>
-                <p className="mt-1 text-[14px] leading-relaxed text-ink-soft">{w.desc}</p>
+                <p className="mt-1 text-[14px] leading-relaxed text-panel-mid">{w.desc}</p>
               </div>
             ))}
           </div>
@@ -220,17 +286,20 @@ export function CaseStudyTechDrishti() {
           <p className="mb-6 text-[14px] leading-relaxed text-ink-mid">
             The differentiator isn't the writing, it's what feeds it. The pipeline doesn't rephrase the source
             article: it researches the topic the way a reporter would, and hands the writer real, grounded facts the
-            source article never mentioned. That's also a deliberate copyright and originality choice, not just a
-            quality one: a published piece is meaningfully distinct from what it started from because it adds real
-            reporting on top, not because it's reworded.
+            source article never mentioned. That's also{" "}
+            <mark className="box-decoration-clone bg-i3/20 px-1 text-ink">
+              a deliberate copyright and originality choice
+            </mark>
+            , not just a quality one: a published piece is meaningfully distinct from what it started from because it{" "}
+            <strong className="font-semibold text-ink">adds real reporting on top, not because it's reworded</strong>.
           </p>
           <div className="flex flex-col gap-3">
             {RESEARCH_STRATEGY.map((r) => (
               <div key={r.tag} className="notch-corner border border-rule-hard bg-panel p-4 pl-5 sm:p-5 sm:pl-6">
                 <span className="font-hero-mono text-[12px] tracking-wide text-i3">{r.tag}</span>
                 <div className="mt-1 font-display text-base font-semibold text-ink">{r.title}</div>
-                <p className="mt-1 text-[14px] leading-relaxed text-ink-soft">{r.desc}</p>
-                <p className="mt-3 border-t border-ink-800 pt-3 text-[14px] leading-relaxed text-ink-mid">
+                <p className="mt-1 text-[14px] leading-relaxed text-panel-mid">{r.desc}</p>
+                <p className="mt-3 border-t border-panel-border pt-3 text-[14px] leading-relaxed text-panel-text">
                   {r.detail}
                 </p>
               </div>
@@ -239,7 +308,45 @@ export function CaseStudyTechDrishti() {
         </section>
 
         <section className="mt-20">
-          <SectionHead num="03" title="How the agentic workflow thinks today" />
+          <SectionHead num="03" title="Built like a newsroom, not a translation" />
+          <p className="mb-6 text-[14px] leading-relaxed text-ink-mid">
+            The whole thing starts from one decision:{" "}
+            <strong className="font-semibold text-ink">this is a newsroom, not a translate button</strong>. A
+            translator takes one article and rewords it. A newsroom is slower and does something different — it
+            reads everything coming in, argues about what actually matters, sends a reporter to fill the gaps,
+            agrees on the angle, and only then writes. Each of those is a separate job, done by a separate desk, and
+            keeping them apart is exactly how a real newsroom avoids mistakes. This system copies that structure on
+            purpose: every stage is <strong className="font-semibold text-ink">one desk with one job</strong>, here
+            for one reason.
+          </p>
+          <ol className="flex flex-col gap-5">
+            {NEWSROOM.map((n, i) => (
+              <li key={n.role} className="flex gap-3">
+                <span
+                  className={`mt-[0.4rem] h-2 w-2 shrink-0 ${STAGE_ACCENT[i].dot}`}
+                  aria-hidden="true"
+                />
+                <div>
+                  <div className="font-display text-base text-ink">
+                    <span className="font-semibold">{n.role}</span>
+                    <span className="text-ink-mid"> — {n.line}</span>
+                  </div>
+                  <p className="mt-1 text-[14px] leading-relaxed text-ink-mid">
+                    {markPhrase(n.why, n.mark, STAGE_ACCENT[i].hl)}
+                  </p>
+                </div>
+              </li>
+            ))}
+          </ol>
+          <p className="mt-6 text-[14px] leading-relaxed text-ink-mid">
+            None of these desks is doing anything magic on its own. The whole idea is{" "}
+            <strong className="font-semibold text-ink">the order and the separation</strong> — the same reason
+            newsrooms have desks in the first place. What each one actually does under the hood is next.
+          </p>
+        </section>
+
+        <section className="mt-20">
+          <SectionHead num="04" title="How the agentic workflow thinks today" />
           <p className="mb-6 text-[14px] leading-relaxed text-ink-mid">
             No server, no database, no standing infrastructure: the entire agentic AI workflow runs inside a daily
             GitHub Actions job, chains through collection, an LLM editorial gate, a self-built research agent, and a
@@ -258,16 +365,28 @@ export function CaseStudyTechDrishti() {
                     className="flex w-full items-start gap-3 p-4 pl-5 text-left sm:p-5 sm:pl-6"
                   >
                     <div className="flex-1">
-                      <span className="font-hero-mono text-[12px] tracking-wide text-i3">{s.tag}</span>
+                      <span className="inline-flex items-center gap-2">
+                        <span
+                          className={`h-2 w-2 shrink-0 ${STAGE_ACCENT[i].dot}`}
+                          aria-hidden="true"
+                        />
+                        <span
+                          className={`font-hero-mono text-[12px] tracking-wide ${STAGE_ACCENT[i].text}`}
+                        >
+                          {s.tag}
+                        </span>
+                      </span>
                       <div className="mt-1 font-display text-base font-semibold text-ink">{s.title}</div>
-                      <p className="mt-1 text-[14px] leading-relaxed text-ink-soft">{s.desc}</p>
+                      <p className="mt-1 text-[14px] leading-relaxed text-panel-mid">{s.desc}</p>
                       {s.model && (
-                        <span className="font-mono mt-2 inline-block text-[12px] text-green-400">{s.model}</span>
+                        <span className={`font-mono mt-2 inline-block text-[12px] ${STAGE_ACCENT[i].text}`}>
+                          {s.model}
+                        </span>
                       )}
                     </div>
                     <ChevronDown
                       size={16}
-                      className={`mt-1 shrink-0 text-ink-soft transition-transform duration-200 motion-reduce:transition-none ${
+                      className={`mt-1 shrink-0 text-panel-mid transition-transform duration-200 motion-reduce:transition-none ${
                         isOpen ? "rotate-180" : ""
                       }`}
                       aria-hidden="true"
@@ -278,14 +397,14 @@ export function CaseStudyTechDrishti() {
                     style={{ gridTemplateRows: isOpen ? "1fr" : "0fr" }}
                   >
                     <div className="overflow-hidden">
-                      <div className="border-t border-ink-800 px-4 pb-4 pl-5 pt-3 sm:px-5 sm:pb-5 sm:pl-6">
-                        <p className="text-[14px] leading-relaxed text-ink-mid">{s.detail}</p>
+                      <div className="border-t border-panel-border px-4 pb-4 pl-5 pt-3 sm:px-5 sm:pb-5 sm:pl-6">
+                        <p className="text-[14px] leading-relaxed text-panel-text">{s.detail}</p>
                         {s.tag === "RESEARCH" && (
                           <div className="mt-3 notch-corner-sm border border-i3/30 bg-i3/[0.06] p-3 pl-4">
                             <span className="font-hero-mono text-[12px] tracking-wide text-i3">
                               CUSTOM BUILD &middot; 45-DAY ENTITY CACHE
                             </span>
-                            <p className="mt-1.5 text-[13px] leading-relaxed text-ink-mid">
+                            <p className="mt-1.5 text-[13px] leading-relaxed text-panel-text">
                               A self-built local cache keyed by resolved entity, not raw string, so "Python (language)"
                               and "Python (snake)" never collide. Every entity checks the cache before a single search
                               or model call fires: a hit costs nothing at all, no DDG fetch, no sarvam-30b synthesis
@@ -324,41 +443,49 @@ export function CaseStudyTechDrishti() {
         </section>
 
         <section className="mt-16">
-          <div className="notch-corner overflow-hidden border border-green-500/40 bg-black font-mono text-[13px]">
-            <div className="flex items-center gap-1.5 border-b border-green-500/30 bg-paper/90 px-3 py-2">
-              <span className="h-2.5 w-2.5 rounded-full bg-red-500/70" />
-              <span className="h-2.5 w-2.5 rounded-full bg-yellow-500/70" />
-              <span className="h-2.5 w-2.5 rounded-full bg-green-500/70" />
-              <span className="ml-2 text-[12px] tracking-wide text-green-500/60">techdrishti@build:~$</span>
+          <div className="notch-corner border border-rule-hard bg-panel p-5 sm:p-6">
+            <div className="flex flex-wrap items-center gap-3">
+              <span className="status-badge pending">Pending</span>
+              <span className="font-hero-mono text-[12px] tracking-wide text-ink-soft">
+                RESEARCH-MODE FLOW &middot; DIALED BACK FOR PRODUCTION
+              </span>
             </div>
-            <div className="space-y-2 px-4 py-4 leading-relaxed text-green-400">
-              <p>
-                <span className="text-green-500/60">$</span> ./deploy_pipeline.sh --research-mode
-              </p>
-              <p className="text-yellow-400">
-                [WARNING] flow altered: reverted RESEARCH stage to DuckDuckGo-only search, tiered
-                research-agent routing left in place but disabled for production runs.
-              </p>
-              <p className="pl-4 text-green-300">
-                current build (DDG-only) . . . . ~$0.008 USD/run &middot; 9&ndash;20 min
-              </p>
-              <p className="pl-4 text-green-300">
-                search-agent build (retained) . . ~$0.17&ndash;$0.20 USD/run &middot; 1 hr 20+ min
-              </p>
-              <p className="text-green-400">
-                reason: build time and cost cut took priority over the marginal research quality
-                gain. tiered search-agent routing kept in codebase for future use, not deleted.
-              </p>
-              <p>
-                <span className="text-green-500/60">$</span>
-                <span className="ml-1 inline-block h-3.5 w-2 bg-green-400 motion-safe:animate-pulse align-middle" />
-              </p>
+            <code className="mt-3 block font-mono text-[13px] text-ink">
+              ./deploy_pipeline.sh --research-mode
+            </code>
+            <p className="mt-3 text-[14px] leading-relaxed text-panel-text">
+              Reverted the RESEARCH stage to DuckDuckGo-only search. Tiered research-agent routing
+              stays in the codebase, just switched off for production runs.
+            </p>
+            <div className="mt-4 grid gap-3 sm:grid-cols-2">
+              <div className="notch-corner-sm border border-panel-border bg-i3/[0.06] p-3">
+                <div className="font-hero-mono text-[11px] uppercase tracking-wide text-i3">
+                  Current build &middot; DDG-only
+                </div>
+                <div className="mt-1.5 font-mono text-[14px] text-ink">
+                  ~$0.008 <span className="text-ink-soft">USD/run</span>
+                </div>
+                <div className="font-mono text-[13px] text-ink-soft">9&ndash;20 min</div>
+              </div>
+              <div className="notch-corner-sm border border-panel-border bg-panel p-3">
+                <div className="font-hero-mono text-[11px] uppercase tracking-wide text-ink-soft">
+                  Retained &middot; search-agent build
+                </div>
+                <div className="mt-1.5 font-mono text-[14px] text-ink">
+                  ~$0.17&ndash;0.20 <span className="text-ink-soft">USD/run</span>
+                </div>
+                <div className="font-mono text-[13px] text-ink-soft">1 hr 20+ min</div>
+              </div>
             </div>
+            <p className="mt-4 text-[13px] leading-relaxed text-ink-soft">
+              Reason: build time and cost cut took priority over the marginal research-quality
+              gain. Tiered routing kept in the codebase for future use, not deleted.
+            </p>
           </div>
         </section>
 
         <section className="mt-20">
-          <SectionHead num="04" title="Nine bugs that shaped the evolution" />
+          <SectionHead num="05" title="Nine bugs that shaped the evolution" />
           <p className="mb-6 text-[14px] leading-relaxed text-ink-mid">
             Every fix was reproduced against real articles, not synthetic test cases, the honest failure rate
             included alongside the fix. Real before/after artifacts where they survive: an empty API response, a
@@ -370,7 +497,7 @@ export function CaseStudyTechDrishti() {
           >
             <div>
               <div className="font-display text-lg font-semibold text-ink">Read all nine field reports &rarr;</div>
-              <p className="mt-1 text-[14px] leading-relaxed text-ink-soft">
+              <p className="mt-1 text-[14px] leading-relaxed text-panel-mid">
                 Claim, what broke, the fix, and how it was verified, each with the real captured evidence.
               </p>
             </div>
@@ -379,15 +506,51 @@ export function CaseStudyTechDrishti() {
         </section>
 
         <section className="mt-20">
-          <SectionHead num="05" title="By the numbers" />
+          <SectionHead num="06" title="Measuring what it gets wrong" />
+          <p className="mb-6 text-[14px] leading-relaxed text-ink-mid">
+            The field reports above are qualitative: one bug, one fix, verified once. On top of that sits a
+            quantitative evaluation layer, three hand-labeled golden sets (1,505 rows) with judge-validated
+            harnesses, that puts real numbers on how often the pipeline's own judgment is wrong, and measures two
+            prompt fixes as direct before/after. Held to the same honesty standard: the one metric that regressed is
+            reported as-is, not tuned away.
+          </p>
+          <div className="mb-6 grid grid-cols-3 gap-px border border-rule-hard bg-rule-hard">
+            {[
+              { num: "81.9%", label: "triage accuracy, up from 73.8% after a prompt fix", tone: "text-i3" },
+              { num: "74.7%", label: "judge-vs-human agreement on entity extraction", tone: "text-ink" },
+              { num: "26.3%", label: "faithfulness baseline: claims unsupported by the source", tone: "text-i1" },
+            ].map((s) => (
+              <div key={s.label} className="bg-panel p-4">
+                <div className={`font-display text-2xl font-semibold tabular-nums ${s.tone}`}>{s.num}</div>
+                <div className="mt-1.5 text-[12px] leading-relaxed text-panel-mid">{s.label}</div>
+              </div>
+            ))}
+          </div>
+          <Link
+            to="/case-study/techdrishti/evaluation"
+            className="notch-corner flex items-center justify-between gap-4 border border-rule-hard bg-panel p-5 transition-colors hover:border-i3/60 sm:p-6"
+          >
+            <div>
+              <div className="font-display text-lg font-semibold text-ink">Read the full evaluation report &rarr;</div>
+              <p className="mt-1 text-[14px] leading-relaxed text-panel-mid">
+                Golden sets, judge calibration, the two verified prompt iterations, and real misclassifications
+                before and after each fix.
+              </p>
+            </div>
+            <ExternalLink size={18} className="shrink-0 text-i3" aria-hidden="true" />
+          </Link>
+        </section>
+
+        <section className="mt-20">
+          <SectionHead num="07" title="By the numbers" />
           <div className="grid grid-cols-2 gap-px border border-rule-hard bg-rule-hard sm:grid-cols-4">
             {STATS.map((s) => (
               <div key={s.label} className="bg-panel p-5">
                 <div className="font-display text-2xl font-semibold text-ink">
                   {s.num}
-                  <span className="font-mono text-sm text-ink-soft">{s.unit}</span>
+                  <span className="font-mono text-sm text-panel-mid">{s.unit}</span>
                 </div>
-                <div className="mt-2 text-[12px] leading-relaxed text-ink-soft">{s.label}</div>
+                <div className="mt-2 text-[12px] leading-relaxed text-panel-mid">{s.label}</div>
               </div>
             ))}
           </div>
@@ -399,21 +562,21 @@ export function CaseStudyTechDrishti() {
             <table className="w-full min-w-[480px] border-collapse text-[14px]">
               <thead>
                 <tr className="border-b border-rule-hard bg-panel">
-                  <th className="font-hero-mono px-4 py-3 text-left text-[12px] tracking-wide text-ink-soft">Per 1M tokens</th>
-                  <th className="font-hero-mono px-4 py-3 text-right text-[12px] tracking-wide text-ink-soft">Input</th>
-                  <th className="font-hero-mono px-4 py-3 text-right text-[12px] tracking-wide text-ink-soft">Cached</th>
-                  <th className="font-hero-mono px-4 py-3 text-right text-[12px] tracking-wide text-ink-soft">Discount</th>
-                  <th className="font-hero-mono px-4 py-3 text-right text-[12px] tracking-wide text-ink-soft">Output</th>
+                  <th className="font-hero-mono px-4 py-3 text-left text-[12px] tracking-wide text-panel-mid">Per 1M tokens</th>
+                  <th className="font-hero-mono px-4 py-3 text-right text-[12px] tracking-wide text-panel-mid">Input</th>
+                  <th className="font-hero-mono px-4 py-3 text-right text-[12px] tracking-wide text-panel-mid">Cached</th>
+                  <th className="font-hero-mono px-4 py-3 text-right text-[12px] tracking-wide text-panel-mid">Discount</th>
+                  <th className="font-hero-mono px-4 py-3 text-right text-[12px] tracking-wide text-panel-mid">Output</th>
                 </tr>
               </thead>
               <tbody>
                 {PRICES.map((p, i) => (
-                  <tr key={p.model} className={i !== PRICES.length - 1 ? "border-b border-ink-800" : ""}>
+                  <tr key={p.model} className={i !== PRICES.length - 1 ? "border-b border-panel-border" : ""}>
                     <td className="px-4 py-2.5 text-ink">{p.model}</td>
-                    <td className="px-4 py-2.5 text-right font-mono text-ink-mid tabular-nums">{p.input}</td>
-                    <td className="px-4 py-2.5 text-right font-mono text-ink-mid tabular-nums">{p.cached}</td>
-                    <td className="px-4 py-2.5 text-right font-mono text-green-400 tabular-nums">{p.discount}</td>
-                    <td className="px-4 py-2.5 text-right font-mono text-ink-mid tabular-nums">{p.output}</td>
+                    <td className="px-4 py-2.5 text-right font-mono text-panel-text tabular-nums">{p.input}</td>
+                    <td className="px-4 py-2.5 text-right font-mono text-panel-text tabular-nums">{p.cached}</td>
+                    <td className="px-4 py-2.5 text-right font-mono text-i3 tabular-nums">{p.discount}</td>
+                    <td className="px-4 py-2.5 text-right font-mono text-panel-text tabular-nums">{p.output}</td>
                   </tr>
                 ))}
               </tbody>
@@ -431,7 +594,7 @@ export function CaseStudyTechDrishti() {
               <div className="font-display text-lg font-semibold text-ink">
                 Full quality comparison: Sarvam vs DeepSeek &rarr;
               </div>
-              <p className="mt-1 text-[14px] leading-relaxed text-ink-soft">74 live calls, judged head to head.</p>
+              <p className="mt-1 text-[14px] leading-relaxed text-panel-mid">74 live calls, judged head to head.</p>
             </div>
             <ExternalLink size={18} className="shrink-0 text-i3" aria-hidden="true" />
           </Link>
@@ -456,7 +619,7 @@ export function CaseStudyTechDrishti() {
               "pytest",
             ].map(
               (t) => (
-                <span key={t} className="notch-corner-sm border border-rule-hard bg-panel px-2.5 py-1 text-[12px] text-ink-soft">
+                <span key={t} className="notch-corner-sm border border-rule-hard bg-panel px-2.5 py-1 text-[12px] text-panel-mid">
                   {t}
                 </span>
               ),
@@ -480,7 +643,7 @@ export function CaseStudyTechDrishti() {
               <div className="mt-1 font-display text-[15px] font-semibold text-ink">
                 Deep Research Agent &rarr;
               </div>
-              <p className="mt-1 text-[13px] leading-relaxed text-ink-soft">
+              <p className="mt-1 text-[13px] leading-relaxed text-panel-mid">
                 The autonomous agent this pipeline calls out to, as its own case study.
               </p>
             </Link>
@@ -492,7 +655,7 @@ export function CaseStudyTechDrishti() {
               <div className="mt-1 font-display text-[15px] font-semibold text-ink">
                 Microglomeruli Segmentation &rarr;
               </div>
-              <p className="mt-1 text-[13px] leading-relaxed text-ink-soft">
+              <p className="mt-1 text-[13px] leading-relaxed text-panel-mid">
                 The other track: 3D instance segmentation and the tool built on it.
               </p>
             </Link>

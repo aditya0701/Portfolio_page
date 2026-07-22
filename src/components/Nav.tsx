@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { Mail } from "lucide-react";
 import { profile } from "../data/profile";
 import { GithubIcon } from "./icons";
@@ -44,6 +45,14 @@ export function Nav() {
               </a>
             </li>
           ))}
+          <li>
+            <Link
+              to="/certifications"
+              className="font-hero-mono border-b border-transparent px-0 py-[0.15rem] text-[0.72rem] uppercase tracking-[0.09em] text-ink-mid transition-colors hover:border-ink hover:text-ink"
+            >
+              Certifications
+            </Link>
+          </li>
         </ul>
         <div className="flex items-center gap-4">
           <a

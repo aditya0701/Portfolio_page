@@ -16,7 +16,7 @@ export function Contact() {
           Open to AI / ML engineering and computer vision roles
         </h2>
         <p className="mx-auto mt-4 max-w-[50ch] text-[0.92rem] leading-[1.6] text-ink-mid">
-          Based in {profile.location}, graduating 06/2026. Reach out about a role, a project, or
+          Based in {profile.location}, graduating September 2026. Reach out about a role, a project, or
           anything on this page you want to argue with.
         </p>
         <div className="mt-8 flex flex-wrap items-center justify-center gap-4">

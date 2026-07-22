@@ -1,8 +1,15 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { ExternalLink } from "lucide-react";
-import type { Project } from "../data/projects";
+import type { EpistemicStatus, Project } from "../data/projects";
 import { TRACK_LABEL } from "../data/projects";
+
+const STATUS_META: Record<EpistemicStatus, { label: string; cls: string }> = {
+  measured: { label: "Measured", cls: "measured" },
+  shipped: { label: "Shipped", cls: "shipped" },
+  pending: { label: "Pending", cls: "pending" },
+  "not-shipped": { label: "Not shipped", cls: "excluded" },
+};
 
 /** Assets live under Vite's base, which changes if the repo is renamed. */
 const asset = (p: string) => `${import.meta.env.BASE_URL}${p}`;
@@ -16,8 +23,9 @@ function TrackBadge({ project }: { project: Project }) {
 }
 
 function StatusBadge({ project }: { project: Project }) {
-  const status = project.weight === "lead" ? "measured" : project.weight === "flagship" ? "shipped" : "pending";
-  return <span className={`status-badge ${status}`}>{status === "measured" ? "Measured" : status === "shipped" ? "Shipped" : "Supporting"}</span>;
+  if (!project.status) return null;
+  const { label, cls } = STATUS_META[project.status];
+  return <span className={`status-badge ${cls}`}>{label}</span>;
 }
 
 function ProjectLink({ label, href, className }: { label: string; href: string; className: string }) {
@@ -170,6 +178,7 @@ export function ProjectCard({ project, index }: { project: Project; index: numbe
     >
       <div className="mb-2 flex flex-wrap items-center gap-2">
         <TrackBadge project={project} />
+        <StatusBadge project={project} />
       </div>
       <div className="font-hero-mono text-[0.7rem] tracking-[0.04em] text-ink-soft">{project.period}</div>
       <h3 className="font-display mt-1 text-[1.15rem] font-[700] text-ink">{project.title}</h3>

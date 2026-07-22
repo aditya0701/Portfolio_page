@@ -168,17 +168,17 @@ function EvidenceBox({ evidence }: { evidence: (typeof REPORTS)[number]["evidenc
         return (
           <div
             key={e.label}
-            className={`flex-1 rounded border px-4 py-3 ${
-              isBefore ? "border-rust-500/40 bg-rust-500/10" : "border-green-600/40 bg-green-500/10"
+            className={`notch-corner-sm flex-1 border px-4 py-3 ${
+              isBefore ? "border-i1/40 bg-i1/[0.06]" : "border-i3/40 bg-i3/[0.06]"
             }`}
           >
             <div className="mb-1.5 flex items-center gap-1.5">
               {isBefore ? (
-                <X size={12} className="shrink-0 text-rust-400" aria-hidden="true" />
+                <X size={12} className="shrink-0 text-i1" aria-hidden="true" />
               ) : (
-                <Check size={12} className="shrink-0 text-green-400" aria-hidden="true" />
+                <Check size={12} className="shrink-0 text-i3" aria-hidden="true" />
               )}
-              <span className={`font-hero-mono text-[12px] tracking-wide ${isBefore ? "text-rust-400" : "text-green-400"}`}>
+              <span className={`font-hero-mono text-[12px] tracking-wide ${isBefore ? "text-i1" : "text-i3"}`}>
                 {e.label}
               </span>
             </div>
@@ -202,8 +202,8 @@ function ReportCard({ report }: { report: (typeof REPORTS)[number] }) {
           <dt className="font-hero-mono mb-1 text-[12px] tracking-wide text-ink-soft">THE CLAIM</dt>
           <dd className="text-[14px] leading-relaxed text-ink-mid">{report.claim}</dd>
         </div>
-        <div className="border-l-2 border-rust-500 bg-rust-500/10 px-4 py-3">
-          <dt className="font-hero-mono mb-1 text-[12px] tracking-wide text-rust-400">WHAT WE FOUND</dt>
+        <div className="notch-corner border border-i1/30 bg-i1/[0.06] px-4 py-3">
+          <dt className="font-hero-mono mb-1 text-[12px] tracking-wide text-i1">WHAT WE FOUND</dt>
           <dd className="text-[14px] leading-relaxed text-ink">{report.found}</dd>
         </div>
         {"evidence" in report && <EvidenceBox evidence={report.evidence} />}
@@ -211,10 +211,10 @@ function ReportCard({ report }: { report: (typeof REPORTS)[number] }) {
           <dt className="font-hero-mono mb-1 text-[12px] tracking-wide text-i3">{report.fixLabel.toUpperCase()}</dt>
           <dd className="text-[14px] leading-relaxed text-ink-mid">{report.fix}</dd>
         </div>
-        <div className="border-l-2 border-green-600 bg-green-500/10 px-4 py-3">
-          <dt className="font-hero-mono mb-1 text-[12px] tracking-wide text-green-400">VERIFIED</dt>
+        <div className="notch-corner border border-i3/30 bg-i3/[0.06] px-4 py-3">
+          <dt className="font-hero-mono mb-1 text-[12px] tracking-wide text-i3">VERIFIED</dt>
           <dd className="flex gap-2 text-[14px] leading-relaxed text-ink">
-            <Check size={15} className="mt-0.5 shrink-0 text-green-400" />
+            <Check size={15} className="mt-0.5 shrink-0 text-i3" />
             <span>{report.verified}</span>
           </dd>
         </div>
@@ -261,7 +261,7 @@ export function Evolution() {
           wrote.
         </p>
 
-        <div className="mt-6 notch-corner border border-rule-hard border-l-2 border-l-ink-500 bg-panel p-4 text-[13px] leading-relaxed text-ink-soft">
+        <div className="mt-6 notch-corner border border-panel-border bg-panel p-4 text-[13px] leading-relaxed text-panel-mid">
           <b className="text-ink">On these quotes.</b> They're pulled from this project's own build log, test
           fixtures, and one raw experiment output captured at the time each bug was live, not re-created after the
           fact for this page.

@@ -1,15 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" shape-rendering="crispEdges">
-  <path fill="#060805" d="M0 2h2V0h12v2h2v12h-2v2H2v-2H0z"/>
-  <g fill="#22e378">
-    <rect x="3" y="3" width="3" height="1"/>
-    <rect x="3" y="3" width="1" height="3"/>
-    <rect x="10" y="3" width="3" height="1"/>
-    <rect x="12" y="3" width="1" height="3"/>
-    <rect x="3" y="12" width="3" height="1"/>
-    <rect x="3" y="10" width="1" height="3"/>
-    <rect x="10" y="12" width="3" height="1"/>
-    <rect x="12" y="10" width="1" height="3"/>
-  </g>
-  <rect x="6" y="6" width="4" height="4" fill="#0e7a3c"/>
-  <rect x="7" y="7" width="2" height="2" fill="#8ff5b8"/>
+  <!-- Figure-plate mark: an ink data panel with the site's notched corner,
+       holding four instance-label cells sampled from the categorical palette. -->
+  <path fill="#0b120e" d="M1 1H11L15 5V15H1Z"/>
+  <rect x="3" y="3" width="4" height="4" fill="#3a5b9e"/>
+  <rect x="8" y="3" width="4" height="4" fill="#37733f"/>
+  <rect x="3" y="8" width="4" height="4" fill="#a8434a"/>
+  <rect x="8" y="8" width="4" height="4" fill="#8b6300"/>
 </svg>

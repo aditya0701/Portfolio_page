@@ -165,7 +165,7 @@ export function SarvamVsDeepseek() {
           article. This page is the evidence behind choosing Sarvam for that stage, not just an assertion of it.
         </p>
 
-        <div className="mt-6 notch-corner border border-rule-hard border-l-2 border-l-ink-500 bg-panel p-4 text-[13px] leading-relaxed text-ink-soft">
+        <div className="mt-6 notch-corner border border-panel-border bg-panel p-4 text-[13px] leading-relaxed text-panel-mid">
           <b className="text-ink">Reproducibility.</b> Every number on this page is read directly from two raw
           result files, one per provider, produced by running the same question set against both and merging the
           results, no number here was typed by hand.{" "}
@@ -227,7 +227,7 @@ export function SarvamVsDeepseek() {
                         <span className="text-[color:var(--color-sarvam-500)]">sarvam {j.sarvam.toFixed(1)}</span>
                         <span className="text-[color:var(--color-deepseek-500)]">deepseek {j.deepseek.toFixed(1)}</span>
                       </div>
-                      <p className="mt-2 border-t border-ink-800 pt-2 text-[13px] italic leading-relaxed text-ink-soft">
+                      <p className="mt-2 border-t border-panel-border pt-2 text-[13px] italic leading-relaxed text-panel-mid">
                         {j.summary}
                       </p>
                     </div>
@@ -244,7 +244,7 @@ export function SarvamVsDeepseek() {
                     style={{ gridTemplateRows: isOpen ? "1fr" : "0fr" }}
                   >
                     <div className="overflow-hidden">
-                      <div className="grid grid-cols-1 gap-4 border-t border-ink-800 p-4 sm:grid-cols-2 sm:p-5">
+                      <div className="grid grid-cols-1 gap-4 border-t border-panel-border p-4 sm:grid-cols-2 sm:p-5">
                         <div>
                           <div className="mb-2 flex items-center justify-between">
                             <span className="font-hero-mono text-[12px] tracking-wide text-[color:var(--color-sarvam-500)]">
@@ -252,7 +252,7 @@ export function SarvamVsDeepseek() {
                             </span>
                           </div>
                           <p className="text-[13px] leading-relaxed text-ink-mid">{j.sarvamNote}</p>
-                          <div className="mt-3 max-h-64 overflow-y-auto rounded border border-ink-800 bg-paper/80 p-3 text-[11.5px] leading-relaxed whitespace-pre-wrap text-ink-soft">
+                          <div className="mt-3 max-h-64 overflow-y-auto rounded border border-panel-border bg-paper/80 p-3 text-[11.5px] leading-relaxed whitespace-pre-wrap text-panel-mid">
                             {j.sarvamAnswer}
                           </div>
                         </div>
@@ -263,7 +263,7 @@ export function SarvamVsDeepseek() {
                             </span>
                           </div>
                           <p className="text-[13px] leading-relaxed text-ink-mid">{j.deepseekNote}</p>
-                          <div className="mt-3 max-h-64 overflow-y-auto rounded border border-ink-800 bg-paper/80 p-3 text-[11.5px] leading-relaxed whitespace-pre-wrap text-ink-soft">
+                          <div className="mt-3 max-h-64 overflow-y-auto rounded border border-panel-border bg-paper/80 p-3 text-[11.5px] leading-relaxed whitespace-pre-wrap text-panel-mid">
                             {j.deepseekAnswer}
                           </div>
                         </div>

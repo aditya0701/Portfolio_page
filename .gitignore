@@ -27,3 +27,8 @@ dist-ssr
 # browsing this repo should hit code, not 7.7 MB of concept art.
 concept_images/
 .impeccable/
+
+# Working scratch: raw certificate URLs used to build src/data/certificates.ts,
+# and session screenshots / og-cover render assets. Not part of the shipped app.
+certi.txt
+scratchpad/

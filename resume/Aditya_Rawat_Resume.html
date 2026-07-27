@@ -1,0 +1,367 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Aditya Rawat — AI / Computer Vision Engineer</title>
+<style>
+  @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
+
+  :root {
+    --ink: #1a1f1d;
+    --ink-soft: #565f5a;
+    --ink-faint: #7b847f;
+    --accent: #1c6a66;         /* deep teal */
+    --accent-deep: #124b48;
+    --rule: #d9ded9;
+    --rule-soft: #e8ece8;
+    --sheet: #ffffff;
+    --page: #eceeec;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+  body {
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: var(--ink);
+    background: var(--page);
+    line-height: 1.5;
+    font-size: 10.6px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .sheet {
+    background: var(--sheet);
+    max-width: 820px;
+    margin: 28px auto;
+    padding: 44px 52px 48px;
+    box-shadow: 0 1px 3px rgba(0,0,0,.12), 0 8px 30px rgba(0,0,0,.08);
+  }
+
+  /* ---------- Header ---------- */
+  header { border-bottom: 2px solid var(--accent); padding-bottom: 14px; }
+  .name {
+    font-size: 30px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    line-height: 1.05;
+  }
+  .role {
+    margin-top: 4px;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--accent);
+    letter-spacing: 0.01em;
+  }
+  .contact {
+    margin-top: 11px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 14px;
+    font-size: 10px;
+    color: var(--ink-soft);
+  }
+  .contact a { color: var(--ink-soft); text-decoration: none; }
+  .contact a:hover { color: var(--accent); }
+  .contact .sep { color: var(--rule); }
+
+  /* ---------- Sections ---------- */
+  section { margin-top: 18px; }
+  h2 {
+    font-size: 10.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--accent-deep);
+    padding-bottom: 4px;
+    border-bottom: 1px solid var(--rule);
+    margin-bottom: 9px;
+  }
+
+  .summary { color: var(--ink-soft); font-size: 10.8px; }
+  .summary strong { color: var(--ink); font-weight: 600; }
+
+  /* ---------- Entry (project / experience) ---------- */
+  .entry { margin-bottom: 12px; }
+  .entry:last-child { margin-bottom: 0; }
+  .entry-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 14px;
+  }
+  .entry-title { font-size: 11.6px; font-weight: 600; color: var(--ink); }
+  .entry-title .at { color: var(--ink-soft); font-weight: 500; }
+  .entry-meta {
+    font-size: 9.6px;
+    font-weight: 500;
+    color: var(--ink-faint);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .entry-sub { font-size: 10px; font-weight: 500; color: var(--accent); margin-top: 1px; }
+
+  ul.bullets { list-style: none; margin-top: 5px; }
+  ul.bullets li {
+    position: relative;
+    padding-left: 14px;
+    margin-bottom: 3px;
+    color: var(--ink-soft);
+    font-size: 10.4px;
+  }
+  ul.bullets li::before {
+    content: "";
+    position: absolute;
+    left: 2px; top: 7px;
+    width: 4px; height: 4px;
+    background: var(--accent);
+    border-radius: 1px;
+  }
+  ul.bullets li strong { color: var(--ink); font-weight: 600; }
+
+  .tech {
+    margin-top: 4px;
+    padding-left: 14px;
+    font-size: 9.5px;
+    color: var(--ink-faint);
+    letter-spacing: 0.01em;
+  }
+  .tech b { color: var(--ink-soft); font-weight: 600; }
+
+  /* ---------- Skills ---------- */
+  .skill-row { display: flex; gap: 10px; margin-bottom: 5px; align-items: baseline; }
+  .skill-cat {
+    flex: 0 0 128px;
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--accent-deep);
+  }
+  .skill-list { color: var(--ink-soft); font-size: 10.3px; }
+
+  /* ---------- Education ---------- */
+  .edu-detail { color: var(--ink-soft); font-size: 10.2px; margin-top: 2px; }
+  .edu-detail .grades { color: var(--ink-faint); }
+  .note { font-size: 9px; color: var(--ink-faint); margin-top: 6px; font-style: italic; }
+
+  .two-col { display: flex; gap: 30px; }
+  .two-col > div { flex: 1; }
+
+  a { color: inherit; }
+
+  /* ---------- Print ---------- */
+  @page { size: A4; margin: 13mm 14mm; }
+  @media print {
+    body { background: #fff; font-size: 10.2px; }
+    .sheet { box-shadow: none; margin: 0; max-width: none; padding: 0; }
+    .entry, .skill-row { page-break-inside: avoid; break-inside: avoid; }
+    header { page-break-after: avoid; }
+    h2 { page-break-after: avoid; break-after: avoid; }
+  }
+</style>
+</head>
+<body>
+<div class="sheet">
+
+  <header>
+    <div class="name">Aditya Rawat</div>
+    <div class="role">AI / Computer Vision Engineer</div>
+    <div class="contact">
+      <span>Kastanienweg 12, 52074 Aachen, Germany</span>
+      <span class="sep">|</span>
+      <span>+49 176 86092946</span>
+      <span class="sep">|</span>
+      <a href="mailto:aditya.rawat@rwth-aachen.de">aditya.rawat@rwth-aachen.de</a>
+      <span class="sep">|</span>
+      <a href="https://github.com/aditya0701">github.com/aditya0701</a>
+      <span class="sep">|</span>
+      <a href="https://aditya0701.github.io/Portfolio_page/">Portfolio</a>
+      <span class="sep">|</span>
+      <a href="https://huggingface.co/aditya0701">huggingface.co/aditya0701</a>
+    </div>
+  </header>
+
+  <section>
+    <h2>Summary</h2>
+    <p class="summary">
+      Computer-vision and machine-learning engineer with a newly completed <strong>M.Sc. in Data
+      Science at RWTH Aachen</strong> (thesis result pending). I <strong>fine-tune foundation models for 3D instance
+      segmentation</strong>, benchmark them honestly against the state of the art, and ship the
+      result as tooling people actually use. Equally at home building <strong>autonomous LLM
+      agents</strong> that run unattended in production, with grounding enforced in code rather than
+      requested in a prompt. Two years of prior software-engineering experience; a bias toward
+      reproducibility, measured results, and code that ships.
+    </p>
+  </section>
+
+  <section>
+    <h2>Education</h2>
+
+    <div class="entry">
+      <div class="entry-head">
+        <div class="entry-title">M.Sc. Data Science <span class="at">— RWTH Aachen University</span></div>
+        <div class="entry-meta">10/2023 – 09/2026 (expected)</div>
+      </div>
+      <div class="edu-detail">
+        Coursework complete — grade <strong>2.1</strong>; Master's thesis submitted, degree expected 09/2026. Focus: Computer Vision, Machine Learning, Data Science.
+        <div class="grades" style="margin-top:2px;">
+          Relevant coursework: Introduction to Artificial Intelligence <b>1.0</b> · Machine Learning <b>1.7</b> ·
+          Computer Science electives <b>1.4</b> · Mathematics of Data Science <b>2.0</b> ·
+          Mathematical Methods of Signal &amp; Image Processing <b>2.3</b> ·
+          Master Seminar: Current Topics in Computer Vision &amp; ML <b>2.3</b> ·
+          Advanced Process Mining <b>1.7</b> · Business Process Intelligence <b>1.7</b>.
+        </div>
+      </div>
+    </div>
+
+    <div class="entry">
+      <div class="entry-head">
+        <div class="entry-title">B.Sc. Computer Engineering <span class="at">— University of Mumbai</span></div>
+        <div class="entry-meta">09/2017 – 05/2021</div>
+      </div>
+      <div class="edu-detail">
+        Final grade <strong>8.42 / 10</strong> (First Class with Distinction) · Focus: Software Development, Software Engineering, Machine Learning.
+      </div>
+    </div>
+    <div class="note">German grading scale: 1.0 = excellent, 4.0 = pass (lower is better).</div>
+  </section>
+
+  <section>
+    <h2>Experience</h2>
+
+    <div class="entry">
+      <div class="entry-head">
+        <div class="entry-title">Student Research Assistant — Computer Vision</div>
+        <div class="entry-meta">07/2024 – 05/2025</div>
+      </div>
+      <div class="entry-sub">Institut für Industrieofenbau und Wärmetechnik (IOB), RWTH Aachen</div>
+      <ul class="bullets">
+        <li>Researched <strong>monocular metrology using computer vision</strong> for industrial settings — measuring hot-heel depth in an electric arc furnace.</li>
+        <li>Built Python / OpenCV computer-vision tooling and supported PhD researchers with data collection, analysis and software development.</li>
+      </ul>
+    </div>
+
+    <div class="entry">
+      <div class="entry-head">
+        <div class="entry-title">Quality Engineer</div>
+        <div class="entry-meta">06/2021 – 03/2023</div>
+      </div>
+      <div class="entry-sub">Larsen &amp; Toubro Infotech (LTIMindtree), Hyderabad</div>
+      <ul class="bullets">
+        <li>Delivered a Python + Selenium <strong>automated-testing framework from proof-of-concept to production, improving testing efficiency by ~50%</strong>.</li>
+        <li>Built API test suites (Postman), authored test plans for new features, trained junior engineers, and completed full-stack training (Java / SpringBoot).</li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <h2>Selected Projects</h2>
+
+    <div class="entry">
+      <div class="entry-head">
+        <div class="entry-title">Microglomeruli Segmentation <span class="at">— M.Sc. Thesis, RWTH Aachen</span></div>
+        <div class="entry-meta">11/2025 – 06/2026</div>
+      </div>
+      <div class="entry-sub">3D instance segmentation of synaptic boutons in Drosophila brain microscopy</div>
+      <ul class="bullets">
+        <li><strong>Fine-tuned MicroSAM</strong> (a ViT-based Segment Anything variant, vit_l_lm) with custom 3D post-processing for instance segmentation of synaptic boutons in confocal and Airyscan microscopy volumes.</li>
+        <li>Hand-built a 3D annotated dataset from scratch in napari — <strong>13 volumetric stacks from 7 brain preparations across two acquisition systems (confocal LSM + Airyscan), split 9 / 2 / 2</strong>; benchmarked head-to-head against <strong>nnU-Net v2, CellposeSAM and SwinUNETR</strong> under a physically-calibrated, instance-matching protocol.</li>
+        <li>The fine-tuned <strong>MicroSAM Large</strong> checkpoint reached <strong>perfect recall (1.000)</strong> and the <strong>top matched-instance mIoU (0.787)</strong> of every model evaluated — ahead of all three SOTA backbones and the lab's semi-manual Imaris baseline; checkpoints published on Hugging Face.</li>
+        <li>Shipped <strong>BoutonViewer</strong>, a napari desktop app that runs the pipeline and reports per-bouton volume and surface area in µm³ / µm² for non-programmer biologists.</li>
+      </ul>
+      <div class="tech"><b>Stack:</b> PyTorch · MicroSAM · MONAI · napari · Python · HTCondor</div>
+    </div>
+
+    <div class="entry">
+      <div class="entry-head">
+        <div class="entry-title">TechDrishti <span class="at">— Agentic AI for autonomous journalism</span></div>
+        <div class="entry-meta">2026</div>
+      </div>
+      <ul class="bullets">
+        <li>Built a <strong>fully autonomous, multi-stage agentic LLM pipeline</strong> that collects, triages, researches and writes original Hindi tech-news articles daily — <strong>unattended on GitHub Actions at ~1¢ per run, zero servers</strong>.</li>
+        <li>Engineered cheap-model triage, a persistent entity cache with sense disambiguation, and sentence-embedding clustering to deduplicate coverage across 8+ feeds.</li>
+      </ul>
+      <div class="tech"><b>Stack:</b> Python · LLM orchestration · sentence-transformers · GitHub Actions</div>
+    </div>
+
+    <div class="entry">
+      <div class="entry-head">
+        <div class="entry-title">Deep Research Agent <span class="at">— Autonomous ReAct agent</span></div>
+        <div class="entry-meta">2026</div>
+      </div>
+      <ul class="bullets">
+        <li>ReAct agent that plans its own searches and <strong>enforces grounding in code, not prompts</strong>: a code-level check flags any comparison claim whose target was not found in retrieved sources, plus an AST-based calculator and a keyless retrieval layer. Live on Hugging Face Spaces.</li>
+      </ul>
+      <div class="tech"><b>Stack:</b> Python · ReAct / tool use · Chainlit · FastAPI</div>
+    </div>
+
+    <div class="entry">
+      <div class="entry-head">
+        <div class="entry-title">Chitragupt <span class="at">— Vision-language agent</span></div>
+        <div class="entry-meta">2026 · in progress</div>
+      </div>
+      <ul class="bullets">
+        <li>Agentic assistant on a <strong>vision-language model</strong> that reasons over images and calls tools; VLM served on a free Colab GPU via a FastAPI bridge to web, desktop and CLI clients.</li>
+      </ul>
+      <div class="tech"><b>Stack:</b> VLM · FastAPI · Python · Computer Vision</div>
+    </div>
+
+    <div class="entry">
+      <div class="entry-head">
+        <div class="entry-title">Celonis Cohort Discovery &amp; Analysis Web App <span class="at">— Interdisciplinary Lab, w/ Celonis</span></div>
+        <div class="entry-meta">04/2024 – 07/2025 · Grade 1.7</div>
+      </div>
+      <ul class="bullets">
+        <li>Implemented a research-paper algorithm to parse and segment process/event logs into cohorts, and built the <strong>full-stack app (React + Flask + PyTest)</strong> for filtering, visualization and comparative cohort analysis. Agile / TDD.</li>
+      </ul>
+      <div class="tech"><b>Stack:</b> React · Flask · Python · Celonis · process mining</div>
+    </div>
+
+    <div class="entry">
+      <div class="entry-head">
+        <div class="entry-title">Realtime Human Detection &amp; Counting <span class="at">— Bachelor's project</span></div>
+        <div class="entry-meta">10/2020 – 05/2021</div>
+      </div>
+      <ul class="bullets">
+        <li><strong>Led a team of 3</strong> to build a real-time human-detection and social-distancing system (<strong>YOLOv3</strong> + perspective transformation) for COVID-19 protocol enforcement.</li>
+      </ul>
+      <div class="tech"><b>Stack:</b> YOLOv3 · OpenCV · Python</div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Skills &amp; Tools</h2>
+    <div class="skill-row">
+      <div class="skill-cat">Programming</div>
+      <div class="skill-list">Python · C++ · Java · TypeScript · SQL</div>
+    </div>
+    <div class="skill-row">
+      <div class="skill-cat">Computer Vision</div>
+      <div class="skill-list">PyTorch · Transformers · Vision Transformers (ViT) · MicroSAM / SAM · nnU-Net v2 · Cellpose · SwinUNETR · StarDist · MONAI · napari · OpenCV · YOLOv3 · 3D instance segmentation · foundation-model fine-tuning</div>
+    </div>
+    <div class="skill-row">
+      <div class="skill-cat">LLM &amp; Agentic AI</div>
+      <div class="skill-list">LLM pipeline design · ReAct agents · tool use / function calling · vision-language models (VLMs) · grounding &amp; hallucination mitigation · sentence-transformers · evals</div>
+    </div>
+    <div class="skill-row">
+      <div class="skill-cat">ML &amp; Data</div>
+      <div class="skill-list">scikit-learn · Pandas · NumPy · Matplotlib / Seaborn · process mining (Celonis, ProM)</div>
+    </div>
+    <div class="skill-row">
+      <div class="skill-cat">MLOps &amp; Tooling</div>
+      <div class="skill-list">Git · Docker · Hugging Face · GitHub Actions · HTCondor clusters · FastAPI · Flask · React · Chainlit · PyTest · Postman · Linux</div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Languages</h2>
+    <div class="skill-list" style="color:var(--ink-soft);">
+      Hindi (native) &nbsp;·&nbsp; English (C1, TOEFL — near-native) &nbsp;·&nbsp; German (A2, in progress)
+    </div>
+  </section>
+
+</div>
+</body>
+</html>

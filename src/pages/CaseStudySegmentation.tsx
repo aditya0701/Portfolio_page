@@ -131,8 +131,8 @@ export function CaseStudySegmentation() {
             Microglomeruli Segmentation
           </h1>
           <p className="font-display mt-2 text-lg italic text-panel-text">
-            Counting synaptic boutons in a fly brain, and handing the result to the people who
-            actually need it
+            Fine-tuning a foundation model to count synaptic boutons in a fly brain, and proving it
+            against the state of the art
           </p>
           <div className="signal-bar mx-auto mt-5 w-24" />
           <p className="font-hero-mono mt-4 text-[12px] tracking-wide text-panel-mid">
@@ -141,12 +141,14 @@ export function CaseStudySegmentation() {
         </div>
 
         <p className="font-display mt-10 text-lg leading-relaxed text-ink sm:text-xl">
-          Segment and quantify synaptic boutons in confocal Z-stacks of the Drosophila mushroom
-          body calyx, benchmark four SOTA architectures honestly against each other, and{" "}
+          A reproducible deep-learning pipeline that{" "}
           <mark className="box-decoration-clone bg-i3/20 px-1 text-ink">
-            ship the winner as a desktop tool a biologist can run without writing code
-          </mark>
-          .
+            fine-tunes a foundation model for 3D instance segmentation
+          </mark>{" "}
+          of synaptic boutons in confocal Z-stacks of the Drosophila mushroom body calyx, then
+          benchmarks it head-to-head against three SOTA 3D architectures &mdash; nnU-Net v2,
+          Cellpose, SwinUNETR &mdash; under a physically-calibrated, instance-matching evaluation
+          protocol.
         </p>
         <p className="mt-4 text-[14px] leading-relaxed text-ink-mid">
           Supervised by Prof. Dr. Abigail Morrison (Software Engineering Group, RWTH Aachen), with
@@ -227,10 +229,12 @@ export function CaseStudySegmentation() {
         <section className="mt-20">
           <SectionHead num="03" title="The benchmark, and why each model is in it" />
           <p className="mb-6 text-[14px] leading-relaxed text-ink-mid">
-            Four architectures, one dataset, one evaluation protocol. The point of including
-            nnU-Net v2 and Cellpose 3D is not to have them lose. It is that a fine-tuned foundation
-            model beating a self-configuring U-Net and the community default is a claim worth
-            making, and beating nothing is not.
+            Four architectures, one dataset, one evaluation protocol. The dataset is 13 volumetric
+            stacks hand-annotated from scratch in napari across seven Drosophila brain preparations
+            and two acquisition systems (confocal LSM and Airyscan), split nine train / two
+            validation / two test. The point of including nnU-Net v2 and Cellpose 3D is not to have
+            them lose. It is that a fine-tuned foundation model beating a self-configuring U-Net and
+            the community default is a claim worth making, and beating nothing is not.
           </p>
           <div className="flex flex-col gap-3">
             {ARCHITECTURES.map((a) => (
@@ -340,12 +344,14 @@ export function CaseStudySegmentation() {
 
           <p className="mt-5 text-[14px] leading-relaxed text-ink-mid">{thesisResultsMeta.headline}</p>
           <p className="mt-3 text-[14px] leading-relaxed text-ink-soft">
-            The honest limitation, stated on the card: Large carries a higher false-positive count
-            (30 in aggregate), several of which are large boutons split into multiple predicted
-            components rather than spurious detections in empty regions. Predictions should be
-            reviewed before unsupervised quantification, which is exactly why BoutonViewer surfaces
-            oversized and merged predictions instead of silently filtering them. Per-model baseline
-            figures are not broken out on the card, so those rows claim only what the card supports.
+            The honest limitation, stated on the card: MicroSAM Large trades that perfect recall for
+            a higher false-positive count (16 on the deconvolved condition), several of them large
+            boutons split into multiple predicted components rather than spurious detections in empty
+            regions. The card is explicit that predictions should be reviewed before unsupervised
+            quantification &mdash; which is exactly why BoutonViewer surfaces oversized and merged
+            predictions instead of silently filtering them. The model was fine-tuned on a
+            comparatively small annotated set drawn from two brain specimens, so performance under
+            substantially different imaging or labelling has not been verified.
           </p>
           <p className="mt-4 font-mono text-[12px] text-ink-soft">{thesisResultsMeta.rwpqNote}</p>
           <a
@@ -431,7 +437,7 @@ export function CaseStudySegmentation() {
             ))}
           </ul>
           <a
-            href="https://aditya0701.github.io/Fluorescent-Microscopy-Image-Segmentation-and-Quantification/model_notes.html"
+            href="https://github.com/aditya0701/Fluorescent-Microscopy-Image-Segmentation-and-Quantification/wiki/Model-Notes"
             target="_blank"
             rel="noreferrer"
             className="mt-6 inline-flex items-center gap-1.5 text-[14px] font-medium text-i3 hover:text-i3"

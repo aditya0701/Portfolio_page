@@ -189,8 +189,8 @@ export const projects: Project[] = [
         href: "https://github.com/aditya0701/Fluorescent-Microscopy-Image-Segmentation-and-Quantification/wiki",
       },
       {
-        label: "Model & data notes",
-        href: "https://aditya0701.github.io/Fluorescent-Microscopy-Image-Segmentation-and-Quantification/model_notes.html",
+        label: "Model card (Hugging Face)",
+        href: "https://huggingface.co/aditya0701/Drosophilla_melanogaster_Bouton_3d_segmentation",
       },
     ],
     weight: "supporting",

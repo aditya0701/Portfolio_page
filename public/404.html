@@ -6,7 +6,10 @@
     <script type="text/javascript">
       // Single Page Apps for GitHub Pages
       // https://github.com/rafgraph/spa-github-pages
-      var pathSegmentsToKeep = 1;
+      // 0 because the site is served from the root of adityarawat.de. It was 1
+      // when this was a project page under aditya0701.github.io/Portfolio_page/,
+      // where the first path segment was the repo name and had to be preserved.
+      var pathSegmentsToKeep = 0;
 
       var l = window.location;
       l.replace(

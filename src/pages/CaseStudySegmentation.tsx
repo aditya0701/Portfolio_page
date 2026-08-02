@@ -4,6 +4,7 @@ import { ArrowLeft, ExternalLink } from "lucide-react";
 import { SignalBar } from "../components/SignalBar";
 import { SectionHead } from "../components/SectionHead";
 import { usePageTitle } from "../hooks/usePageTitle";
+import { ROUTE_META } from "../data/routeMeta";
 import { thesisResults, thesisResultsMeta } from "../data/thesisResults";
 
 const asset = (p: string) => `${import.meta.env.BASE_URL}${p}`;
@@ -95,7 +96,7 @@ const VARIANTS = [
 ];
 
 export function CaseStudySegmentation() {
-  usePageTitle("Microglomeruli Segmentation — M.Sc. thesis | Aditya Rawat");
+  usePageTitle(ROUTE_META["/case-study/microglomeruli-segmentation"].title);
 
   useEffect(() => {
     window.scrollTo(0, 0);

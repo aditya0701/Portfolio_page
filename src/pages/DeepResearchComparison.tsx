@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { ArrowLeft, ExternalLink, ChevronDown } from "lucide-react";
 import { SignalBar } from "../components/SignalBar";
 import { usePageTitle } from "../hooks/usePageTitle";
+import { ROUTE_META } from "../data/routeMeta";
 
 // Highlight tokens embedded in the case text: [[g:...]] correct/superior,
 // [[r:...]] wrong/misleading, [[a:...]] extended (extra depth beyond the baseline).
@@ -268,7 +269,7 @@ function SectionHead({ num, title }: { num: string; title: string }) {
 }
 
 export function DeepResearchComparison() {
-  usePageTitle("How the research agent compares — measured vs Tavily & Claude | Aditya Rawat");
+  usePageTitle(ROUTE_META["/case-study/deep-research-agent/comparison"].title);
 
   useEffect(() => {
     window.scrollTo(0, 0);

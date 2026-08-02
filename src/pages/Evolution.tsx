@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { ArrowLeft, ExternalLink, Check, X } from "lucide-react";
 import { SignalBar } from "../components/SignalBar";
 import { usePageTitle } from "../hooks/usePageTitle";
+import { ROUTE_META } from "../data/routeMeta";
 
 const REPORTS = [
   {
@@ -224,7 +225,7 @@ function ReportCard({ report }: { report: (typeof REPORTS)[number] }) {
 }
 
 export function Evolution() {
-  usePageTitle("TechDrishti — nine field reports | Aditya Rawat");
+  usePageTitle(ROUTE_META["/case-study/techdrishti/evolution"].title);
 
   useEffect(() => {
     window.scrollTo(0, 0);

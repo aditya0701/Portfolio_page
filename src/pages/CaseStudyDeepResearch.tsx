@@ -4,6 +4,7 @@ import { ArrowLeft, ExternalLink, ChevronDown } from "lucide-react";
 import { SignalBar } from "../components/SignalBar";
 import { SectionHead } from "../components/SectionHead";
 import { usePageTitle } from "../hooks/usePageTitle";
+import { ROUTE_META } from "../data/routeMeta";
 
 const WHY = [
   {
@@ -129,7 +130,7 @@ function FlowArrow() {
 export function CaseStudyDeepResearch() {
   const [openQuirk, setOpenQuirk] = useState<number | null>(null);
 
-  usePageTitle("Deep Research Agent — code-enforced grounding | Aditya Rawat");
+  usePageTitle(ROUTE_META["/case-study/deep-research-agent"].title);
 
   useEffect(() => {
     window.scrollTo(0, 0);

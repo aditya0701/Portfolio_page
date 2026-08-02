@@ -4,6 +4,7 @@ import { ArrowLeft, ExternalLink, ChevronDown } from "lucide-react";
 import { SignalBar } from "../components/SignalBar";
 import { SectionHead } from "../components/SectionHead";
 import { usePageTitle } from "../hooks/usePageTitle";
+import { ROUTE_META } from "../data/routeMeta";
 
 const WHY = [
   {
@@ -188,7 +189,7 @@ const PRICES = [
 export function CaseStudyTechDrishti() {
   const [openStage, setOpenStage] = useState<number | null>(null);
 
-  usePageTitle("TechDrishti — autonomous AI news agent | Aditya Rawat");
+  usePageTitle(ROUTE_META["/case-study/techdrishti"].title);
 
   useEffect(() => {
     window.scrollTo(0, 0);

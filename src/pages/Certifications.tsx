@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { ArrowLeft, ExternalLink } from "lucide-react";
 import { SignalBar } from "../components/SignalBar";
 import { usePageTitle } from "../hooks/usePageTitle";
+import { ROUTE_META } from "../data/routeMeta";
 import { credentials, totalCourseCount, completedSpecializations, type Credential } from "../data/certificates";
 
 const HUE_TEXT: Record<Credential["hue"], string> = {
@@ -127,7 +128,7 @@ function CredentialPanel({ cred }: { cred: Credential }) {
 }
 
 export function Certifications() {
-  usePageTitle("Certifications — Coursera credentials | Aditya Rawat");
+  usePageTitle(ROUTE_META["/certifications"].title);
 
   useEffect(() => {
     window.scrollTo(0, 0);

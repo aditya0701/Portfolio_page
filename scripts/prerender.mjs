@@ -116,20 +116,31 @@ const vite = await createServer({
   optimizeDeps: { noDiscovery: true, include: [] },
 
   ssr: {
+    // react-router-dom is the one dependency here that hands Node a CommonJS
+    // file. Its export map puts `module-sync` (ESM) and a CJS `default` side by
+    // side under the `node` condition, so a resolver that does not ask for
+    // `module-sync` gets the CJS build — and then `import { StaticRouter } from
+    // "react-router-dom"` works only if Node's cjs-module-lexer manages to
+    // infer the named exports off it. It does on Node 20.14, and does not on
+    // the Node 20.20 GitHub Actions runs, where the build fails with "Named
+    // export 'StaticRouter' not found". The same trap sits under every `Link`
+    // a page imports, so pinning just this entry's import would not hold.
+    //
+    // Two settings, because externalized and inlined imports resolve through
+    // different lists and only fixing one leaves the real path untouched:
+    //
+    //   noExternal  — Vite loads the package in its own module runner instead
+    //                 of delegating to Node's importer, which is what takes
+    //                 cjs-module-lexer (and the runner's Node version) out of
+    //                 the picture entirely.
+    //   conditions  — asks for `module-sync` first, so what Vite then inlines
+    //                 is the .mjs build rather than a CJS file it cannot
+    //                 evaluate as ESM.
+    //
+    // Neither works alone: noExternal on the CJS build dies with "module is not
+    // defined", and conditions alone leaves the externalized path on Node.
+    noExternal: ["react-router-dom"],
     resolve: {
-      // `module-sync` first, so react-router-dom resolves to its ESM build.
-      //
-      // Its export map puts `module-sync` and a CJS `default` side by side
-      // under the `node` condition. Without `module-sync` in this list the CJS
-      // file wins, and then `import { StaticRouter } from "react-router-dom"`
-      // only works if Node's cjs-module-lexer manages to infer the named
-      // exports off it — which it does on Node 20.14 and does not on the Node
-      // 20.20 GitHub Actions runs, where the build died with "Named export
-      // 'StaticRouter' not found". The same trap sits under every `Link`
-      // imported by a page, so pinning the entry alone would not have held.
-      //
-      // Resolving the .mjs takes the runner's Node version out of it. The rest
-      // of the default server conditions are preserved.
       conditions: ["module-sync", "module", "node", "development|production"],
     },
   },

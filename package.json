@@ -5,10 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "npm run check:metrics && tsc -b && vite build",
+    "build": "npm run check:metrics && tsc -b && vite build && npm run prerender",
     "lint": "oxlint",
     "preview": "vite preview",
-    "check:metrics": "node scripts/check-metrics.mjs"
+    "check:metrics": "node scripts/check-metrics.mjs",
+    "prerender": "node scripts/prerender.mjs"
   },
   "dependencies": {
     "react": "^19.2.7",

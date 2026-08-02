@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { ArrowLeft, ExternalLink, ChevronDown } from "lucide-react";
 import { SignalBar } from "../components/SignalBar";
 import { usePageTitle } from "../hooks/usePageTitle";
+import { ROUTE_META } from "../data/routeMeta";
 
 const STATS = [
   { label: "Avg. latency", unit: "s", sarvam: 20.2, deepseek: 33.4, note: "lower is faster" },
@@ -126,7 +127,7 @@ function SectionHead({ num, title }: { num: string; title: string }) {
 export function SarvamVsDeepseek() {
   const [openCase, setOpenCase] = useState<number | null>(null);
 
-  usePageTitle("Sarvam vs DeepSeek, measured | Aditya Rawat");
+  usePageTitle(ROUTE_META["/case-study/techdrishti/sarvam-vs-deepseek"].title);
 
   useEffect(() => {
     window.scrollTo(0, 0);

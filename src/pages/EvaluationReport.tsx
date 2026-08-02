@@ -4,6 +4,7 @@ import { ArrowLeft, ExternalLink } from "lucide-react";
 import { SignalBar } from "../components/SignalBar";
 import { SectionHead } from "../components/SectionHead";
 import { usePageTitle } from "../hooks/usePageTitle";
+import { ROUTE_META } from "../data/routeMeta";
 
 // Headline numbers, tone === which accent the big figure takes.
 const HEAD_STATS = [
@@ -152,7 +153,7 @@ function MetricsTable({
 }
 
 export function EvaluationReport() {
-  usePageTitle("TechDrishti — evaluation report | Aditya Rawat");
+  usePageTitle(ROUTE_META["/case-study/techdrishti/evaluation"].title);
 
   useEffect(() => {
     window.scrollTo(0, 0);

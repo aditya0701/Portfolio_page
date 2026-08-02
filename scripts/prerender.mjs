@@ -108,6 +108,31 @@ const vite = await createServer({
   logLevel: "warn",
   appType: "custom",
   server: { middlewareMode: true },
+
+  // Nothing here is served to a browser, so the client dep optimizer has no
+  // work to do. Left on, it crawls every .html file under the project root —
+  // resume/, update/, public/ — looking for entries it will never use, and
+  // turns any failure in this script into a wall of unrelated esbuild noise.
+  optimizeDeps: { noDiscovery: true, include: [] },
+
+  ssr: {
+    resolve: {
+      // `module-sync` first, so react-router-dom resolves to its ESM build.
+      //
+      // Its export map puts `module-sync` and a CJS `default` side by side
+      // under the `node` condition. Without `module-sync` in this list the CJS
+      // file wins, and then `import { StaticRouter } from "react-router-dom"`
+      // only works if Node's cjs-module-lexer manages to infer the named
+      // exports off it — which it does on Node 20.14 and does not on the Node
+      // 20.20 GitHub Actions runs, where the build died with "Named export
+      // 'StaticRouter' not found". The same trap sits under every `Link`
+      // imported by a page, so pinning the entry alone would not have held.
+      //
+      // Resolving the .mjs takes the runner's Node version out of it. The rest
+      // of the default server conditions are preserved.
+      conditions: ["module-sync", "module", "node", "development|production"],
+    },
+  },
 });
 
 try {

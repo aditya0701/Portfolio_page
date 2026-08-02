@@ -12,6 +12,13 @@ Email: aditya.rawat@rwth-aachen.de
 GitHub: https://github.com/aditya0701
 Hugging Face: https://huggingface.co/aditya0701
 
+CV, international format: https://aditya0701.github.io/Portfolio_page/resume/Aditya_Rawat_Resume.html
+CV, German (Lebenslauf) format: https://aditya0701.github.io/Portfolio_page/resume/Aditya_Rawat_Resume_German.html
+Both carry the same content in English; they differ only in convention — the
+German version adds the photo, personal details and signature block expected
+there. PDF versions sit alongside each at the same path with a .pdf extension.
+Sitemap: https://aditya0701.github.io/Portfolio_page/sitemap.xml
+
 Every route on this site is prerendered to static HTML and served with a 200, so
 fetching any URL below returns the full text without executing JavaScript.
 

@@ -186,9 +186,47 @@
 
   /* ---------- Print ---------- */
   @page { size: A4; margin: 13mm 14mm; }
+  /* Version switch. Two CVs carrying the same content under different
+     conventions: this German Lebenslauf, and the international sheet without
+     the photo, personal details and signature block.
+     Screen-only — a printed or PDF-exported CV must not carry dead UI. */
+  .cv-switch {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin-bottom: 16px;
+    font-size: 9.5px;
+  }
+  .cv-switch-label {
+    margin-right: 9px;
+    color: var(--ink-faint);
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-weight: 600;
+  }
+  .cv-switch-opt {
+    padding: 4px 11px;
+    border: 1px solid var(--rule);
+    border-radius: 1px;
+    color: var(--ink-soft);
+    text-decoration: none;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+  }
+  /* Collapse the shared edge so the pair reads as one control. */
+  .cv-switch-opt + .cv-switch-opt { margin-left: -1px; }
+  .cv-switch-opt.is-active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+    font-weight: 600;
+  }
+  a.cv-switch-opt:hover { background: var(--rule-soft); color: var(--ink); }
+
   @media print {
     body { background: #fff; font-size: 10.2px; }
     .sheet { box-shadow: none; margin: 0; max-width: none; padding: 0; }
+    .cv-switch { display: none; }
     .entry, .skill-row, .signature { page-break-inside: avoid; break-inside: avoid; }
     header { page-break-after: avoid; }
     h2 { page-break-after: avoid; break-after: avoid; }
@@ -197,6 +235,12 @@
 </head>
 <body>
 <div class="sheet">
+
+  <nav class="cv-switch" aria-label="CV version">
+    <span class="cv-switch-label">Version</span>
+    <a class="cv-switch-opt" href="Aditya_Rawat_Resume.html">International</a>
+    <span class="cv-switch-opt is-active" aria-current="page">German format</span>
+  </nav>
 
   <header>
     <div class="head-main">

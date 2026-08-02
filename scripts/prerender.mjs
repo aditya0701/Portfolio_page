@@ -62,7 +62,42 @@ function replaceTag(html, pattern, replacement, label) {
 const metaByName = (name) => new RegExp(`<meta\\s+name="${name}"[^>]*>`);
 const metaByProperty = (property) => new RegExp(`<meta\\s+property="${property}"[^>]*>`);
 
-function buildPage(template, { appHtml, title, description, url }) {
+/**
+ * Structured data describing *this page*, alongside the site-wide Person block
+ * already in the template.
+ *
+ * Without it every route claims to be the same thing — a Person — and a machine
+ * reading a case study learns only that Aditya Rawat exists, not that it is
+ * looking at an article about TechDrishti. No `datePublished`: there is no
+ * honest source for one here, and a guessed date is exactly the kind of
+ * plausible-looking figure `check:metrics` exists to keep off this site.
+ */
+function structuredDataFor(route, { title, description, url, siteRoot }) {
+  const author = { "@type": "Person", name: "Aditya Rawat", url: siteRoot };
+
+  // The title carries a " | Aditya Rawat" suffix for the browser tab; a
+  // headline should not.
+  const headline = title.replace(/\s*\|\s*Aditya Rawat\s*$/, "");
+
+  if (route === "/") return null; // Person schema in the template already covers it.
+
+  const type = route.startsWith("/case-study/") ? "Article" : "CollectionPage";
+
+  return {
+    "@context": "https://schema.org",
+    "@type": type,
+    headline,
+    name: headline,
+    description,
+    url,
+    inLanguage: "en",
+    author,
+    publisher: author,
+    isPartOf: { "@type": "WebSite", name: "Aditya Rawat", url: siteRoot },
+  };
+}
+
+function buildPage(template, { appHtml, title, description, url, route, siteRoot }) {
   const t = escapeAttr(title);
   const d = escapeAttr(description);
   let html = template;
@@ -88,10 +123,51 @@ function buildPage(template, { appHtml, title, description, url }) {
     "meta twitter:description",
   );
 
+  const schema = structuredDataFor(route, { title, description, url, siteRoot });
+  if (schema) {
+    // JSON.stringify handles quoting; the `<` escape stops a `</script>` inside
+    // any future description from closing the block early.
+    const json = JSON.stringify(schema, null, 2).replace(/</g, "\\u003c");
+    html = replaceTag(
+      html,
+      /<\/head>/,
+      `  <script type="application/ld+json">\n${json}\n    </script>\n  </head>`,
+      "/head",
+    );
+  }
+
   // The one non-head substitution: fill the mount point React will hydrate.
   html = replaceTag(html, /<div id="root"><\/div>/, `<div id="root">${appHtml}</div>`, 'div id="root"');
 
   return html;
+}
+
+/**
+ * A sitemap only became possible once every route was a real file. It is the
+ * canonical list to hand to Google Search Console — which matters more than
+ * usual here, because a project page cannot serve its own robots.txt (crawlers
+ * only read the one at the user-site root, aditya0701.github.io/robots.txt),
+ * so there is nowhere to advertise this file automatically.
+ *
+ * No <lastmod>: the build date is not the content date, and a wrong one is
+ * worse than none.
+ */
+function buildSitemap(routes, siteRoot) {
+  // Static pages that are not React routes. The CVs are the most directly
+  // useful page on the site to a recruiter, and they are invisible to the
+  // router, so nothing else would list them. The PDFs are deliberately left
+  // out: same content at a second URL is a duplicate-content signal, not extra
+  // reach.
+  const staticPages = ["resume/Aditya_Rawat_Resume.html", "resume/Aditya_Rawat_Resume_German.html"];
+
+  const urls = [
+    ...routes.map((route) => (route === "/" ? siteRoot : `${siteRoot}${route.slice(1)}/`)),
+    ...staticPages.map((p) => `${siteRoot}${p}`),
+  ]
+    .map((loc) => `  <url><loc>${escapeAttr(loc)}</loc></url>`)
+    .join("\n");
+
+  return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>\n`;
 }
 
 /** `/` -> dist/index.html; `/case-study/x` -> dist/case-study/x/index.html. */
@@ -185,12 +261,18 @@ try {
     const url = route === "/" ? siteRoot : `${siteRoot}${route.slice(1)}/`;
     const outPath = outputPathFor(route);
     await mkdir(dirname(outPath), { recursive: true });
-    await writeFile(outPath, buildPage(template, { appHtml, title, description, url }), "utf8");
+    await writeFile(
+      outPath,
+      buildPage(template, { appHtml, title, description, url, route, siteRoot }),
+      "utf8",
+    );
 
     console.log(`  prerendered ${route.padEnd(48)} ${(appHtml.length / 1024).toFixed(1)} kB`);
   }
 
-  console.log(`prerender — ${PRERENDER_ROUTES.length} routes written to dist/.`);
+  await writeFile(join(DIST, "sitemap.xml"), buildSitemap(PRERENDER_ROUTES, siteRoot), "utf8");
+
+  console.log(`prerender — ${PRERENDER_ROUTES.length} routes written to dist/, plus sitemap.xml.`);
 } finally {
   await vite.close();
 }

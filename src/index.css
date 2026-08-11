@@ -38,6 +38,7 @@
 
   /* Status colours */
   --color-measured: var(--color-i3);
+  --color-prototype: var(--color-i4);
   --color-pending: var(--color-i2);
   --color-shipped: var(--color-i5);
 
@@ -130,7 +131,9 @@ body {
   clip-path: polygon(0 0, calc(100% - 7px) 0, 100% 7px, 100% 100%, 0 100%);
 }
 
-/* Status badge system: MEASURED / SHIPPED / PENDING / NOT SHIPPED */
+/* Status badge system: MEASURED / SHIPPED / PROTOTYPE / PENDING / NOT SHIPPED.
+   The dot carries the meaning: filled is done, half-filled is not started,
+   a solid core inside a ring is running but not finished. */
 .status-badge {
   display: inline-flex;
   align-items: center;
@@ -156,6 +159,8 @@ body {
 .status-badge.measured::before { background: currentColor; }
 .status-badge.shipped { color: var(--color-i5); }
 .status-badge.shipped::before { background: currentColor; }
+.status-badge.prototype { color: var(--color-i4); }
+.status-badge.prototype::before { background: radial-gradient(circle, currentColor 45%, transparent 48%); }
 .status-badge.pending { color: var(--color-i2); }
 .status-badge.pending::before { background: linear-gradient(90deg, currentColor 50%, transparent 50%); }
 .status-badge.excluded { color: var(--color-ink-soft); }

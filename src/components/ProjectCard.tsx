@@ -7,6 +7,7 @@ import { TRACK_LABEL } from "../data/projects";
 const STATUS_META: Record<EpistemicStatus, { label: string; cls: string }> = {
   measured: { label: "Measured", cls: "measured" },
   shipped: { label: "Shipped", cls: "shipped" },
+  prototype: { label: "Prototype", cls: "prototype" },
   pending: { label: "Pending", cls: "pending" },
   "not-shipped": { label: "Not shipped", cls: "excluded" },
 };
@@ -22,7 +23,7 @@ function TrackBadge({ project }: { project: Project }) {
   );
 }
 
-function StatusBadge({ project }: { project: Project }) {
+export function StatusBadge({ project }: { project: Project }) {
   if (!project.status) return null;
   const { label, cls } = STATUS_META[project.status];
   return <span className={`status-badge ${cls}`}>{label}</span>;

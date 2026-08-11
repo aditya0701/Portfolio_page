@@ -16,131 +16,227 @@ type Case = {
   rule: string;
 };
 
+/* v2's log. Quotes are from this project's decision log and from the session
+   exports captured while each bug was live — not reconstructed afterwards. */
 const CASES: Case[] = [
   {
     no: "01",
-    title: "The camera kept switching itself off",
+    title: "It read the label into the document, then said nothing about it",
     status: "fixed",
     statusLabel: "Fixed",
     symptom:
-      "The user spent most of a session asking why the camera kept closing. One step — “Prepare tadka” — was marked complete off a note reading “oil poured into an empty pan, no ingredients added yet”.",
+      "Reported three separate times. The camera reads something the user is clearly waiting on, the model folds it into the document correctly, updates the right task — and never tells them.",
     cause: [
-      "One boolean on log_observation was doing three unrelated jobs: it guaranteed a spoken alert, it marked the task item complete, and it closed the camera. It was described to the model as “important enough to guarantee they're told” — so the model set it on ordinary progress notes. It was behaving exactly as documented.",
-      "Split into two flags with one effect each, and the completion path guarded so it only fires on a genuine “find X” goal. A stray flag is now logged, spoken, and explained back to the model in the tool result so it corrects itself next turn.",
+      "One model call was being scored on two objectives that pull against each other: keep the document accurate, which rewards quiet bookkeeping, and decide whether to speak, which rewards noticing the user. Silence kept winning, because it was also the stated default for the other job.",
+      "Split into two calls. Stage 1 does bookkeeping and its prose is discarded unread. Stage 2 gets a separate, deliberately cheap prompt — no tools, no system brief, no full document, roughly a third of the size — and answers one question. A cheap arithmetic check between them skips Stage 2 entirely when nothing happened, so an idle tick still costs exactly one reasoning call.",
     ],
-    rule: "One flag, one consequence. If a boolean drives both a user-visible action and a state mutation, split it.",
+    rule: "If one call is scored on two objectives that trade against each other, it will optimise the one that is also the default. Split the call, not the wording.",
   },
   {
     no: "02",
-    title: "Frames disappeared, leaving no trace at all",
+    title: "The camera spent a session narrating the camera",
     status: "fixed",
     statusLabel: "Fixed",
-    symptom: "Nothing. That is the entire problem — there was no symptom to find.",
+    symptom:
+      "An entire session of captions describing the videographer instead of the kitchen. Full price per frame, and zero task information in any of them.",
+    wire: `"the camera pulls back and tilts upward"
+"the camera pushes in close"
+"the camera angle shifts to the right"`,
     cause: [
-      "A cheap yes/no call ran before the real one: is this frame relevant to the current goal? If it said no, the tick returned empty. On the client that is byte-identical to a legitimate “nothing has changed” silence. A frame showing exactly the thing the user asked for could be discarded by a crude misjudgement and leave no evidence anywhere in the system. It also doubled the vision calls per tick.",
-      "Removed entirely, with no replacement. The browser-side diff gate and the model's own silence protocol are the cost controls, and relevance is decided in one documented place rather than two.",
+      "An honest failure rather than a stupid one. The user is holding the phone and walking around, so the largest frame-to-frame delta genuinely is camera motion — and the instruction to describe change rather than re-describe the scene points straight at it.",
+      "Fixed with an explicit ban plus a redirect: if the view moved to a new place, name what is now visible there — “pantry shelf: onions in a wooden bowl” — never the motion that got you there. The change instruction was also taught that a different viewpoint is not a change.",
     ],
-    rule: "Never add a pre-filter whose “no” is indistinguishable from a legitimate quiet outcome. Failures must be traceable, or they are not failures — they are behaviour.",
+    rule: "An instruction to report change will find the largest change. If the largest change is an artifact of how the data arrives, the instruction has to say so.",
   },
   {
     no: "03",
-    title: "The camera contradicted itself every few seconds",
+    title: "An inference stood in for an observation, and reported beans that were lentils",
     status: "fixed",
     statusLabel: "Fixed",
     symptom:
-      "Four consecutive captions of the same pan, seconds apart, with the scene barely changing — and the reasoning model logging the contradictions as fact.",
-    wire: `"Cumin seeds and chopped red onions are sauteing"
-"Chopped onions and red chilies are being sauteed"          ← cumin gone
-"The cumin seeds ... have not yet been added"               ← now denied
-"Cumin seeds or other spices are visible among the onions"  ← back`,
+      "The user was looking for black-eyed beans. The caption said “several bags of lentils”. The reasoning model reported “I can see the beans”.",
     cause: [
-      "Two causes. First, the prompt named the step's ingredients, which turned the job into a roll-call — and a roll-call over small ambiguous items (cumin among browned onions, at 640 px) produces confident false negatives. “Not yet added” is a claim about a negative that a single frame usually cannot support.",
-      "Second, every vision call is independent: no memory, no shared attention. The previous caption was already sitting in a buffer and the vision stage simply never used it. It is now passed back as text, with an instruction to describe change — because a hosted API cannot share attention state across calls, so the comparison baseline has to arrive in words.",
+      "Nothing had actually been asked. The brief reached the vision model only as a soft “these are relevant, be detailed” nudge at the end of the prompt, so nothing sharp ever came back — and with no answer to read, the reasoning model filled the gap itself.",
+      "Watches are now asked first, before the description, one line each, in a fixed format where NOT VISIBLE and UNCLEAR are real answers rather than the absence of one. Separately, the found state was closed off entirely: no tool can set it, and only plain string matching over the caption can. The inference has no door left to walk through.",
     ],
-    rule: "Absence is only reportable when it is positively visible. “I cannot tell” is a valid answer; a confident false negative is not.",
+    rule: "If you want an observation, ask a question. A soft nudge gets you an inference, and downstream an inference is indistinguishable from an observation.",
   },
   {
     no: "04",
-    title: "A blocked search was reported as “nothing found”",
+    title: "Answering the user silenced the exact follow-up they were waiting for",
     status: "fixed",
     statusLabel: "Fixed",
     symptom:
-      "No web search results found for \"…\" — returned to the model as authoritative, on exactly the does-this-contain-beef questions where being wrong matters most.",
+      "Asked to find the onions, the assistant replied “I'll point them out as soon as they're in view” — and that reply gagged it for the entire 90-second search. It found them at +27 seconds, logged them silently, and said nothing until it was asked again.",
     cause: [
-      "The search provider serves its bot CAPTCHA with HTTP 202. So the status check passed, the parser found zero results in a CAPTCHA page, and a hard block was rendered to the model as a confident absence. The tool was not failing loudly; it was succeeding at returning nothing.",
-      "Now a block raises its own error type, so “blocked” and “genuinely empty” are visibly different results, and a provider chain replaces the single endpoint. Two counter-intuitive findings fell out of measuring it: a spoofed browser user-agent draws more CAPTCHAs than an honest bot one, and the “slow endpoint” was a cold TLS handshake.",
+      "Speaking reset the politeness budget, so the assistant's own helpful acknowledgement spent the whole allowance on saying nothing.",
+      "A user turn now opens a follow-up window instead of closing a gap, and the two timestamps are tracked separately on purpose. The window is deliberately not folded into the general check: a stale-task nag firing seconds after a conversation is exactly what the politeness gap is right to suppress. Only the path where the model is reacting to something it can actually see opts in.",
     ],
-    rule: "A failed tool must never render like an empty result. The model cannot tell the difference, and it will treat silence as evidence.",
+    rule: "Speaking should make an assistant quieter; being asked should make it more forthcoming. One timestamp cannot express both.",
   },
   {
     no: "05",
-    title: "Correctly shipped work was invisible for an entire session",
-    status: "fixed",
-    statusLabel: "Fixed",
+    title: "A dead camera reported that nothing had changed",
+    status: "open",
+    statusLabel: "Fixed, with a hole left",
     symptom:
-      "Voice input, the camera toggle and several other features were deployed, verified in the repo, and simply absent in the browser.",
+      "The camera view was entirely black and the system cheerfully reported that nothing had changed. Correct, and useless.",
     cause: [
-      "The progressive-web-app service worker is cache-first for the app shell and only re-fetches when its own bytes change. Its cache key sat unchanged for a whole development session, so every browser that had ever loaded the app kept serving the stale shell through every deploy. The code was right; the delivery was frozen.",
+      "To a frame-difference comparison, a dead camera is indistinguishable from a perfectly still scene. A standard-deviation liveness test now runs before the diff gate, and a persistently flat frame gets a red capture border, a distinct warning, and track diagnostics. Camera startup was hardened at the same time, because an autoplay refusal leaves a black poster frame that looks exactly like a dead sensor.",
+      "Caption reuse made this worse and is why the two shipped together — before it, every chat turn sent a frame, so a dead camera still got looked at eventually.",
+      "Still open: flat frames are detected and reported, and they are still captioned at full price. The one live session spent five vision calls describing a blackout.",
     ],
-    rule: "Any change to the shell must bump the cache key. It is a one-line ritual that replaces an entire category of unreproducible bug.",
+    rule: "A liveness test and a change test are different tests. Absence of change is not evidence of a working sensor.",
   },
   {
     no: "06",
-    title: "It forgot everything for three turns, and I could not prove why",
-    status: "open",
-    statusLabel: "Instrumented, unresolved",
+    title: "One flag in the browser defeated every fix on the server",
+    status: "fixed",
+    statusLabel: "Fixed",
     symptom:
-      "Thirty-six seconds after receiving detailed instructions, the assistant answered “You'll need to give me a bit more context — what is it that you've managed? Are we working on a recipe, a project…?” Both the conversation memory and the task list had vanished together.",
-    wire: `turn context: history_turns=12 (sending 10) task_items=6
-              task_list_in_prompt=True prompt_chars=3184`,
+      "The lock restructure, the yield points, the phase split — none of it reached a user. A typed question still waited for the current camera tick to finish.",
+    wire: `if (busy) {
+  queuedPrompt = prompt;
+  setStatus('queued — waiting for the current tick to finish…');
+  return;
+}`,
     cause: [
-      "Ruled out: camera ticks polluting memory, the reply not being recorded, an accidental reset, and the free-tier server sleeping — the gap was four minutes, not fifteen.",
-      "The root cause is still unknown, and that is the finding. It could not be diagnosed after the fact because nothing recorded how much context a turn actually carried. “The model ignored the task list” and “the task list never reached the prompt” look identical in a transcript and need opposite repairs. So I shipped the measurement above instead of a guess — one line per turn, on both code paths.",
+      "The client held a single busy flag covering both ticks and chat. The message never left the browser, and the status line was apologising for a constraint that existed nowhere else in the system.",
+      "Split into two flags protecting genuinely different things: frames must not stack, and replies must not interleave. A second question still queues behind the first — with voice input there is no visible input box in which to notice a dropped message.",
     ],
-    rule: "When two hypotheses need opposite fixes and the evidence cannot separate them, ship the measurement. A speculative fix here would have added machinery that addressed nothing.",
+    rule: "A server-side concurrency fix is not done until the client can exercise it. Both halves need a test.",
   },
   {
     no: "07",
-    title: "A wrong answer survived being corrected",
-    status: "open",
-    statusLabel: "Open · top priority",
+    title: "The first live session died on a provider it should never have been able to reach",
+    status: "fixed",
+    statusLabel: "Fixed — made impossible",
     symptom:
-      "The model found “toor dal” in a plastic bag. The user corrected it — “the thing in the plastic bag is black eyed beans not toor dal”. It apologised, then repeated the claim for four more turns, adding detail it had invented: “on an upper shelf, open and upright, with a black loaf pan behind it”.",
+      "Eighteen minutes into the first real run, on someone's actual dinner. The daily cap belonged to a provider this version cannot run on at all.",
+    wire: `429 — Rate limit reached for model \`qwen/qwen3.6-27b\` …
+      tokens per day (TPD): Limit 200000, Used 199109`,
     cause: [
-      "A design gap rather than a bug: nothing is doing the wrong thing, the capability simply does not exist. Observations are append-only. There is no way to retract one, and no way to move a wrongly-completed item back to in progress — so the false note kept riding along in the prompt on every subsequent turn, indistinguishable from a verified one.",
-      "It also interacts with case 03: the grounding rule tells the model not to contradict the previous caption about something it can no longer see clearly. That is right for a scene going out of focus and wrong once the user has said the caption was mistaken. Whatever fixes this has to carry an “…unless the user corrected you” clause.",
+      "The interesting part is that nothing was wrong on disk. Every config file named the correct provider, and the factory routed it correctly, so there was no artifact anyone could inspect and find a mistake in. The running process simply predated the configuration. That is the actual defect: the system had a hard requirement and no point at which it compared that requirement against reality.",
+      "Three changes, in order of how much each carries. The default was the bug — it defaulted to the one configuration that cannot work, a leftover from before the right backend existed, so the one thing you got by not choosing was the thing that fails. Which provider gets the pixels was not knowable to any code: the hybrid backend extends the other one and replaces a client its parent constructed, so the class name, the mode string and the module name all fail to answer the question — backends now declare it. And startup refuses outright unless an environment variable says the wrong provider was deliberate.",
+      "Three details are deliberate. The escape hatch is per-run and explicit, because choosing that provider for a one-off comparison is legitimate — arriving there is the bug. The check runs at boot but does not re-raise, because v1 shares the process and is the system in daily use; v2's own routes still fail loudly. And every character of it is ASCII: the first version used arrows and section marks, and printing it on a Windows console raised a UnicodeEncodeError — a diagnostic that crashed while reporting the problem it existed to explain.",
     ],
-    rule: "A false observation that survives an explicit correction is worse than no observation at all. If a system can write memory, it needs a way to unwrite it.",
+    rule: "The default nobody sets must be the one that works. And a hard requirement with no point of enforcement is a comment, not a requirement.",
   },
   {
     no: "08",
-    title: "The cost control was a suggestion, and the session died",
+    title: "A correct plan shipped as a bare colon",
     status: "open",
-    statusLabel: "Open",
+    statusLabel: "Repaired, guard still too narrow",
     symptom:
-      "Close-up mode costs 2.4× a normal frame, so it is opt-in per step and the schema explicitly instructs the model to set it back when the close look is done. It never did.",
-    wire: `11:26:40   frame detail → fine (live ticks now 1024px)
-           …never switches back
-
-           429   198,310 / 200,000 tokens per day`,
+      "The turn ended mid-sentence: “Got it — we just need the tadka. Here's the plan:” The plan itself had gone into a tool, so no second call happened and the naked preamble shipped.",
+    wire: `"Let me also make a note of what's on the menu so it stays consistent:"
+                                    — the live session, 2026-08-10`,
     cause: [
-      "Its cost was bounded by scope — finishing the step ends it. The step stayed in progress for the rest of the session, so every later frame ran at full resolution until the daily ceiling hit.",
-      "The fix is not better wording. It needs a hard bound underneath the soft one: a count of close-up frames per item that reverts automatically, stored on the item so it survives a restart.",
+      "The user is listening, not reading. A task list that exists only in the document panel does not reach someone whose hands are in the dal, and they had to ask to be told what the plan was.",
+      "Repaired deterministically rather than with another model call — it costs nothing and cannot itself dangle. It fires on the exact shape of the failure, a trailing colon or dash plus a plan tool in the results, and appends the step count and only the first step. Reading six steps aloud is how you lose someone at a stove. For a proposal it appends “Shall I go with that?” instead, because a dangling proposal is the worse version: the plan is not only unseen, it is waiting on an answer nobody was asked for.",
+      "Still open, and the live session proved it: the guard requires a plan tool in the results, so a turn that trailed off after writing an environment fact shipped with a bare colon anyway. The trailing-colon test matched; the tool guard rejected it.",
     ],
-    rule: "A cost control that depends on the model's judgement does not hold. Instructions are a hint; the budget needs arithmetic.",
+    rule: "A deterministic repair beats another model call. But a repair keyed to the shape of one failure catches exactly that shape, and the next one arrives wearing something else.",
   },
+  {
+    no: "09",
+    title: "It reported an error beside a perfectly built plan",
+    status: "fixed",
+    statusLabel: "Fixed",
+    symptom:
+      "Asked for help with chole, the model wrote a correct seven-step plan into the document, emitted no prose at all, and the user was shown “(no reply — something went wrong, try again)” next to work that had entirely succeeded.",
+    cause: [
+      "On a camera tick, empty text is the answer. On a user turn it never is — and the code did not distinguish them, so a turn that did all its work through tools reported itself as a failure.",
+      "Four escalating rescues now run, and the third is the one that matters: a forced text-only call with the tools taken away. While tools are offered the model can always answer with another call instead of prose, which is precisely what it did on “walk me through changing an oil filter” — a chain that spent both earlier calls on tools. Taking them away leaves it nothing to reply with except words.",
+    ],
+    rule: "Reporting a failure beside work that succeeded is worse than saying nothing useful. It tells the user to redo something that already worked.",
+  },
+  {
+    no: "10",
+    title: "The brief turned a perfectly good setup into a list of absent items",
+    status: "fixed",
+    statusLabel: "Fixed",
+    symptom:
+      "Briefs written as checklists — “whether a wheel chock sits behind a rear wheel; whether a drain pan is directly underneath the filter” — so a different but entirely fine arrangement read back as a series of things that were missing.",
+    cause: [
+      "The reasoning model was writing the whole vision block, and it cannot see the user's kitchen or garage. So it was describing an imagined one, and the camera was scoring reality against it.",
+      "It now writes only the activity — “user is dicing onions on a board at the counter”. The grip, posture and danger wording is standard text attached to every frame, identical for every task, and carries the counter-instruction that makes it survive contact with a real frame: this is not a checklist, and if something mentioned is simply not in this frame, absence is not a finding.",
+    ],
+    rule: "A model that cannot see the scene must not be the one describing it. Given the chance it will enumerate one imagined arrangement and treat every difference as a fault.",
+  },
+];
+
+/* Not bugs — known gaps with no fix designed yet. Listed because a failure log
+   that only contains solved problems is a marketing document. */
+const STILL_OPEN = [
+  [
+    "The close-up tier has never been used live",
+    "Every caption in the one real session is coarse, including while reading a patent binder and searching a fridge. The tier passes its harness; the model does not reach for it. Whether the prompt is steering away from it is unresolved.",
+  ],
+  [
+    "Nothing throttles a twenty-minute simmer",
+    "There is no adaptive backoff. A step where nothing will change for a long time ticks at the same rate as one where everything is changing.",
+  ],
+  [
+    "The diff gate saves nothing while walking",
+    "Every frame differs, so the single largest cost control switches itself off exactly when the user is moving around a shop. Visible in the live export during the fridge and pantry search.",
+  ],
+  [
+    "A compound step can be completed from a quarter of the evidence",
+    "“Prep: dice onions, dice tomatoes, make paste, cut chicken” can be marked done from a frame showing one of the four. It needs sub-items, not a better prompt.",
+  ],
+  [
+    "Timezone is one server-wide setting",
+    "Standing in until there is somewhere to store per-user preferences at all. Every timestamp in the document is rendered in it, including the header all temporal arithmetic is done against.",
+  ],
+];
+
+/* v1's log is archived rather than deleted: several of its rules are still the
+   reason v2's code looks the way it does. */
+const INHERITED = [
+  [
+    "One flag, one consequence",
+    "A single boolean once guaranteed a spoken alert, marked a task complete, and closed the camera. In v2, [URGENT] bypasses the politeness gate and does nothing else — and found and announced are two flags, because one is about the world and the other about speech.",
+  ],
+  [
+    "Never add a pre-filter whose “no” looks like silence",
+    "v1 ran a cheap relevance call before the real one, and its rejection was byte-identical to a legitimate quiet frame. In v2, NOT VISIBLE is a first-class answer with its own format, and a frame dropped by the browser gate is a distinct, visible state.",
+  ],
+  [
+    "A failed tool must never render like an empty result",
+    "The search provider served its bot CAPTCHA with HTTP 202, so a hard block reached the model as a confident “nothing found”. The provider chain and the distinct error type carried into v2 unchanged.",
+  ],
+  [
+    "Flag network tools as blocking",
+    "They run on the event loop otherwise, and one slow web search stalls every camera tick behind it.",
+  ],
+  [
+    "Ship the measurement when two hypotheses need opposite fixes",
+    "v1 lost its memory for three turns and the transcript could not distinguish “the model ignored the task list” from “the task list never reached the prompt”. v2's startup line naming its own vision provider is the same move, one version later — and case 07 is what it was built for.",
+  ],
+  [
+    "A cost control that depends on the model's judgement does not hold",
+    "v1 switched close-up mode on and never switched it back, ending a session at 198,310 of 200,000 tokens. v2 renders the running count into the document so the drift is visible to the thing causing it, and puts a hard cap underneath the instruction.",
+  ],
 ];
 
 const INSTRUMENTS = [
   [
     "the session export",
-    "Every turn, every tool call, and — after this was fixed — every vision prompt and answer, silent frames included",
+    "Every turn, every tool call, every vision prompt and answer — silent ticks included — plus the document as it stood. Every finding in this log's “open” column came from reading it, not from a harness",
   ],
   [
-    "Groq vision usage:",
-    "Per-frame image cost. Before this, the number that governs the entire architecture was literally unmeasurable",
+    "DeepInfra vision usage:",
+    "The per-frame bill. In this split the vision call is the only image cost, so its prompt tokens are the number that governs the whole architecture",
   ],
-  ["turn context:", "How much history and state each turn actually carried into the prompt"],
+  [
+    "Initialized live agent | …",
+    "One startup line naming the backend mode, the vision provider and the reasoning model. It exists because case 07 could not be settled from any file on disk",
+  ],
+  [
+    "a timed overlap harness",
+    "Drives a question into a tick that is already mid-reasoning and measures how long it waits. It is the only reason the lock restructure has a number attached to it rather than a claim",
+  ],
 ];
 
 function CaseCard({ c }: { c: Case }) {
@@ -162,7 +258,7 @@ function CaseCard({ c }: { c: Case }) {
       <dl className="mt-4 flex flex-col gap-3">
         <div className="notch-corner border border-i1/30 bg-i1/[0.06] px-4 py-3">
           <dt className="font-hero-mono mb-1 text-[12px] tracking-wide text-i1">SYMPTOM</dt>
-          <dd className="text-[14px] leading-relaxed text-ink">{c.symptom}</dd>
+          <dd className="text-[15px] leading-relaxed text-ink">{c.symptom}</dd>
         </div>
 
         {c.wire && (
@@ -174,7 +270,7 @@ function CaseCard({ c }: { c: Case }) {
         <div>
           <dt className="font-hero-mono mb-1 text-[12px] tracking-wide text-ink-soft">ROOT CAUSE</dt>
           {c.cause.map((p) => (
-            <dd key={p.slice(0, 40)} className="mb-2 text-[14px] leading-relaxed text-ink-mid last:mb-0">
+            <dd key={p.slice(0, 40)} className="mb-2 text-[15px] leading-relaxed text-ink-mid last:mb-0">
               {p}
             </dd>
           ))}
@@ -218,20 +314,20 @@ export function ChitraguptaFailureLog() {
       </header>
 
       <main className="mx-auto max-w-3xl px-6 pb-28">
-        <p className="font-hero-mono mb-4 text-[12px] tracking-wider text-i2">CHITRAGUPTA &middot; FAILURE LOG</p>
+        <p className="font-hero-mono mb-4 text-[12px] tracking-wider text-i2">CHITRAGUPTA v2 &middot; FAILURE LOG</p>
         <h1 className="font-display text-3xl font-semibold text-ink sm:text-4xl">
-          Eight things that broke, and the rule each one left behind
+          Ten things that broke, and the rule each one left behind
         </h1>
         <p className="mt-4 max-w-2xl text-sm leading-relaxed text-ink-soft">
           Nearly every non-obvious line in this codebase is scar tissue from a specific bug. This is
-          the log kept alongside it — symptom, root cause, and the rule that came out. Two of these
-          are still open, and they are here for the same reason as the rest.
+          the log kept alongside it — symptom, root cause, and the rule that came out. Three are still
+          open, and they are here for the same reason as the rest.
         </p>
 
-        <div className="notch-corner mt-6 border border-panel-border bg-panel p-4 text-[13px] leading-relaxed text-panel-mid">
+        <div className="notch-corner mt-6 border border-panel-border bg-panel p-4 text-[14px] leading-relaxed text-panel-mid">
           <b className="text-ink">On these quotes.</b> They come from this project's own decision log
           and from session exports captured while each bug was live, not reconstructed afterwards for
-          this page.
+          this page. Cases 05, 07 and 08 were all found in the same eighteen-minute live run.
         </div>
 
         <div className="mt-10 flex flex-col gap-5">
@@ -240,21 +336,100 @@ export function ChitraguptaFailureLog() {
           ))}
         </div>
 
+        {/* Still open ─────────────────────────────────────── */}
         <section className="mt-16">
           <div className="mb-6 flex items-baseline gap-3">
-            <span className="font-mono text-xs text-ink-soft">09</span>
+            <span className="font-mono text-xs text-ink-soft">11</span>
+            <h2 className="font-display text-2xl font-semibold text-ink sm:text-3xl">
+              Known gaps with no fix designed yet
+            </h2>
+            <span className="h-px flex-1 bg-rule-hard" aria-hidden="true" />
+          </div>
+          <p className="text-[15px] leading-relaxed text-ink-mid">
+            These are not bugs and nothing is doing the wrong thing. The capability simply is not
+            there, and pretending otherwise on a page like this would defeat the point of keeping the
+            log at all.
+          </p>
+          <div className="mt-6 flex flex-col gap-[2px]">
+            {STILL_OPEN.map(([k, v]) => (
+              <div
+                key={k}
+                className="grid gap-1 border border-rule border-l-[3px] border-l-i1 bg-panel px-4 py-3 sm:grid-cols-[15rem_1fr] sm:gap-x-5"
+              >
+                <span className="text-[14.5px] leading-snug font-semibold text-ink">{k}</span>
+                <span className="text-[14px] leading-relaxed text-ink-mid">{v}</span>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Inherited ──────────────────────────────────────── */}
+        <section className="mt-16">
+          <div className="mb-6 flex items-baseline gap-3">
+            <span className="font-mono text-xs text-ink-soft">12</span>
+            <h2 className="font-display text-2xl font-semibold text-ink sm:text-3xl">
+              What v1 left behind, and where it still binds
+            </h2>
+            <span className="h-px flex-1 bg-rule-hard" aria-hidden="true" />
+          </div>
+          <p className="text-[15px] leading-relaxed text-ink-mid">
+            v2 is a rewrite of the tick loop, not of the lessons. The first version had its own log of
+            eight failures; it is archived rather than deleted, because several of its rules are still
+            the reason v2's code looks the way it does. These are the ones that carried.
+          </p>
+          <div className="mt-6 overflow-x-auto">
+            <table className="w-full min-w-[32rem] border-collapse text-[14px]">
+              <thead>
+                <tr>
+                  {["The rule v1 produced", "Where it binds in v2"].map((h) => (
+                    <th
+                      key={h}
+                      className="font-hero-mono border-b border-rule-hard px-3 py-2 text-left text-[11px] tracking-wider uppercase text-ink-soft"
+                    >
+                      {h}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {INHERITED.map(([k, v]) => (
+                  <tr key={k}>
+                    <td className="border-b border-rule px-3 py-3 align-top font-semibold text-ink">{k}</td>
+                    <td className="border-b border-rule px-3 py-3 align-top text-ink-mid">{v}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <p className="mt-4 text-[14px] leading-relaxed text-ink-soft">
+            One v1 rule did not carry, and that is worth saying too. Its service-worker cache-key
+            ritual — correctly shipped work sat invisible in browsers for a whole session — is
+            sidestepped entirely in v2, because the live page and its routes are excluded from the
+            service worker outright. The best outcome for a rule is a design where it cannot apply.
+          </p>
+        </section>
+
+        {/* Instruments ────────────────────────────────────── */}
+        <section className="mt-16">
+          <div className="mb-6 flex items-baseline gap-3">
+            <span className="font-mono text-xs text-ink-soft">13</span>
             <h2 className="font-display text-2xl font-semibold text-ink sm:text-3xl">
               Most of these were found by reading, not by watching
             </h2>
             <span className="h-px flex-1 bg-rule-hard" aria-hidden="true" />
           </div>
-          <p className="text-[14px] leading-relaxed text-ink-mid">
-            There is no test suite here, and I would not claim otherwise. Verification is throwaway
-            harnesses plus one artifact that turned out to be worth more than all of them: a full
-            session export.
+          <p className="text-[15px] leading-relaxed text-ink-mid">
+            There is no test suite here and I would not claim otherwise. Verification is a folder of
+            ad-hoc harnesses plus one artifact worth more than all of them.{" "}
+            <strong className="font-semibold text-ink">
+              Harnesses cannot tell you whether the model behaves.
+            </strong>{" "}
+            They cover what is checkable without a live session; everything about judgement — does it
+            propose instead of writing, does it revert to coarse, does it speak when the user is
+            waiting — needs a real run and a read of the export.
           </p>
           <div className="mt-6 overflow-x-auto">
-            <table className="w-full min-w-[30rem] border-collapse text-[13px]">
+            <table className="w-full min-w-[30rem] border-collapse text-[14px]">
               <thead>
                 <tr>
                   {["Instrument", "What it makes visible"].map((h) => (
@@ -270,29 +445,26 @@ export function ChitraguptaFailureLog() {
               <tbody>
                 {INSTRUMENTS.map(([k, v]) => (
                   <tr key={k}>
-                    <td className="font-hero-mono border-b border-rule px-3 py-3 align-top whitespace-nowrap text-ink">
-                      {k}
-                    </td>
+                    <td className="font-hero-mono border-b border-rule px-3 py-3 align-top text-ink">{k}</td>
                     <td className="border-b border-rule px-3 py-3 align-top text-ink-mid">{v}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
-          <p className="mt-5 text-[14px] leading-relaxed text-ink-mid">
-            The vision round trip was invisible three times over: it never leaves the server as its
-            own request, so it is not a network call anyone can inspect; most camera ticks answer{" "}
-            <code className="font-hero-mono text-[13px]">[SILENT]</code>, and the client only logged a
-            turn when there was something to render, so the majority of frames left no trace
-            whatsoever; and the one log that did carry it was capped and rolled off. That cap is
-            exactly why case 06 could not be diagnosed — the window had already scrolled past.
-          </p>
-          <div className="notch-corner mt-5 border border-i2/40 bg-i2/[0.07] p-5">
+          <div className="notch-corner mt-6 border border-i2/40 bg-i2/[0.07] p-5">
             <p className="font-display text-[15px] italic leading-relaxed text-ink">
-              Case 03 is invisible in any single turn. Only the sequence shows it — which is the whole
+              No single turn shows a contradiction. Only the sequence does — which is the whole
               argument for logging the thing nobody is looking at.
             </p>
           </div>
+          <p className="mt-5 text-[14px] leading-relaxed text-ink-soft">
+            There is one trap in the client-side harnesses worth writing down, because a harness that
+            ignores it passes against a broken file: they drive the real client in a stubbed DOM rather
+            than reimplementing it, and a top-level <code className="font-hero-mono">let</code> in that
+            sandbox is not a property of the sandbox object. State has to be read and poked through the
+            context, or the harness is quietly testing nothing.
+          </p>
         </section>
 
         <div className="mt-16">
@@ -302,8 +474,9 @@ export function ChitraguptaFailureLog() {
           >
             <div>
               <div className="font-display text-lg font-semibold text-ink">How it works &rarr;</div>
-              <p className="mt-1 text-[14px] leading-relaxed text-panel-mid">
-                The pipeline diagram, the blind/mute protocol, and what one minute of watching costs.
+              <p className="mt-1 text-[15px] leading-relaxed text-panel-mid">
+                The session diagram, where the lock is and is not, the document section by section, and
+                what one minute of watching costs.
               </p>
             </div>
             <ArrowRight size={18} className="shrink-0 text-i2" aria-hidden="true" />

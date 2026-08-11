@@ -3,8 +3,129 @@ import { Link } from "react-router-dom";
 import { ArrowLeft, ExternalLink, ChevronDown } from "lucide-react";
 import { SignalBar } from "../components/SignalBar";
 import { SectionHead } from "../components/SectionHead";
+import { DataSheet, type DataRow } from "../components/DataSheet";
+import { SkillTags, type SkillGroup } from "../components/SkillTags";
 import { usePageTitle } from "../hooks/usePageTitle";
 import { ROUTE_META } from "../data/routeMeta";
+
+// Head matter. The two rows that cost something — the tie on plain lookups, and
+// the integration that was built then cut — are in the block rather than buried
+// in sections 07 and 09, because a datasheet that only contains wins is a
+// brochure and reads like one.
+const DATASHEET: DataRow[] = [
+  {
+    k: "Status",
+    v: "Live and usable on Hugging Face Spaces right now.",
+    s: "shipped",
+    label: "Shipped",
+  },
+  {
+    k: "Shape",
+    v: "An autonomous ReAct loop, not a pipeline: the model decides how many searches to run, what to search next based on what it already found, and when it has enough to stop.",
+    s: "shipped",
+    label: "Shipped",
+  },
+  {
+    k: "Budget",
+    v: (
+      <>
+        <span className="font-mono tabular-nums">8</span>-turn cap enforced in the loop, not asked for in the
+        prompt. At the cap the search tools are removed from the request and only{" "}
+        <code className="font-mono text-[13px]">calculate</code> remains.
+      </>
+    ),
+    s: "shipped",
+    label: "Shipped",
+  },
+  {
+    k: "Grounding",
+    v: "Every comparison claim is checked in code against what was actually retrieved — and calculate's own output never counts as evidence, so a fabricated number can't launder itself by passing through a tool.",
+    s: "shipped",
+    label: "Shipped",
+  },
+  {
+    k: "Retrieval cost",
+    v: (
+      <>
+        <span className="font-mono tabular-nums">$0</span>. DuckDuckGo, Google News RSS and direct page fetches
+        — no API key, no per-query metering. The only metered cost is the reasoning wrapped around them.
+      </>
+    ),
+    s: "shipped",
+    label: "Shipped",
+  },
+  {
+    k: "Surface",
+    v: (
+      <>
+        Four modes on one loop, plus three POST routes for callers that can&rsquo;t speak the chat protocol,
+        guarded by a shared secret that <strong className="font-semibold">fails closed</strong> if the secret is
+        ever unset.
+      </>
+    ),
+    s: "shipped",
+    label: "Shipped",
+  },
+  {
+    k: "vs Tavily",
+    v: (
+      <>
+        On the same eight questions: <span className="font-mono tabular-nums">8/8</span> grounded, cited answers
+        from this agent against <span className="font-mono tabular-nums">0/8</span> from Tavily, which returned{" "}
+        <code className="font-mono text-[13px]">"answer": null</code> every time.
+      </>
+    ),
+    s: "measured",
+    label: "Measured",
+  },
+  {
+    k: "Honest boundary",
+    v: "On plain factual lookups the two effectively tie — that is what single-shot search is already good at. The gap only opens on questions needing decomposition, cross-source synthesis, or a refusal to hallucinate.",
+    s: "measured",
+    label: "Measured",
+  },
+  {
+    k: "Backends",
+    v: (
+      <>
+        Two, behind one <code className="font-mono text-[13px]">LLM_PROVIDER</code> env var. DeepSeek V4 Flash
+        is the default because it grounds better; Sarvam is roughly{" "}
+        <span className="font-mono tabular-nums">3&times;</span> faster.
+      </>
+    ),
+    s: "measured",
+    label: "Measured",
+  },
+  {
+    k: "Not shipped",
+    v: (
+      <>
+        Wiring this agent into TechDrishti&rsquo;s daily pipeline. Built, measured at roughly{" "}
+        <span className="font-mono tabular-nums">17&times;</span> the cost and{" "}
+        <span className="font-mono tabular-nums">+81</span> minutes a run, then cut — and left in the repo
+        disabled rather than deleted.
+      </>
+    ),
+    s: "excluded",
+    label: "Not shipped",
+  },
+];
+
+const SKILL_GROUPS: SkillGroup[] = [
+  [
+    "Agentic AI",
+    ["ReAct loop", "Autonomous tool use", "Code-enforced budgets", "Multi-mode prompt contracts", "Agent-callable HTTP API"],
+  ],
+  [
+    "Grounding & eval",
+    ["Claim-vs-source verification", "Adversarial test cases", "Head-to-head benchmarking", "LLM-as-judge comparison"],
+  ],
+  [
+    "LLM engineering",
+    ["Provider-generic client", "reasoning_effort control", "Tool-call recovery parsing", "Structured error returns"],
+  ],
+  ["Engineering", ["Python", "Chainlit", "FastAPI", "ddgs", "pytest", "Hugging Face Spaces"]],
+];
 
 const WHY = [
   {
@@ -106,25 +227,161 @@ const MODES = [
   },
 ];
 
-const STATS = [
-  { num: "8", unit: "-turn", label: "hard iteration cap (MAX_ITERATIONS), code-enforced regardless of what the model wants" },
-  { num: "5", unit: "", label: "CORE_RULES shared verbatim across every mode: ask, quick answer, research an article, write an article" },
-  { num: "4", unit: "", label: "chat modes on one agent loop: ask, quick grounded answer, research an article, write an article" },
-  { num: "2", unit: "", label: "swappable backends (DeepSeek V4 Flash / Sarvam) behind one LLM_PROVIDER env var" },
+
+/* ── The loop, as one figure ───────────────────────────────────────────────
+ * The left rail is the argument, not decoration. This page's whole claim is a
+ * division of labour: the model owns every judgment that needs judgment, and
+ * code owns everything that must hold regardless of what the model wants — the
+ * budget, the HTTP request, the grounding check. So the rail marks WHO DECIDES
+ * at each step rather than what it costs, and the two hollow squares are the
+ * places a prompt was tried first and failed.
+ *
+ * Vertical, because a loop drawn wide is a loop nobody scrolls to on a phone.
+ * Every number here is stated elsewhere on the page. */
+
+const R_TAG = { fontFamily: "var(--font-data)", fontSize: 10.5, letterSpacing: ".09em" };
+const R_MONO = { fontFamily: "var(--font-data)", fontSize: 9.5 };
+const R_BIG = { fontFamily: "var(--font-display)", fontSize: 12.5, fontWeight: 600 };
+const R_NOTE = { fontFamily: "var(--font-sans)", fontSize: 10, fontStyle: "italic" as const };
+
+const TOOLS_FREE = [
+  ["web_search", "DuckDuckGo, via ddgs"],
+  ["news_search", "Google News RSS, recency-aware"],
+  ["fetch_page", "full body text — HTML or PDF"],
+  ["get_current_date", "the training cutoff is not “now”"],
+  ["calculate", "AST arithmetic only, never eval()"],
 ];
 
+const CX = 265;
+const BX = 136;
+const BW = 258;
 
-function FlowStep({ label, sub }: { label: string; sub: string }) {
+function LoopDiagram() {
   return (
-    <div className="notch-corner-sm flex-1 border border-rule-hard bg-panel px-3 py-3 text-center">
-      <div className="font-hero-mono text-[12px] tracking-wide text-i3">{label}</div>
-      <div className="mt-1 text-[12px] text-panel-mid">{sub}</div>
-    </div>
-  );
-}
+    <svg
+      viewBox="0 0 720 512"
+      className="block h-auto w-full min-w-[32rem]"
+      role="img"
+      aria-label="The research loop read downward. A question enters an iteration region labelled up to eight turns, containing three steps: think, where the model decides what it still needs; act, where code executes one tool call; and evaluate, where the model judges whether it has enough evidence. An arrow returns from evaluate back to think when it does not. Five keyless tools hang off the act step — web search, news search, page fetch, current date and a calculator — and at turn eight code removes the three search tools from the request while leaving the calculator. On exit, a grounding step written in code, not a model, checks every claim against what was actually retrieved before a cited report is returned. A left-hand rail marks each step as either decided by the model or decided by code."
+    >
+      <defs>
+        <marker id="dr-arw" viewBox="0 0 10 10" refX="9.5" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto">
+          <path d="M0 0 L10 5 L0 10 z" fill="var(--color-rule-hard)" />
+        </marker>
+        <marker id="dr-arw-g" viewBox="0 0 10 10" refX="9.5" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+          <path d="M0 0 L10 5 L0 10 z" fill="var(--color-i3)" />
+        </marker>
+      </defs>
 
-function FlowArrow() {
-  return <div className="hidden shrink-0 items-center px-1 text-panel-mid sm:flex">&rarr;</div>;
+      <text {...R_MONO} x={6} y={14} letterSpacing=".08em" fill="var(--color-ink-soft)">
+        WHO DECIDES
+      </text>
+
+      {/* Question in */}
+      <rect x={BX} y={10} width={BW} height={42} fill="var(--color-paper-hi)" stroke="var(--color-rule-hard)" />
+      <text {...R_TAG} x={CX} y={29} textAnchor="middle" fill="var(--color-ink)">A RESEARCH QUESTION</text>
+      <text {...R_NOTE} x={CX} y={45} textAnchor="middle" fill="var(--color-ink-soft)">
+        no step count decided in advance
+      </text>
+      <line x1={CX} y1={52} x2={CX} y2={86} stroke="var(--color-rule-hard)" strokeWidth="1.4" markerEnd="url(#dr-arw)" />
+
+      {/* The iteration region */}
+      <rect x={100} y={64} width={330} height={254} fill="none" stroke="var(--color-rule)" strokeDasharray="4 3" />
+      <text {...R_MONO} x={106} y={79} fill="var(--color-i3)">UP TO 8 TURNS</text>
+
+      {/* THINK — model */}
+      <rect x={6} y={107} width={8} height={8} fill="var(--color-ink)" />
+      <text {...R_MONO} x={22} y={115} fill="var(--color-ink)">MODEL</text>
+      <rect x={BX} y={88} width={BW} height={54} fill="color-mix(in oklch, var(--color-i3) 8%, transparent)" stroke="var(--color-i3)" strokeWidth="1.3" />
+      <text {...R_TAG} x={BX + 14} y={107} fill="var(--color-i3)">THINK</text>
+      <text {...R_BIG} x={BX + 14} y={126} fill="var(--color-ink)">what do I still need?</text>
+      <line x1={CX} y1={142} x2={CX} y2={160} stroke="var(--color-rule-hard)" strokeWidth="1.4" markerEnd="url(#dr-arw)" />
+
+      {/* ACT — code */}
+      <rect x={6} y={181} width={8} height={8} fill="none" stroke="var(--color-ink-soft)" />
+      <text {...R_MONO} x={22} y={189} fill="var(--color-ink-soft)">CODE</text>
+      <rect x={BX} y={162} width={BW} height={54} fill="var(--color-paper-hi)" stroke="var(--color-rule-hard)" />
+      <text {...R_TAG} x={BX + 14} y={181} fill="var(--color-ink-mid)">ACT</text>
+      <text {...R_BIG} x={BX + 14} y={200} fill="var(--color-ink)">one tool call, executed</text>
+      <line x1={CX} y1={216} x2={CX} y2={234} stroke="var(--color-rule-hard)" strokeWidth="1.4" markerEnd="url(#dr-arw)" />
+
+      {/* EVALUATE — model */}
+      <rect x={6} y={255} width={8} height={8} fill="var(--color-ink)" />
+      <text {...R_MONO} x={22} y={263} fill="var(--color-ink)">MODEL</text>
+      <rect x={BX} y={236} width={BW} height={54} fill="color-mix(in oklch, var(--color-i3) 8%, transparent)" stroke="var(--color-i3)" strokeWidth="1.3" />
+      <text {...R_TAG} x={BX + 14} y={255} fill="var(--color-i3)">EVALUATE</text>
+      <text {...R_BIG} x={BX + 14} y={274} fill="var(--color-ink)">is that enough evidence?</text>
+
+      {/* …and back round */}
+      <path
+        d="M136 276 L116 276 L116 115 L134 115"
+        fill="none"
+        stroke="var(--color-i3)"
+        strokeWidth="1.3"
+        markerEnd="url(#dr-arw-g)"
+      />
+      {/* Sits under the corner where the return path turns, so it reads as
+          belonging to that line rather than floating below the whole region. */}
+      <text {...R_NOTE} x={104} y={308} fill="var(--color-i3)">
+        not yet — go again
+      </text>
+
+      {/* Tools */}
+      <line x1={BX + BW} y1={189} x2={446} y2={189} stroke="var(--color-rule-hard)" strokeWidth="1.3" markerEnd="url(#dr-arw)" />
+      <rect x={448} y={140} width={268} height={108} fill="var(--color-paper-hi)" stroke="var(--color-rule-hard)" />
+      <text {...R_TAG} x={458} y={158} fill="var(--color-ink)">FIVE TOOLS · ALL KEYLESS</text>
+      {TOOLS_FREE.map(([name, what], i) => (
+        <g key={name}>
+          <text {...R_MONO} x={458} y={176 + i * 15} fill="var(--color-ink)">
+            {name}
+          </text>
+          <text {...R_NOTE} fontSize={9} x={558} y={176 + i * 15} fill="var(--color-ink-soft)">
+            {what}
+          </text>
+        </g>
+      ))}
+      <text {...R_NOTE} x={448} y={268} fill="var(--color-i1)">at turn 8 code removes the first three from</text>
+      <text {...R_NOTE} x={448} y={281} fill="var(--color-i1)">the request. calculate stays, so a half-done</text>
+      <text {...R_NOTE} x={448} y={294} fill="var(--color-i1)">calculation can still be finished.</text>
+
+      {/* Exit */}
+      <line x1={CX} y1={290} x2={CX} y2={342} stroke="var(--color-rule-hard)" strokeWidth="1.4" markerEnd="url(#dr-arw)" />
+      <text {...R_NOTE} x={CX + 10} y={332} fill="var(--color-ink-soft)">enough — or turn 8</text>
+
+      {/* GROUND — code */}
+      <rect x={6} y={365} width={8} height={8} fill="none" stroke="var(--color-ink-soft)" />
+      <text {...R_MONO} x={22} y={373} fill="var(--color-ink-soft)">CODE</text>
+      <rect x={BX} y={344} width={BW} height={56} fill="var(--color-paper-hi)" stroke="var(--color-rule-hard)" strokeWidth="1.3" />
+      <text {...R_TAG} x={BX + 14} y={363} fill="var(--color-ink-mid)">GROUND</text>
+      <text {...R_BIG} x={BX + 14} y={382} fill="var(--color-ink)">claims checked vs. sources</text>
+      <text {...R_NOTE} x={BX + 14} y={395} fill="var(--color-ink-soft)">runs once, on the final report only</text>
+      <text {...R_NOTE} x={410} y={362} fill="var(--color-ink-soft)">“don’t hallucinate” was tried twice as a</text>
+      <text {...R_NOTE} x={410} y={374} fill="var(--color-ink-soft)">prompt and failed twice. Only searches and</text>
+      <text {...R_NOTE} x={410} y={386} fill="var(--color-ink-soft)">successful fetches count as evidence —</text>
+      <text {...R_NOTE} x={410} y={398} fill="var(--color-ink-soft)">calculate’s own output never does.</text>
+
+      <line x1={CX} y1={400} x2={CX} y2={420} stroke="var(--color-rule-hard)" strokeWidth="1.4" markerEnd="url(#dr-arw)" />
+
+      {/* Out */}
+      <rect x={BX} y={422} width={BW} height={46} fill="var(--color-paper-hi)" stroke="var(--color-rule-hard)" />
+      <text {...R_TAG} x={CX} y={441} textAnchor="middle" fill="var(--color-ink)">A CITED REPORT</text>
+      <text {...R_NOTE} x={CX} y={458} textAnchor="middle" fill="var(--color-ink-soft)">
+        every claim beside its own URL, never [1]
+      </text>
+
+      {/* Legend, drawn with the same marks it explains */}
+      <g transform="translate(6 486)">
+        <rect x={0} y={0} width={8} height={8} fill="var(--color-ink)" />
+        <text {...R_MONO} x={14} y={7} fill="var(--color-ink-soft)">
+          the model decides
+        </text>
+        <rect x={136} y={0} width={8} height={8} fill="none" stroke="var(--color-ink-soft)" />
+        <text {...R_MONO} x={150} y={7} fill="var(--color-ink-soft)">
+          code decides, regardless of what the model wants
+        </text>
+      </g>
+    </svg>
+  );
 }
 
 export function CaseStudyDeepResearch() {
@@ -208,8 +465,116 @@ export function CaseStudyDeepResearch() {
           </a>
         </div>
 
+        <div className="mt-10">
+          <DataSheet title="AGENT DATASHEET" rows={DATASHEET} collapsible />
+        </div>
+
+        <div className="mt-8">
+          <SkillTags groups={SKILL_GROUPS} />
+        </div>
+
         <section className="mt-20">
-          <SectionHead num="01" title="Why an agent, not another pipeline" />
+          <SectionHead num="01" title="The whole loop, in one figure" />
+          <p className="text-[14px] leading-relaxed text-ink-mid">
+            The left rail is the argument. The model owns every judgment that genuinely needs judgment — what to
+            search next, whether a result is enough, when to stop. Code owns everything that has to hold{" "}
+            <strong className="font-semibold text-ink">regardless of what the model wants</strong>: the budget,
+            the HTTP request, and the check on its own final claims. Both hollow squares in that rail mark a place
+            where a prompt was tried first and failed.
+          </p>
+          <figure className="m-0 mt-6 flex flex-col gap-3">
+            <div className="notch-corner overflow-x-auto border border-rule-hard bg-panel px-3 py-4 sm:px-4">
+              <LoopDiagram />
+            </div>
+            <figcaption className="text-[13px] leading-relaxed text-ink-mid">
+              <b className="text-ink">The loop has no fixed length, and that is the point.</b> A pipeline decides
+              its step count in code before the question is read; this decides it from what it finds. What stops
+              it is not the model getting bored but a counter — at turn eight the search tools are taken away
+              mid-conversation, which is a very different guarantee from asking a model to please stop.
+            </figcaption>
+          </figure>
+        </section>
+
+        <section className="mt-20">
+          <SectionHead num="02" title="Measured against Tavily, not just claimed" />
+          <div className="notch-corner mb-6 flex items-start gap-3 border border-rule-hard bg-panel p-4 pl-5 sm:p-5 sm:pl-6">
+            <span className="status-badge measured mt-0.5">Measured</span>
+            <span className="text-[14px] leading-relaxed text-panel-text">
+              The headline promise — a Tavily-grade answer without the paid search API — was put on
+              the clock rather than left as a claim. The same eight questions (the ask and
+              quick-answer modes) were run through this agent and through Tavily&rsquo;s own Search
+              API on identical inputs, and the two sets of outputs compared side by side.
+            </span>
+          </div>
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            <div className="notch-corner border border-rule-hard bg-panel p-5">
+              <span className="font-hero-mono text-[12px] tracking-wide text-panel-text">
+                TAVILY · SYNTHESIZED ANSWERS
+              </span>
+              {/* Neutral, not red. Tavily did not fail — as called, it retrieves and
+                  does not claim to reason, which the copy below says outright.
+                  Green on both sides made the two scores read as one colour and
+                  killed the comparison at a glance; grey against green lets the
+                  contrast land without editorialising about someone else's tool. */}
+              <div className="mt-2 font-display text-2xl font-semibold text-ink-mid">
+                0<span className="font-mono text-sm text-panel-mid"> / 8</span>
+              </div>
+              <p className="mt-1 text-[13px] leading-relaxed text-panel-text">
+                Every response came back <code className="text-panel-text">"answer": null</code> —
+                five raw result links and nothing more. As called, Tavily retrieves; it does not
+                reason over what it retrieved.
+              </p>
+            </div>
+            <div className="notch-corner border border-rule-hard bg-panel p-5">
+              <span className="font-hero-mono text-[12px] tracking-wide text-panel-text">
+                THIS AGENT · ON THE SAME EIGHT
+              </span>
+              <div className="mt-2 font-display text-2xl font-semibold text-i3">
+                8<span className="font-mono text-sm text-panel-mid"> / 8</span>
+              </div>
+              <p className="mt-1 text-[13px] leading-relaxed text-panel-text">
+                A grounded, cited answer every time — on the open-ended questions, the synthesis
+                Tavily leaves the reader to assemble by hand from a list of links.
+              </p>
+            </div>
+          </div>
+
+          <div className="notch-corner mt-3 border border-rule-hard bg-panel p-4 pl-5 sm:p-5 sm:pl-6">
+            <span className="font-hero-mono text-[12px] tracking-wide text-i3">
+              THE TELLING CASE · A MODEL THAT DOESN'T EXIST
+            </span>
+            <div className="mt-1 font-display text-base font-semibold text-ink">
+              Asked for the benchmark scores of a fictional model, the grounding check earned its keep
+            </div>
+            <p className="mt-2 text-[14px] leading-relaxed text-panel-text">
+              One question asked for the benchmark scores of &ldquo;Zephyr-Q9&rdquo; — a model that
+              was never released. Tavily returned five real benchmark leaderboards for{" "}
+              <em>other</em> models, with nothing signalling that the model in the question does not
+              exist; a reader skimming them could easily misattribute stray numbers to it. This agent
+              searched, found no such model, and said exactly that instead of inventing scores — the
+              same code-level grounding check the loop runs on every final report, holding up on a
+              live adversarial input rather than a rehearsed one.
+            </p>
+          </div>
+
+          <p className="mt-4 text-[13px] leading-relaxed text-ink-soft">
+            The honest boundary: on plain factual lookups — a model&rsquo;s context window, a single
+            number with an obvious right answer — the two effectively tie, because that is exactly
+            what single-shot search is already good at, and the agent has no business being slower to
+            reach the same fact. The gap only opens on the questions that need decomposition,
+            cross-source synthesis, or a refusal to hallucinate — and the whole run stays bounded by
+            the 8-call cap, so matching Tavily never costs an unbounded number of LLM calls.
+          </p>
+          <Link
+            to="/case-study/deep-research-agent/comparison"
+            className="notch-corner-sm mt-6 inline-flex items-center gap-2 border border-panel-border bg-panel px-4 py-2 text-xs text-panel-text transition-colors hover:text-i3"
+          >
+            Full comparison, case by case (vs Tavily &amp; Claude) <ExternalLink size={14} />
+          </Link>
+        </section>
+
+        <section className="mt-20">
+          <SectionHead num="03" title="Why an agent, not another pipeline" />
           <p className="mb-6 text-[14px] leading-relaxed text-ink-mid">
             TechDrishti is deliberately a cost-controlled, deterministic workflow — it has to run
             unattended every day on a fixed budget, so predictable behavior beats research depth.
@@ -228,27 +593,13 @@ export function CaseStudyDeepResearch() {
         </section>
 
         <section className="mt-20">
-          <SectionHead num="02" title="The research loop" />
+          <SectionHead num="04" title="The tools, and the budget that outranks them" />
           <p className="mb-6 text-[14px] leading-relaxed text-ink-mid">
-            One orchestration loop underneath all three modes. The model owns the reasoning —
-            deciding what to search, whether a result is enough, when to stop. Everything the
-            model cannot itself do — actually making the HTTP request, enforcing a hard budget
-            regardless of what it wants, checking its own final claims — is owned by code.
-          </p>
-          <div className="flex flex-col items-stretch gap-2 sm:flex-row sm:items-center">
-            <FlowStep label="THINK" sub="LLM call, rules + tools" />
-            <FlowArrow />
-            <FlowStep label="ACT" sub="tool call executed" />
-            <FlowArrow />
-            <FlowStep label="EVALUATE" sub="enough evidence yet?" />
-            <FlowArrow />
-            <FlowStep label="GROUND" sub="claims checked vs. sources" />
-          </div>
-          <p className="mt-3 text-center text-[12px] text-ink-soft">
-            THINK &rarr; ACT &rarr; EVALUATE repeats up to 8 times; GROUND runs once, on the final report only.
+            One orchestration loop underneath every mode. What the model can reach for, and what happens when it
+            has reached too often:
           </p>
 
-          <div className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <div className="notch-corner border border-rule-hard bg-panel p-4 pl-5 sm:p-5 sm:pl-6">
               <span className="font-hero-mono text-[12px] tracking-wide text-i3">TOOLS AVAILABLE</span>
               <p className="mt-2 text-[14px] leading-relaxed text-panel-text">
@@ -269,7 +620,7 @@ export function CaseStudyDeepResearch() {
         </section>
 
         <section className="mt-20">
-          <SectionHead num="03" title="The rules that came from getting it wrong once already" />
+          <SectionHead num="05" title="The rules that came from getting it wrong once already" />
           <p className="mb-6 text-[14px] leading-relaxed text-ink-mid">
             CORE_RULES is shared verbatim across every mode. Each one exists because a specific
             failure was reproduced and fixed in TechDrishti first — this is what carrying that
@@ -287,7 +638,7 @@ export function CaseStudyDeepResearch() {
         </section>
 
         <section className="mt-20">
-          <SectionHead num="04" title="Prompt quirks that make it hold up" />
+          <SectionHead num="06" title="Prompt quirks that make it hold up" />
           <p className="mb-6 text-[14px] leading-relaxed text-ink-mid">
             Click a card for how it actually works. Every one of these exists because of a live,
             reproduced failure — not a hypothetical edge case.
@@ -333,7 +684,7 @@ export function CaseStudyDeepResearch() {
         </section>
 
         <section className="mt-20">
-          <SectionHead num="05" title="Four modes, one loop" />
+          <SectionHead num="07" title="Four modes, one loop" />
           <p className="mb-6 text-[14px] leading-relaxed text-ink-mid">
             Every mode is the same ResearchAgent with a different system prompt and a different
             final-answer contract — not four separate codepaths to keep in sync. "Research an
@@ -374,7 +725,7 @@ export function CaseStudyDeepResearch() {
         </section>
 
         <section className="mt-20">
-          <SectionHead num="06" title="Why this is the cheap alternative to a paid search API" />
+          <SectionHead num="08" title="Why this is the cheap alternative to a paid search API" />
           <p className="mb-6 text-[14px] leading-relaxed text-ink-mid">
             A service like Tavily charges per search call — the metered cost scales with how many
             queries an agent fires. This project's retrieval layer (DuckDuckGo via{" "}
@@ -417,80 +768,7 @@ export function CaseStudyDeepResearch() {
         </section>
 
         <section className="mt-20">
-          <SectionHead num="07" title="Measured against Tavily, not just claimed" />
-          <div className="notch-corner mb-6 flex items-start gap-3 border border-rule-hard bg-panel p-4 pl-5 sm:p-5 sm:pl-6">
-            <span className="status-badge measured mt-0.5">Measured</span>
-            <span className="text-[14px] leading-relaxed text-panel-text">
-              The headline promise — a Tavily-grade answer without the paid search API — was put on
-              the clock rather than left as a claim. The same eight questions (the ask and
-              quick-answer modes) were run through this agent and through Tavily&rsquo;s own Search
-              API on identical inputs, and the two sets of outputs compared side by side.
-            </span>
-          </div>
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-            <div className="notch-corner border border-rule-hard bg-panel p-5">
-              <span className="font-hero-mono text-[12px] tracking-wide text-panel-text">
-                TAVILY · SYNTHESIZED ANSWERS
-              </span>
-              <div className="mt-2 font-display text-2xl font-semibold text-i3">
-                0<span className="font-mono text-sm text-panel-mid"> / 8</span>
-              </div>
-              <p className="mt-1 text-[13px] leading-relaxed text-panel-text">
-                Every response came back <code className="text-panel-text">"answer": null</code> —
-                five raw result links and nothing more. As called, Tavily retrieves; it does not
-                reason over what it retrieved.
-              </p>
-            </div>
-            <div className="notch-corner border border-rule-hard bg-panel p-5">
-              <span className="font-hero-mono text-[12px] tracking-wide text-panel-text">
-                THIS AGENT · ON THE SAME EIGHT
-              </span>
-              <div className="mt-2 font-display text-2xl font-semibold text-i3">
-                8<span className="font-mono text-sm text-panel-mid"> / 8</span>
-              </div>
-              <p className="mt-1 text-[13px] leading-relaxed text-panel-text">
-                A grounded, cited answer every time — on the open-ended questions, the synthesis
-                Tavily leaves the reader to assemble by hand from a list of links.
-              </p>
-            </div>
-          </div>
-
-          <div className="notch-corner mt-3 border border-rule-hard bg-panel p-4 pl-5 sm:p-5 sm:pl-6">
-            <span className="font-hero-mono text-[12px] tracking-wide text-i3">
-              THE TELLING CASE · A MODEL THAT DOESN'T EXIST
-            </span>
-            <div className="mt-1 font-display text-base font-semibold text-ink">
-              Asked for the benchmark scores of a fictional model, the grounding check earned its keep
-            </div>
-            <p className="mt-2 text-[14px] leading-relaxed text-panel-text">
-              One question asked for the benchmark scores of &ldquo;Zephyr-Q9&rdquo; — a model that
-              was never released. Tavily returned five real benchmark leaderboards for{" "}
-              <em>other</em> models, with nothing signalling that the model in the question does not
-              exist; a reader skimming them could easily misattribute stray numbers to it. This agent
-              searched, found no such model, and said exactly that instead of inventing scores — the
-              same code-level grounding discipline from section 03, holding up on a live adversarial
-              input rather than a rehearsed one.
-            </p>
-          </div>
-
-          <p className="mt-4 text-[13px] leading-relaxed text-ink-soft">
-            The honest boundary: on plain factual lookups — a model&rsquo;s context window, a single
-            number with an obvious right answer — the two effectively tie, because that is exactly
-            what single-shot search is already good at, and the agent has no business being slower to
-            reach the same fact. The gap only opens on the questions that need decomposition,
-            cross-source synthesis, or a refusal to hallucinate — and the whole run stays bounded by
-            the 8-call cap, so matching Tavily never costs an unbounded number of LLM calls.
-          </p>
-          <Link
-            to="/case-study/deep-research-agent/comparison"
-            className="notch-corner-sm mt-6 inline-flex items-center gap-2 border border-panel-border bg-panel px-4 py-2 text-xs text-panel-text transition-colors hover:text-i3"
-          >
-            Full comparison, case by case (vs Tavily &amp; Claude) <ExternalLink size={14} />
-          </Link>
-        </section>
-
-        <section className="mt-20">
-          <SectionHead num="08" title="Sarvam vs DeepSeek, measured head-to-head" />
+          <SectionHead num="09" title="Sarvam vs DeepSeek, measured head-to-head" />
           <p className="mb-6 text-[14px] leading-relaxed text-ink-mid">
             Since this agent runs on either backend behind one <code className="text-ink-mid">LLM_PROVIDER</code>{" "}
             switch, the two were put through the same fixed question set and compared on identical metrics rather
@@ -520,7 +798,7 @@ export function CaseStudyDeepResearch() {
         </section>
 
         <section className="mt-20">
-          <SectionHead num="09" title="Measured it, then chose not to ship it" />
+          <SectionHead num="10" title="Measured it, then chose not to ship it" />
           <div className="notch-corner mb-6 flex flex-col gap-2.5 border border-rule-hard bg-panel p-4 pl-5 sm:p-5 sm:pl-6">
             <div className="flex items-start gap-3">
               <span className="status-badge shipped mt-0.5">Shipped</span>
@@ -579,21 +857,6 @@ export function CaseStudyDeepResearch() {
             the point: knowing when not to ship the more impressive thing is the same discipline as
             the code-level grounding check above, applied to a build decision instead of a claim.
           </p>
-        </section>
-
-        <section className="mt-20">
-          <SectionHead num="10" title="By the numbers" />
-          <div className="grid grid-cols-2 gap-px border border-rule-hard bg-rule-hard sm:grid-cols-4">
-            {STATS.map((s) => (
-              <div key={s.label} className="bg-panel p-5">
-                <div className="font-display text-2xl font-semibold text-panel-text">
-                  {s.num}
-                  <span className="font-mono text-sm text-panel-mid">{s.unit}</span>
-                </div>
-                <div className="mt-2 text-[12px] leading-relaxed text-panel-mid">{s.label}</div>
-              </div>
-            ))}
-          </div>
         </section>
 
         <footer className="mt-20 border-t border-rule-hard pt-8">

@@ -1,8 +1,10 @@
 export type Track = "cv" | "llm" | "both" | "data";
 
 /** Epistemic status, mirrored in the hero legend. `not-shipped` renders with the
- *  muted `excluded` style: built and measured, but deliberately left out. */
-export type EpistemicStatus = "measured" | "shipped" | "pending" | "not-shipped";
+ *  muted `excluded` style: built and measured, but deliberately left out.
+ *  `prototype` sits between shipped and pending: it runs end to end on real
+ *  input, and the numbers attached to it are not yet a distribution. */
+export type EpistemicStatus = "measured" | "shipped" | "prototype" | "pending" | "not-shipped";
 
 export type Figure = {
   src: string;
@@ -19,8 +21,10 @@ export type Project = {
   tags: string[];
   links: { label: string; href: string }[];
   /** `lead` gets the full-width treatment; `flagship` gets a large card;
-   *  `supporting` stays lightweight; `pending` marks a project still in progress. */
-  weight: "lead" | "flagship" | "supporting" | "pending";
+   *  `supporting` stays lightweight; `pending` marks a project still in progress.
+   *  `bridge` is rendered by its own homepage section instead of a card in the
+   *  list, so `Projects` deliberately does not pick it up. */
+  weight: "lead" | "flagship" | "supporting" | "pending" | "bridge";
   track: Track;
   /** Real epistemic status for the badge. Omit on lightweight older work. */
   status?: EpistemicStatus;
@@ -134,37 +138,47 @@ export const projects: Project[] = [
   },
   {
     slug: "chitragupta",
-    status: "pending",
+    status: "prototype",
     title: "Chitragupta",
     tagline:
-      "A hands-free camera assistant where one model writes the brief for the other model's eyes",
+      "A hands-free camera assistant where the document is what is true, and speech is a side-effect",
     period: "07/2026 – present · Solo project",
     track: "both",
     description:
-      "A voice assistant that watches through a phone camera while your hands are busy — tracking steps, substitutions and timers, and speaking back. Two models split the job: one converts frames to text and nothing else, the second does all reasoning and tool calling and never sees a pixel. That split exists because a single-model design could not survive its provider's per-minute cap, and the whole system is engineered to run continuously inside a 200,000-token daily ceiling on free tiers.",
+      "A voice assistant that watches through a phone camera while your hands are busy. The first version asked, on every frame, what do I say about this — a question that always has an answer, which is why it narrated. v2 inverts it: a tick's only job is to keep a world document accurate, and whether the user is owed a sentence is decided separately by zero-token arithmetic over that document. Two models split the work, and the one that makes every decision has never seen a pixel.",
     bullets: [
-      "Hybrid pipeline (Groq Qwen3.6-27B for vision, DeepSeek v4-flash for reasoning + 10 native tools), forced by an 8,000 token/minute cap that made a one-model design impossible",
-      "The reasoning model writes its own brief to the vision stage, so the system can look for things nobody anticipated in advance — and asks for observations, never judgements",
-      "Cost engineering measured, not guessed: a browser-side perceptual diff gate drops unchanged frames before any request, and an opt-in close-up tier costs a measured 2.4× per frame",
-      "Persisted task and timer state on disk, injected into every prompt, so a restart loses nothing and timer checks cost no inference",
-      "Verified against a real 40-minute phone session, with two known failure modes documented rather than hidden",
+      "World-document architecture: primary state is a file on disk that every prompt is rendered from, ordered stability-first so consecutive ticks share the longest possible cached prefix",
+      "The speech decision is a separate, cheaper call from the bookkeeping one — splitting them fixed a failure reported three times, where a single call scored on both objectives always chose silence",
+      "A trigger engine of pure wall-clock arithmetic decides when the user is owed something, so an idle tick costs one vision call and one reasoning call and nothing else",
+      "Concurrency measured, not asserted: the lock covers writes rather than thinking, taking a question's time-to-wire from 2.00 s to 0.01 s while a tick is mid-reasoning",
+      "Plans are proposed aloud and committed on assent, never written straight into state — because a plan re-injected into every later prompt is read back by the model as settled memory",
+      "Run live once, for eighteen minutes, and this page says which six things worked and which three did not",
     ],
     tags: [
       "Vision-language models",
       "Agentic AI",
       "LLM cost engineering",
       "Tool use / function calling",
+      "asyncio concurrency",
       "FastAPI",
       "Python",
-      "Groq · DeepSeek",
+      "Qwen3-VL · DeepSeek",
     ],
     links: [
       { label: "Case Study", href: "/case-study/chitragupta" },
+      // `/live`, not the bare origin: the server serves v2 at `/` now and keeps
+      // `/live` as a permanent alias, but that ships on its own deploy cycle
+      // and the origin still returns v1 until it does. Free-tier host, so it
+      // sleeps; the case study says so where it links to it.
+      { label: "Live instance", href: "https://chitragupta-k6ek.onrender.com/live" },
       { label: "How it works", href: "/case-study/chitragupta/architecture" },
       { label: "Failure log", href: "/case-study/chitragupta/failure-log" },
       { label: "GitHub", href: "https://github.com/aditya0701/Chitragupta---A-Vision-based-AI-helper" },
     ],
-    weight: "flagship",
+    // Rendered by ChitraguptaBridge as its own homepage section — it is the one
+    // project where both tracks are the same piece of work — so it is
+    // deliberately absent from the card list above.
+    weight: "bridge",
   },
   {
     slug: "human-detection-and-counting",

@@ -3,11 +3,129 @@ import { Link } from "react-router-dom";
 import { ArrowLeft, ExternalLink } from "lucide-react";
 import { SignalBar } from "../components/SignalBar";
 import { SectionHead } from "../components/SectionHead";
+import { DataSheet, type DataRow } from "../components/DataSheet";
+import { SkillTags, type SkillGroup } from "../components/SkillTags";
 import { usePageTitle } from "../hooks/usePageTitle";
 import { ROUTE_META } from "../data/routeMeta";
 import { thesisResults, thesisResultsMeta } from "../data/thesisResults";
 
 const asset = (p: string) => `${import.meta.env.BASE_URL}${p}`;
+
+// Head matter. Every figure here is already defended further down the page or
+// transcribed from the published model card — the datasheet introduces none of
+// its own. The last two rows are the unflattering ones, and they are in the
+// block on purpose: a research result presented without its failure mode is a
+// claim, not a result.
+const DATASHEET: DataRow[] = [
+  {
+    k: "Work",
+    v: "M.Sc. thesis, RWTH Aachen. Supervised by Prof. Dr. Abigail Morrison, second examiner Prof. Dr.-Ing. Johannes Stegmaier. Built for the Tavosanis lab, who counted these structures by hand.",
+    s: "shipped",
+    label: "Shipped",
+  },
+  {
+    k: "Task",
+    v: "3D instance segmentation of synaptic boutons in confocal Z-stacks of the Drosophila mushroom body calyx — how many, and how big each one is.",
+    s: "shipped",
+    label: "Shipped",
+  },
+  {
+    k: "Dataset",
+    v: (
+      <>
+        <span className="font-mono tabular-nums">13</span> volumetric stacks, hand-annotated from scratch in
+        napari across seven brain preparations and two acquisition systems. No public benchmark for this
+        structure existed.
+      </>
+    ),
+    s: "measured",
+    label: "Measured",
+  },
+  {
+    k: "Benchmark",
+    v: (
+      <>
+        <span className="font-mono tabular-nums">4</span> architectures &times;{" "}
+        <span className="font-mono tabular-nums">4</span> preprocessing variants under one evaluation
+        protocol — MicroSAM against nnU-Net v2, Cellpose 3D and SwinUNETR.
+      </>
+    ),
+    s: "measured",
+    label: "Measured",
+  },
+  {
+    k: "Headline result",
+    v: (
+      <>
+        Fine-tuned MicroSAM Large recovered every bouton — recall{" "}
+        <span className="font-mono tabular-nums">1.000</span>, matched mIoU{" "}
+        <span className="font-mono tabular-nums">0.787</span>, the best of any model evaluated.
+      </>
+    ),
+    s: "measured",
+    label: "Measured",
+  },
+  {
+    k: "Baseline beaten",
+    v: (
+      <>
+        The lab&rsquo;s current semi-manual Imaris workflow scores recall{" "}
+        <span className="font-mono tabular-nums">0.735</span>, mIoU{" "}
+        <span className="font-mono tabular-nums">0.505</span> on the same test set.
+      </>
+    ),
+    s: "measured",
+    label: "Measured",
+  },
+  {
+    k: "In production",
+    v: "BoutonViewer is in active use by biologists today, on their own acquisitions rather than on the held-out volumes. A napari desktop app that turns a TIFF stack into a per-bouton table in µm³ and µm²; checkpoints published on Hugging Face with the rejected runs left out.",
+    s: "shipped",
+    label: "In use",
+  },
+  {
+    k: "Known weakness",
+    v: (
+      <>
+        That perfect recall is bought with <span className="font-mono tabular-nums">16</span> false positives,
+        several of them one large bouton split into parts. The model card says predictions should be reviewed
+        before unsupervised quantification.
+      </>
+    ),
+    s: "measured",
+    label: "Measured",
+  },
+  {
+    k: "Not verified",
+    v: (
+      <>
+        The scored test set is <span className="font-mono tabular-nums">2</span> images and{" "}
+        <span className="font-mono tabular-nums">33</span> ground-truth boutons, from two specimens. Performance
+        under substantially different imaging or labelling has never been formally measured —{" "}
+        <strong className="font-semibold">daily use is adoption evidence, not benchmark evidence</strong>, and
+        the two are not interchangeable.
+      </>
+    ),
+    s: "pending",
+    label: "Unverified",
+  },
+];
+
+const SKILL_GROUPS: SkillGroup[] = [
+  [
+    "Computer vision",
+    ["3D instance segmentation", "Foundation-model fine-tuning", "MicroSAM / SAM", "nnU-Net v2", "SwinUNETR", "Cellpose 3D"],
+  ],
+  [
+    "Evaluation",
+    ["Instance matching", "Volume-weighted metrics", "Recall-weighted panoptic quality", "Held-out specimen splits"],
+  ],
+  [
+    "Imaging data",
+    ["Hand annotation in napari", "Anisotropic voxel calibration", "Richardson-Lucy deconvolution", "Difference-of-Gaussians"],
+  ],
+  ["Engineering", ["PyTorch", "MONAI", "Kornia", "HTCondor cluster jobs", "napari plugin", "Hugging Face Hub"]],
+];
 
 const FIGURES = [
   {
@@ -32,9 +150,9 @@ const FIGURES = [
 
 const HARD = [
   {
-    tag: "INSTANCES, NOT PIXELS",
-    title: "Boutons touch, and touching is the whole point",
-    desc: "Microglomeruli sit packed against each other in the calyx. Semantic segmentation would happily paint one confluent blob across a dozen of them and score well on pixel overlap while being useless: the biological question is how many boutons there are and how big each one is. That makes this an instance problem, and it makes the interesting failure mode a merge, not a miss.",
+    tag: "NO CANONICAL BOUTON",
+    title: "Two boutons in the same image can look nothing alike",
+    desc: "Shape and intensity both vary, and they vary within a single volume rather than only between specimens: there is no reference size to filter on and no reference brightness to threshold at. That is exactly the assumption classical detection rests on — a threshold, a blob filter, a size prior all expect the thing you are looking for to look roughly the same wherever it turns up — which is why those methods fall over here. And the failure cuts both ways. Noise and background signal throw up structures that pass the same tests a real bouton passes, so a pipeline tuned far enough down to catch the faint ones starts reporting boutons that were never there. Beating that trade is what a learned model with a strong prior is actually being asked to do.",
   },
   {
     tag: "3D, AND ANISOTROPIC",
@@ -95,6 +213,162 @@ const VARIANTS = [
   { key: "all", label: "Combined", desc: "All variants pooled into one training set." },
 ];
 
+/* ── The experiment, as one figure ─────────────────────────────────────────
+ * Read downward. The shape of this page's argument is a grid, not a pipeline:
+ * the claim is not "a model worked" but "a model beat three SOTA backbones and
+ * the lab's existing tool under one protocol", and that claim is only worth
+ * anything because 16 runs sit behind it. So the matrix is the centrepiece and
+ * everything else is what feeds it or what comes out.
+ *
+ * The two instruments get their own colour because they are a real category
+ * with real consequences — they take different preprocessing paths, and
+ * collapsing them would mean deconvolving already-deconvolved data. Green marks
+ * the path that shipped; red marks the failure mode the evaluation is designed
+ * around. Every number is stated elsewhere on this page. */
+
+const F_TAG = { fontFamily: "var(--font-data)", fontSize: 10.5, letterSpacing: ".09em" };
+const F_SUB = { fontFamily: "var(--font-data)", fontSize: 9.5 };
+const F_NOTE = { fontFamily: "var(--font-sans)", fontSize: 10, fontStyle: "italic" as const };
+const F_BIG = { fontFamily: "var(--font-display)", fontSize: 12.5, fontWeight: 600 };
+
+const VARIANT_COLS = ["raw", "DoG", "PSF", "all"];
+const ARCH_ROWS = [
+  { name: "MicroSAM", selected: true },
+  { name: "Cellpose 3D", selected: false },
+  { name: "nnU-Net v2", selected: false },
+  { name: "SwinUNETR", selected: false },
+];
+
+const CELL_W = 52;
+const CELL_H = 32;
+const CELL_X0 = 272;
+/** Pushed down from the dataset box so the incoming arrow, the "16 training
+ *  runs" tag and the column headers each get their own band instead of
+ *  crowding into one. Everything below is measured off this. */
+const GRID_Y0 = 230;
+
+function ExperimentDiagram() {
+  return (
+    <svg
+      viewBox="0 0 720 566"
+      className="block h-auto w-full min-w-[32rem]"
+      role="img"
+      aria-label="The experiment read downward. Two microscopes — confocal LSM and Airyscan — feed one hand-annotated dataset of 13 volumes from seven brain preparations, split nine train, two validation, two test. That dataset feeds a four-by-four grid of 16 training runs: four architectures (MicroSAM, Cellpose 3D, nnU-Net v2, SwinUNETR) each trained on four preprocessing variants (raw, difference-of-Gaussians, PSF-deconvolved, and all combined), launched as HTCondor submit files. Every run is scored by the same protocol: instance matching weighted by physical voxel volume, rather than per-pixel overlap. Two things come out — the selected checkpoints, published on Hugging Face, and BoutonViewer, a napari application that turns a microscope stack into a per-bouton table."
+    >
+      <defs>
+        <marker id="sg-arw" viewBox="0 0 10 10" refX="9.5" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto">
+          <path d="M0 0 L10 5 L0 10 z" fill="var(--color-rule-hard)" />
+        </marker>
+      </defs>
+
+      <text {...F_NOTE} x={360} y={13} textAnchor="middle" fill="var(--color-ink-soft)">
+        two instruments, two preprocessing paths — one shared path would deconvolve already-deconvolved data
+      </text>
+
+      {/* Sources */}
+      <rect x={88} y={22} width={252} height={62} fill="color-mix(in oklch, var(--color-i4) 8%, transparent)" stroke="var(--color-i4)" strokeWidth="1.3" />
+      <text {...F_TAG} x={214} y={42} textAnchor="middle" fill="var(--color-i4)">CONFOCAL LSM</text>
+      <text {...F_SUB} x={214} y={58} textAnchor="middle" fill="var(--color-ink)">0.3 × 0.0709 × 0.0709 µm</text>
+      <text {...F_NOTE} x={214} y={74} textAnchor="middle" fill="var(--color-ink-soft)">rolling-ball + Richardson-Lucy</text>
+
+      <rect x={380} y={22} width={252} height={62} fill="color-mix(in oklch, var(--color-i6) 8%, transparent)" stroke="var(--color-i6)" strokeWidth="1.3" />
+      <text {...F_TAG} x={506} y={42} textAnchor="middle" fill="var(--color-i6)">AIRYSCAN</text>
+      <text {...F_SUB} x={506} y={58} textAnchor="middle" fill="var(--color-ink)">0.3 × 0.0425 × 0.0425 µm</text>
+      <text {...F_NOTE} x={506} y={74} textAnchor="middle" fill="var(--color-ink-soft)">already deconvolved — light normalise</text>
+
+      <path d="M214 84 L214 98 L360 98 L360 112" fill="none" stroke="var(--color-rule-hard)" strokeWidth="1.4" markerEnd="url(#sg-arw)" />
+      <path d="M506 84 L506 98 L360 98" fill="none" stroke="var(--color-rule-hard)" strokeWidth="1.4" />
+
+      {/* Dataset */}
+      <rect x={140} y={114} width={440} height={58} fill="var(--color-paper-hi)" stroke="var(--color-rule-hard)" />
+      <text {...F_TAG} x={360} y={134} textAnchor="middle" fill="var(--color-ink)">13 HAND-ANNOTATED VOLUMES</text>
+      <text {...F_NOTE} x={360} y={152} textAnchor="middle" fill="var(--color-ink-soft)">
+        7 brain preparations · 9 train / 2 validation / 2 test
+      </text>
+      <text {...F_NOTE} x={8} y={132} fill="var(--color-ink-soft)">no public benchmark</text>
+      <text {...F_NOTE} x={8} y={144} fill="var(--color-ink-soft)">existed — the ground</text>
+      <text {...F_NOTE} x={8} y={156} fill="var(--color-ink-soft)">truth had to be made</text>
+      <text {...F_NOTE} x={8} y={168} fill="var(--color-ink-soft)">before anything ran</text>
+
+      <line x1={360} y1={172} x2={360} y2={196} stroke="var(--color-rule-hard)" strokeWidth="1.4" markerEnd="url(#sg-arw)" />
+
+      {/* The 4 × 4 grid — the centrepiece */}
+      <text {...F_TAG} x={150} y={212} fill="var(--color-ink)">16 TRAINING RUNS</text>
+      {VARIANT_COLS.map((c, j) => (
+        <text key={c} {...F_SUB} x={CELL_X0 + j * CELL_W + CELL_W / 2} y={GRID_Y0 - 6} textAnchor="middle" fill="var(--color-ink-soft)">
+          {c}
+        </text>
+      ))}
+      {ARCH_ROWS.map((r, i) => (
+        <g key={r.name}>
+          <text
+            {...F_SUB}
+            x={262}
+            y={GRID_Y0 + i * CELL_H + CELL_H / 2 + 3}
+            textAnchor="end"
+            fill={r.selected ? "var(--color-i3)" : "var(--color-ink-mid)"}
+          >
+            {r.name}
+          </text>
+          {VARIANT_COLS.map((c, j) => (
+            <rect
+              key={c}
+              x={CELL_X0 + j * CELL_W}
+              y={GRID_Y0 + i * CELL_H}
+              width={CELL_W}
+              height={CELL_H}
+              fill={r.selected ? "color-mix(in oklch, var(--color-i3) 9%, transparent)" : "var(--color-paper-hi)"}
+              stroke={r.selected ? "var(--color-i3)" : "var(--color-rule)"}
+            />
+          ))}
+        </g>
+      ))}
+      <text {...F_NOTE} x={496} y={GRID_Y0 + 14} fill="var(--color-ink-soft)">four architectures × four</text>
+      <text {...F_NOTE} x={496} y={GRID_Y0 + 26} fill="var(--color-ink-soft)">preprocessing variants is a</text>
+      <text {...F_NOTE} x={496} y={GRID_Y0 + 38} fill="var(--color-ink-soft)">grid, not a run — launched as</text>
+      <text {...F_NOTE} x={496} y={GRID_Y0 + 50} fill="var(--color-ink-soft)">HTCondor submit files on the</text>
+      <text {...F_NOTE} x={496} y={GRID_Y0 + 62} fill="var(--color-ink-soft)">cluster, not started by hand</text>
+      <text {...F_NOTE} x={496} y={GRID_Y0 + 82} fill="var(--color-i3)">green = the row that shipped</text>
+
+      <line x1={360} y1={GRID_Y0 + 4 * CELL_H} x2={360} y2={GRID_Y0 + 4 * CELL_H + 20} stroke="var(--color-rule-hard)" strokeWidth="1.4" markerEnd="url(#sg-arw)" />
+
+      {/* Evaluation */}
+      <rect x={140} y={380} width={440} height={62} fill="var(--color-paper-hi)" stroke="var(--color-rule-hard)" />
+      <text {...F_TAG} x={360} y={400} textAnchor="middle" fill="var(--color-ink)">INSTANCE MATCHING, NOT PIXEL OVERLAP</text>
+      <text {...F_NOTE} x={360} y={417} textAnchor="middle" fill="var(--color-ink-soft)">
+        weighted by physical voxel volume, so coarse Z spacing
+      </text>
+      <text {...F_NOTE} x={360} y={432} textAnchor="middle" fill="var(--color-ink-soft)">
+        cannot quietly inflate or deflate a score
+      </text>
+      <text {...F_NOTE} x={8} y={400} fill="var(--color-i1)">a pixel score can’t</text>
+      <text {...F_NOTE} x={8} y={412} fill="var(--color-i1)">say whether one</text>
+      <text {...F_NOTE} x={8} y={424} fill="var(--color-i1)">object became two</text>
+      <text {...F_NOTE} x={596} y={406} fill="var(--color-ink-soft)">recall leads:</text>
+      <text {...F_NOTE} x={596} y={418} fill="var(--color-ink-soft)">a missed bouton</text>
+      <text {...F_NOTE} x={596} y={430} fill="var(--color-ink-soft)">is permanent</text>
+
+      <path d="M360 442 L360 458 L214 458 L214 474" fill="none" stroke="var(--color-rule-hard)" strokeWidth="1.4" markerEnd="url(#sg-arw)" />
+      <path d="M360 458 L506 458 L506 474" fill="none" stroke="var(--color-rule-hard)" strokeWidth="1.4" markerEnd="url(#sg-arw)" />
+
+      {/* What comes out */}
+      <rect x={88} y={476} width={252} height={58} fill="var(--color-paper-hi)" stroke="var(--color-rule-hard)" />
+      <text {...F_TAG} x={214} y={496} textAnchor="middle" fill="var(--color-ink)">CHECKPOINTS</text>
+      <text {...F_NOTE} x={214} y={513} textAnchor="middle" fill="var(--color-ink-soft)">on Hugging Face, with the</text>
+      <text {...F_NOTE} x={214} y={526} textAnchor="middle" fill="var(--color-ink-soft)">rejected runs left out</text>
+
+      <rect x={380} y={476} width={252} height={58} fill="color-mix(in oklch, var(--color-i3) 8%, transparent)" stroke="var(--color-i3)" strokeWidth="1.3" />
+      <text {...F_BIG} x={506} y={497} textAnchor="middle" fill="var(--color-ink)">BoutonViewer</text>
+      <text {...F_NOTE} x={506} y={514} textAnchor="middle" fill="var(--color-ink-soft)">a biologist loads a TIFF stack</text>
+      <text {...F_NOTE} x={506} y={527} textAnchor="middle" fill="var(--color-ink-soft)">and gets a table in µm³</text>
+
+      <text {...F_NOTE} x={360} y={556} textAnchor="middle" fill="var(--color-ink-soft)">
+        A checkpoint on a cluster helps nobody — which is why the napari app is part of this project, and why biologists use it now.
+      </text>
+    </svg>
+  );
+}
+
 export function CaseStudySegmentation() {
   usePageTitle(ROUTE_META["/case-study/microglomeruli-segmentation"].title);
 
@@ -153,8 +427,9 @@ export function CaseStudySegmentation() {
         </p>
         <p className="mt-4 text-[14px] leading-relaxed text-ink-mid">
           Supervised by Prof. Dr. Abigail Morrison (Software Engineering Group, RWTH Aachen), with
-          Prof. Dr.-Ing. Johannes Stegmaier as second examiner. Built for the Tavosanis lab, who
-          count these structures by hand today.
+          Prof. Dr.-Ing. Johannes Stegmaier as second examiner. Built for the Tavosanis lab, who counted
+          these structures by hand &mdash;{" "}
+          <strong className="font-semibold text-ink">and who are using the tool now</strong>.
         </p>
 
         <div className="mt-8 flex flex-wrap gap-4">
@@ -174,11 +449,55 @@ export function CaseStudySegmentation() {
           >
             BoutonViewer <ExternalLink size={14} />
           </a>
+          {/* The file tree rather than the repo root: someone who clicks a button
+              labelled "model weights" wants the checkpoints, not the card. The
+              card is one click away from here, and linked in full below. */}
+          <a
+            href="https://huggingface.co/aditya0701/Drosophilla_melanogaster_Bouton_3d_segmentation/tree/main"
+            target="_blank"
+            rel="noreferrer"
+            className="notch-corner-sm inline-flex items-center gap-2 border border-panel-border bg-panel px-5 py-2.5 text-[14px] font-medium text-panel-text transition-colors hover:border-i3 hover:text-i3"
+          >
+            Model weights <ExternalLink size={14} />
+          </a>
+        </div>
+
+        <div className="mt-10">
+          <DataSheet title="THESIS DATASHEET" rows={DATASHEET} />
+        </div>
+
+        <div className="mt-8">
+          <SkillTags groups={SKILL_GROUPS} />
         </div>
 
         {/* ------------------------------------------------------------ */}
         <section className="mt-20">
-          <SectionHead num="01" title="What it looks like" />
+          <SectionHead num="01" title="The whole experiment, in one figure" />
+          <p className="text-[14px] leading-relaxed text-ink-mid">
+            The claim on this page is not that a model worked. It is that a fine-tuned foundation model{" "}
+            <strong className="font-semibold text-ink">
+              beat three SOTA 3D backbones and the lab&rsquo;s existing tool under one protocol
+            </strong>
+            , and that claim is only worth making because sixteen runs sit behind it. So the grid is the
+            centre of the figure, and everything else is what feeds it or what came out.
+          </p>
+          <figure className="m-0 mt-6 flex flex-col gap-3">
+            <div className="notch-corner overflow-x-auto border border-rule-hard bg-panel px-3 py-4 sm:px-4">
+              <ExperimentDiagram />
+            </div>
+            <figcaption className="text-[13px] leading-relaxed text-ink-mid">
+              <b className="text-ink">Two constraints shape the whole thing.</b> Every training example was
+              annotated by hand, which puts a hard ceiling on how much data can ever exist — that is what makes a
+              model with a strong microscopy prior a practical choice rather than a fashionable one. And the two
+              microscopes are genuinely different instruments, so they take different preprocessing paths;
+              averaging them into one would mean deconvolving data the microscope had already deconvolved.
+            </figcaption>
+          </figure>
+        </section>
+
+        {/* ------------------------------------------------------------ */}
+        <section className="mt-20">
+          <SectionHead num="02" title="What it looks like" />
           <figure>
             <div className="grid gap-3 sm:grid-cols-3">
               {FIGURES.map((f) => (
@@ -211,7 +530,7 @@ export function CaseStudySegmentation() {
 
         {/* ------------------------------------------------------------ */}
         <section className="mt-20">
-          <SectionHead num="02" title="Why this is hard" />
+          <SectionHead num="03" title="Why this is hard" />
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             {HARD.map((h) => (
               <div
@@ -228,7 +547,7 @@ export function CaseStudySegmentation() {
 
         {/* ------------------------------------------------------------ */}
         <section className="mt-20">
-          <SectionHead num="03" title="The benchmark, and why each model is in it" />
+          <SectionHead num="04" title="The benchmark, and why each model is in it" />
           <p className="mb-6 text-[14px] leading-relaxed text-ink-mid">
             Four architectures, one dataset, one evaluation protocol. The dataset is 13 volumetric
             stacks hand-annotated from scratch in napari across seven Drosophila brain preparations
@@ -284,7 +603,7 @@ export function CaseStudySegmentation() {
 
         {/* ------------------------------------------------------------ */}
         <section className="mt-20">
-          <SectionHead num="04" title="Results" />
+          <SectionHead num="05" title="Results" />
 
           <p className="text-[14px] leading-relaxed text-ink-mid">
             Recall is the headline metric, not accuracy or Dice, and that is deliberate: a missed
@@ -374,7 +693,7 @@ export function CaseStudySegmentation() {
 
         {/* ------------------------------------------------------------ */}
         <section className="mt-20">
-          <SectionHead num="05" title="Two decisions worth defending" />
+          <SectionHead num="06" title="Two decisions worth defending" />
 
           <div className="notch-corner border border-rule-hard bg-panel p-5 sm:p-6">
             <span className="font-hero-mono text-[12px] tracking-wide text-i3">
@@ -418,11 +737,15 @@ export function CaseStudySegmentation() {
 
         {/* ------------------------------------------------------------ */}
         <section className="mt-20">
-          <SectionHead num="06" title="Shipping it: BoutonViewer" />
+          <SectionHead num="07" title="Shipping it: BoutonViewer" />
           <p className="text-[14px] leading-relaxed text-ink-mid">
             A napari desktop application that runs the pipeline on a confocal or Airyscan TIFF
             stack, shows the raw channels and predicted labels in 3D, and reports per-bouton volume
-            and surface area in µm³ and µm². A biologist loads a file and gets a table.
+            and surface area in µm³ and µm². A biologist loads a file and gets a table.{" "}
+            <strong className="font-semibold text-ink">
+              It is in active use in the lab today, on their own acquisitions
+            </strong>{" "}
+            — which is the part of this project that a benchmark table cannot show.
           </p>
           <ul className="mt-5 space-y-2.5">
             {[
@@ -449,7 +772,7 @@ export function CaseStudySegmentation() {
 
         {/* ------------------------------------------------------------ */}
         <section className="mt-20">
-          <SectionHead num="07" title="Reproducibility" />
+          <SectionHead num="08" title="Reproducibility" />
           <p className="text-[14px] leading-relaxed text-ink-mid">
             The thesis claim is reproducibility, so the repo has to earn it. Training, inference
             and evaluation are separate scripts with a{" "}

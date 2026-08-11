@@ -4,8 +4,11 @@ import { Mail } from "lucide-react";
 import { profile } from "../data/profile";
 import { GithubIcon } from "./icons";
 
+/** `wide` links only appear from lg up. The bar is already close to its limit
+ *  at the sm breakpoint, so extra entries earn their place by having room. */
 const links = [
   { href: "#projects", label: "Work" },
+  { href: "#chitragupta", label: "Chitragupta", wide: true },
   { href: "#experience", label: "Background" },
   { href: "#skills", label: "Skills" },
   { href: "#contact", label: "Contact" },
@@ -36,7 +39,7 @@ export function Nav() {
         </a>
         <ul className="hidden items-center gap-6 sm:flex">
           {links.map((l) => (
-            <li key={l.href}>
+            <li key={l.href} className={l.wide ? "hidden lg:block" : undefined}>
               <a
                 href={l.href}
                 className="font-hero-mono border-b border-transparent px-0 py-[0.15rem] text-[0.72rem] uppercase tracking-[0.09em] text-ink-mid transition-colors hover:border-ink hover:text-ink"

@@ -26,7 +26,7 @@ export const ROUTE_META = {
   "/": {
     title: "Aditya Rawat | ML Systems, Computer Vision & LLM Engineering",
     description:
-      "M.Sc. Data Science at RWTH Aachen. I build 3D microscopy segmentation pipelines (MicroSAM, nnU-Net v2, SwinUNETR) and production LLM systems: an autonomous Hindi newsroom and a research agent with code-enforced grounding.",
+      "M.Sc. Data Science at RWTH Aachen. I build 3D microscopy segmentation pipelines (MicroSAM, nnU-Net v2, SwinUNETR) and production LLM systems: an autonomous Hindi newsroom, a research agent with code-enforced grounding, and a camera assistant where speech is a side-effect of keeping a document true.",
   },
 
   "/case-study/microglomeruli-segmentation": {
@@ -72,21 +72,21 @@ export const ROUTE_META = {
   },
 
   "/case-study/chitragupta": {
-    title: "Chitragupta — a camera assistant built for a cost ceiling | Aditya Rawat",
+    title: "Chitragupta — a live vision assistant without the training | Aditya Rawat",
     description:
-      "A hands-free camera assistant where one model writes the brief for the other model's eyes. A two-model split forced by an 8,000 token/minute cap, engineered to run inside a 200,000-token daily ceiling.",
+      "VideoLLM-online answers when a model watching a live stream should speak — with a trained head, a cached frame history and purpose-built data. Built with none of those, on hosted APIs, that decision has to move out of the model entirely.",
   },
 
   "/case-study/chitragupta/architecture": {
     title: "Chitragupta — how it works | Aditya Rawat",
     description:
-      "Every diagram on this page exists because of a number. The shape of the system is not a preference — it is what fits inside 200,000 vision tokens a day.",
+      "One document, two models, and arithmetic in between. The session diagram, where the lock is and is not, the document section by section, and what one minute of watching costs.",
   },
 
   "/case-study/chitragupta/failure-log": {
-    title: "Chitragupta — eight failures and the rules they left | Aditya Rawat",
+    title: "Chitragupta — ten failures and the rules they left | Aditya Rawat",
     description:
-      "Eight things that broke, and the rule each one left behind: symptom, root cause, and the rule that came out. Two are still open, and they are here for the same reason as the rest.",
+      "Ten things that broke, each with the symptom, the root cause, and the rule it produced — plus the gaps with no fix designed yet, and what the previous version left behind.",
   },
 
   "/certifications": {

@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import { ArrowLeft, ExternalLink, ChevronDown } from "lucide-react";
 import { SignalBar } from "../components/SignalBar";
 import { SectionHead } from "../components/SectionHead";
+import { DataSheet, type DataRow } from "../components/DataSheet";
+import { SkillTags, type SkillGroup } from "../components/SkillTags";
 import { usePageTitle } from "../hooks/usePageTitle";
 import { ROUTE_META } from "../data/routeMeta";
 
@@ -99,14 +101,17 @@ const STAGES = [
 // Each pipeline stage is labeled like an instance in the figure plate: a base
 // hue from the categorical scale, keyed by stage order. GATE is red (it's the
 // reject gate); RESEARCH keeps green, matching the flagship's own links below.
+// `v` is the same hue as a raw custom property, for the SVG figure — Tailwind
+// classes don't reach into SVG paint attributes, and one array keeps the
+// architecture diagram and the stage list below it from ever disagreeing.
 const STAGE_ACCENT = [
-  { text: "text-i5", dot: "bg-i5", hl: "bg-i5/20" }, // COLLECT
-  { text: "text-i4", dot: "bg-i4", hl: "bg-i4/20" }, // NORMALIZE
-  { text: "text-i6", dot: "bg-i6", hl: "bg-i6/20" }, // CLUSTER
-  { text: "text-i1", dot: "bg-i1", hl: "bg-i1/20" }, // GATE
-  { text: "text-i3", dot: "bg-i3", hl: "bg-i3/20" }, // RESEARCH
-  { text: "text-i2", dot: "bg-i2", hl: "bg-i2/25" }, // PLAN
-  { text: "text-i5", dot: "bg-i5", hl: "bg-i5/20" }, // WRITE
+  { text: "text-i5", dot: "bg-i5", hl: "bg-i5/20", v: "var(--color-i5)" }, // COLLECT
+  { text: "text-i4", dot: "bg-i4", hl: "bg-i4/20", v: "var(--color-i4)" }, // NORMALIZE
+  { text: "text-i6", dot: "bg-i6", hl: "bg-i6/20", v: "var(--color-i6)" }, // CLUSTER
+  { text: "text-i1", dot: "bg-i1", hl: "bg-i1/20", v: "var(--color-i1)" }, // GATE
+  { text: "text-i3", dot: "bg-i3", hl: "bg-i3/20", v: "var(--color-i3)" }, // RESEARCH
+  { text: "text-i2", dot: "bg-i2", hl: "bg-i2/25", v: "var(--color-i2)" }, // PLAN
+  { text: "text-i5", dot: "bg-i5", hl: "bg-i5/20", v: "var(--color-i5)" }, // WRITE
 ];
 
 // The design ideology in plain English: each pipeline stage is a desk in a
@@ -172,12 +177,470 @@ function markPhrase(text: string, phrase: string, hl: string) {
   );
 }
 
-const STATS = [
-  { num: "61", unit: "/run", label: "usable RSS candidates per run, up from ~15 after expanding 2 feeds to 8" },
-  { num: "2.3", unit: "×", label: "article length after fixing the editorial plan, not the token cap (930 → ~2,150 chars)" },
-  { num: "45", unit: "-day", label: "TTL on the entity knowledge cache, so a name researched once isn't re-searched next time" },
-  { num: "3", unit: "-stage", label: "plan-execute LLM pipeline: research → editorial strategy → prose, each a separate call" },
+// The head-matter datasheet: the whole system in eight rows, before any prose.
+// Every row carries the site's epistemic status so a scanner can tell a
+// measurement from a deployment claim — including the two rows that are not
+// flattering, which is the point of having the status system at all.
+const DATASHEET: DataRow[] = [
+  {
+    k: "Status",
+    v: "Live. Publishes daily at 08:00 IST, unattended, building since June 2026.",
+    s: "shipped",
+    label: "Shipped",
+  },
+  {
+    k: "Autonomy",
+    v: "No human editor. Every skip-or-publish call, every relevance judgment, is machine-made.",
+    s: "shipped",
+    label: "Shipped",
+  },
+  {
+    k: "Infrastructure",
+    v: "One GitHub Actions job. No server, no database, no hosting bill.",
+    s: "shipped",
+    label: "Shipped",
+  },
+  {
+    k: "Cost per run",
+    v: (
+      <>
+        <span className="font-mono tabular-nums">~$0.008</span> USD, across a seven-stage pipeline.
+      </>
+    ),
+    s: "measured",
+    label: "Measured",
+  },
+  {
+    k: "Intake",
+    v: (
+      <>
+        <span className="font-mono tabular-nums">61</span> usable candidates per run, up from ~15, across 8 RSS
+        feeds plus GitHub trending.
+      </>
+    ),
+    s: "measured",
+    label: "Measured",
+  },
+  {
+    k: "Triage accuracy",
+    v: (
+      <>
+        <span className="font-mono tabular-nums">81.9%</span>, up from{" "}
+        <span className="font-mono tabular-nums">73.8%</span> after one prompt fix — scored against 1,505
+        hand-labeled rows in three golden sets.
+      </>
+    ),
+    s: "measured",
+    label: "Measured",
+  },
+  {
+    k: "Known weakness",
+    v: (
+      <>
+        <span className="font-mono tabular-nums">26.3%</span> of generated claims are unsupported by the source
+        on the faithfulness baseline. Reported as-is, not tuned away.
+      </>
+    ),
+    s: "measured",
+    label: "Measured",
+  },
+  {
+    k: "Tiered research routing",
+    v: "Built, verified, and kept in the codebase — switched off for production runs on cost and build time.",
+    s: "pending",
+    label: "Off in prod",
+  },
 ];
+
+// Production volume, read out of the GitHub Actions run logs and the traces the
+// pipeline commits about itself. These answer a different question from the
+// datasheet's evaluation rows: not "is its judgment sound" but "does it actually
+// run, every day, without anyone holding it up" — so they get their own table
+// rather than being mixed into the same list.
+//
+// `trace: true` marks a figure that covers only the 28 runs which committed
+// machine-readable traces. Trace committing landed on 2026-07-07, so eight
+// earlier runs left nothing behind and those totals are floors, not totals. The
+// dagger is not decoration: an unqualified number here would be a lie by
+// omission, and this page's whole argument is that its numbers are honest.
+//
+// Deliberately absent: per-call LLM volume (recorded nowhere — inferring it from
+// the architecture would be an estimate wearing a measurement's clothes) and any
+// readership figure (the pipeline publishes; nobody has been told to read it).
+const SCALE: { k: string; n: string; v: string; trace?: boolean }[] = [
+  { k: "Operating window", n: "39", v: "scheduled runs across 31 days, unattended." },
+  // 848 ÷ 36 = 23.6, so the average is per completed run, not per scheduled one.
+  // Worth the extra word: the two divisors differ and the page shows both.
+  { k: "Compute", n: "848 min", v: "(14.1 hours) of Actions runtime, averaging 23.6 minutes a completed run." },
+  {
+    k: "Published, to date",
+    n: "860",
+    v: "articles in the store — 588 from RSS, 192 from GitHub trending, 80 synthesized.",
+  },
+  {
+    k: "Hindi prose written",
+    n: "2,262,387",
+    v: "characters, averaging 2,980 per full three-stage article.",
+  },
+  { k: "Source text read", n: "2,027,544", v: "characters scraped and processed, roughly 338,000 words.", trace: true },
+  {
+    k: "Pipeline throughput",
+    n: "731",
+    v: "articles reached the pipeline after clustering — 635 published, 63 rejected by the relevance gate, 8 too thin to be worth writing.",
+    trace: true,
+  },
+  {
+    k: "Research dispatched",
+    n: "2,774",
+    v: "search queries — 1,812 identity lookups, 962 gap and context questions.",
+    trace: true,
+  },
+  { k: "Entity knowledge base", n: "2,272", v: "entities cached to date." },
+  {
+    k: "Cache effectiveness",
+    n: "30%",
+    v: "of 2,584 extractions answered from cache: no search, no model call, no cost.",
+    trace: true,
+  },
+  {
+    k: "Under failure",
+    n: "3.4%",
+    v: "of Stage 2 calls failed; each degraded to a fallback rather than dropping the article.",
+    trace: true,
+  },
+];
+
+// Grouped rather than a flat chip cloud: the grouping is the claim. A recruiter
+// reading for one track can find their row without reading the other three.
+const SKILL_GROUPS: SkillGroup[] = [
+  [
+    "LLM systems",
+    ["Multi-stage prompt pipelines", "Plan-execute decomposition", "Cost-tiered model routing", "Agent-to-agent calls", "Structured JSON extraction"],
+  ],
+  ["Evaluation", ["Hand-labeled golden sets", "LLM-as-judge calibration", "Before/after prompt A/B", "Failure taxonomies"]],
+  // Named "Local models" rather than "ML": this project is an LLM-systems
+  // project, and an ML row padded out with a checkpoint name and a similarity
+  // metric undersells it to anyone scanning for real ML — which lives on the
+  // segmentation case study, not here. What is genuinely worth showing is the
+  // judgment behind these three: deduplication and language detection were kept
+  // off the metered path on purpose, which is the same argument the figure's
+  // cost rail makes.
+  ["Local models", ["sentence-transformers", "Embedding-based dedup", "Language detection"]],
+  ["Engineering", ["Python", "GitHub Actions CI/CD", "TTL caching", "BeautifulSoup", "pytest"]],
+];
+
+/* ── Architecture figure ───────────────────────────────────────────────────
+ * One vertical spine, read downward, because a wide figure on a phone is a
+ * figure nobody scrolls. Three columns carry three different questions:
+ *
+ *   left   — what this stage costs. A filled square is a metered model call;
+ *            a hollow one runs locally and costs nothing. The two hollow
+ *            squares in the middle of the column are the whole cost argument:
+ *            deduplication and language detection were deliberately kept off
+ *            the meter, so the budget is spent on judgment, not bookkeeping.
+ *   centre — the stage itself, in the same hue it carries in the stage list
+ *            further down the page.
+ *   right  — what falls out here (red, with a branch arrow) or what this stage
+ *            adds that the source article never had.
+ *
+ * Every number in it is stated elsewhere on this page; the figure introduces
+ * none of its own. */
+
+const T_TAG = { fontFamily: "var(--font-data)", fontSize: 10.5, letterSpacing: ".09em" };
+const T_RAIL = { fontFamily: "var(--font-data)", fontSize: 9 };
+const T_HEAD = { fontFamily: "var(--font-display)", fontSize: 12.5, fontWeight: 600 };
+const T_NOTE = { fontFamily: "var(--font-sans)", fontSize: 10, fontStyle: "italic" as const };
+
+type ArchStage = {
+  title: string;
+  /** Left rail: up to two short lines. */
+  cost: [string, string];
+  /** Filled marker = a real, metered API call happens here. */
+  metered: boolean;
+  /** Right column: two lines. `reject` draws the branch arrow and colours it. */
+  note: [string, string];
+  reject?: boolean;
+  /** Extra lines inside the box — only RESEARCH earns them (the cache). */
+  inset?: [string, string];
+};
+
+const ARCH: ArchStage[] = [
+  {
+    title: "8 RSS feeds + GitHub trending",
+    cost: ["sarvam-105b", "batched editor"],
+    metered: true,
+    note: ["job ads, listicle spam, low-traction repos", "— dropped by regex before any model runs"],
+    reject: true,
+  },
+  {
+    title: "detect language, translate to English",
+    cost: ["langdetect", "local · free"],
+    metered: false,
+    note: ["non-English sources are translated first,", "so the entities extracted are the real ones"],
+  },
+  {
+    title: "same-story detection by embedding",
+    cost: ["mpnet-768d", "local · free"],
+    metered: false,
+    note: ["five outlets, one event — cosine ≥ 0.44", "folds them into one story, written once"],
+    reject: true,
+  },
+  {
+    title: "scrape, then decide if it's worth writing",
+    cost: ["sarvam-30b", "× 3 calls"],
+    metered: true,
+    note: ["not worth writing — the gate states its", "REASON before its VERDICT (0/5 → 10/10)"],
+    reject: true,
+  },
+  {
+    title: "entity + gap analysis, tiered search",
+    cost: ["sarvam-30b × 3", "45-day cache 1st"],
+    metered: true,
+    note: ["", ""],
+    inset: ["a 45-day entity cache is checked first —", "a hit costs nothing at all: no search, no call"],
+  },
+  {
+    title: "editorial strategy, then a paragraph plan",
+    cost: ["sarvam-105b", "× 2 calls"],
+    metered: true,
+    note: ["the thinking is written out as plain text", "first, then transcribed into strict JSON"],
+  },
+  {
+    title: "original Hindi prose, six sections",
+    cost: ["sarvam-105b", "× 1 + one retry"],
+    metered: true,
+    note: ["six labeled Hindi sections — 2.3× longer", "once the plan was fixed, not the token cap"],
+  },
+];
+
+const BOX_X = 124;
+const BOX_W = 292;
+const CX = BOX_X + BOX_W / 2;
+const BOX_R = BOX_X + BOX_W;
+/** A real gutter between the stage column and the notes, so the branch arrows
+ *  and the two-way call to the research agent read as connectors, not ticks. */
+const NOTE_X = 458;
+const VB_W = 720;
+
+const TRIG_Y = 28;
+const CAP_H = 46;
+const GAP = 24;
+const ROW_H = 56;
+const RESEARCH_H = 76;
+
+/** Walk the rows once so the boxes, the rail and the arrows can't drift. */
+function archLayout() {
+  let y = TRIG_Y + CAP_H + GAP;
+  const rows = ARCH.map((s, i) => {
+    const h = i === 4 ? RESEARCH_H : ROW_H;
+    const top = y;
+    y += h + GAP;
+    return { s, i, top, h };
+  });
+  return { rows, outY: y, total: y + CAP_H + 32 };
+}
+
+function ArchitectureDiagram() {
+  const { rows, outY, total } = archLayout();
+
+  return (
+    <svg
+      viewBox={`0 0 ${VB_W} ${total}`}
+      className="block h-auto w-full min-w-[32rem]"
+      role="img"
+      aria-label="The pipeline read downward as seven stages, from a daily GitHub Actions cron to a Hindi edition committed back to the repository. A left-hand rail marks what each stage costs: collect, gate, research, plan and write each make metered model calls, while language detection and same-story clustering run locally and cost nothing. A right-hand column marks the three stages that reject material — collect drops job ads and listicle spam by regex, cluster folds five outlets covering one event into a single story at a cosine similarity of 0.44, and the gate skips articles not worth writing. The research stage checks a 45-day entity cache before any search and calls out to a separately built research agent for ambiguous entities and comparison questions."
+    >
+      <defs>
+        <marker id="td-arw" viewBox="0 0 10 10" refX="9.5" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto">
+          <path d="M0 0 L10 5 L0 10 z" fill="var(--color-rule-hard)" />
+        </marker>
+        <marker id="td-arw-x" viewBox="0 0 10 10" refX="9.5" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+          <path d="M0 0 L10 5 L0 10 z" fill="var(--color-i1)" />
+        </marker>
+        <marker id="td-arw-g" viewBox="0 0 10 10" refX="9.5" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+          <path d="M0 0 L10 5 L0 10 z" fill="var(--color-i3)" />
+        </marker>
+      </defs>
+
+      {/* Column headers — three columns, three different questions */}
+      <text {...T_RAIL} x={6} y={14} letterSpacing=".08em" fill="var(--color-ink-soft)">
+        WHAT IT COSTS
+      </text>
+      <text {...T_RAIL} x={NOTE_X} y={14} letterSpacing=".08em" fill="var(--color-ink-soft)">
+        WHAT IT DROPS, OR ADDS
+      </text>
+
+      {/* Trigger */}
+      <rect x={BOX_X} y={TRIG_Y} width={BOX_W} height={CAP_H} fill="var(--color-paper-hi)" stroke="var(--color-rule-hard)" />
+      <text {...T_TAG} x={CX} y={TRIG_Y + 20} textAnchor="middle" fill="var(--color-ink)">
+        GITHUB ACTIONS · DAILY CRON
+      </text>
+      <text {...T_NOTE} x={CX} y={TRIG_Y + 36} textAnchor="middle" fill="var(--color-ink-soft)">
+        one job, 08:00 IST, nobody watching
+      </text>
+      <line
+        x1={CX}
+        y1={TRIG_Y + CAP_H}
+        x2={CX}
+        y2={TRIG_Y + CAP_H + GAP - 2}
+        stroke="var(--color-rule-hard)"
+        strokeWidth="1.5"
+        markerEnd="url(#td-arw)"
+      />
+
+      {rows.map(({ s, i, top, h }) => {
+        const hue = STAGE_ACCENT[i].v;
+        const mid = top + h / 2;
+        const railY = i === 4 ? top + 26 : mid - 3;
+
+        return (
+          <g key={s.title}>
+            {/* Cost rail */}
+            {s.metered ? (
+              <rect x={6} y={railY - 11} width={8} height={8} fill="var(--color-ink)" />
+            ) : (
+              <rect x={6} y={railY - 11} width={8} height={8} fill="none" stroke="var(--color-ink-soft)" />
+            )}
+            <text {...T_RAIL} x={22} y={railY - 4} fill={s.metered ? "var(--color-ink)" : "var(--color-ink-soft)"}>
+              {s.cost[0]}
+            </text>
+            <text {...T_RAIL} x={22} y={railY + 8} fill="var(--color-ink-soft)">
+              {s.cost[1]}
+            </text>
+
+            {/* Stage */}
+            <rect
+              x={BOX_X}
+              y={top}
+              width={BOX_W}
+              height={h}
+              fill={`color-mix(in oklch, ${hue} 8%, transparent)`}
+              stroke={hue}
+              strokeWidth="1.3"
+            />
+            <text {...T_TAG} x={BOX_X + 14} y={top + 21} fill={hue}>
+              {STAGES[i].tag}
+            </text>
+            <text {...T_HEAD} x={BOX_X + 14} y={top + 40} fill="var(--color-ink)">
+              {s.title}
+            </text>
+            {s.inset && (
+              <>
+                <text {...T_NOTE} x={BOX_X + 14} y={top + 57} fill="var(--color-i3)">
+                  {s.inset[0]}
+                </text>
+                <text {...T_NOTE} x={BOX_X + 14} y={top + 69} fill="var(--color-i3)">
+                  {s.inset[1]}
+                </text>
+              </>
+            )}
+
+            {/* Right column: a branch that drops material, or a note on what it adds */}
+            {s.reject && (
+              <line
+                x1={BOX_R + 3}
+                y1={mid}
+                x2={NOTE_X - 8}
+                y2={mid}
+                stroke="var(--color-i1)"
+                strokeWidth="1.2"
+                strokeDasharray="3 3"
+                markerEnd="url(#td-arw-x)"
+              />
+            )}
+            {s.note[0] && (
+              <>
+                <text
+                  {...T_NOTE}
+                  x={NOTE_X}
+                  y={mid - 3}
+                  fill={s.reject ? "var(--color-i1)" : "var(--color-ink-soft)"}
+                >
+                  {s.reject ? `✕ ${s.note[0]}` : s.note[0]}
+                </text>
+                <text
+                  {...T_NOTE}
+                  x={NOTE_X}
+                  y={mid + 10}
+                  fill={s.reject ? "var(--color-i1)" : "var(--color-ink-soft)"}
+                >
+                  {s.note[1]}
+                </text>
+              </>
+            )}
+
+            {/* Spine to the next box */}
+            <line
+              x1={CX}
+              y1={top + h}
+              x2={CX}
+              y2={top + h + GAP - 2}
+              stroke="var(--color-rule-hard)"
+              strokeWidth="1.5"
+              markerEnd="url(#td-arw)"
+            />
+          </g>
+        );
+      })}
+
+      {/* The research agent: a separate project, called across the boundary */}
+      <rect
+        x={NOTE_X - 6}
+        y={rows[4].top + 8}
+        width={VB_W - NOTE_X - 2}
+        height={RESEARCH_H - 16}
+        fill="color-mix(in oklch, var(--color-i3) 7%, transparent)"
+        stroke="var(--color-i3)"
+        strokeDasharray="4 3"
+      />
+      <line
+        x1={BOX_R + 3}
+        y1={rows[4].top + RESEARCH_H / 2}
+        x2={NOTE_X - 12}
+        y2={rows[4].top + RESEARCH_H / 2}
+        stroke="var(--color-i3)"
+        strokeWidth="1.3"
+        markerStart="url(#td-arw-g)"
+        markerEnd="url(#td-arw-g)"
+      />
+      <text {...T_TAG} x={NOTE_X + 6} y={rows[4].top + 26} fill="var(--color-i3)">
+        RESEARCH AGENT
+      </text>
+      <text {...T_NOTE} x={NOTE_X + 6} y={rows[4].top + 42} fill="var(--color-ink)">
+        a second project of mine, called
+      </text>
+      <text {...T_NOTE} x={NOTE_X + 6} y={rows[4].top + 54} fill="var(--color-ink)">
+        as a paid API from this one
+      </text>
+
+      {/* Output */}
+      <rect x={BOX_X} y={outY} width={BOX_W} height={CAP_H} fill="var(--color-paper-hi)" stroke="var(--color-rule-hard)" />
+      <text {...T_TAG} x={CX} y={outY + 20} textAnchor="middle" fill="var(--color-ink)">
+        COMMITTED BACK TO THE REPO
+      </text>
+      <text {...T_NOTE} x={CX} y={outY + 36} textAnchor="middle" fill="var(--color-ink-soft)">
+        a static Hindi edition · ~$0.008 per run
+      </text>
+
+      {/* Legend: the same marks, drawn the same way, so the key can't drift
+          from the rail it explains. */}
+      <g transform={`translate(6 ${total - 18})`}>
+        <rect x={0} y={0} width={8} height={8} fill="var(--color-ink)" />
+        <text {...T_RAIL} x={14} y={7} fill="var(--color-ink-soft)">
+          a metered model call
+        </text>
+        <rect x={144} y={0} width={8} height={8} fill="none" stroke="var(--color-ink-soft)" />
+        <text {...T_RAIL} x={158} y={7} fill="var(--color-ink-soft)">
+          runs locally, costs nothing
+        </text>
+        <line x1={318} y1={4} x2={346} y2={4} stroke="var(--color-i1)" strokeWidth="1.2" strokeDasharray="3 3" markerEnd="url(#td-arw-x)" />
+        <text {...T_RAIL} x={354} y={7} fill="var(--color-i1)">
+          rejected here, and why
+        </text>
+      </g>
+    </svg>
+  );
+}
 
 const PRICES = [
   { model: "sarvam-30b", input: "$0.029", cached: "$0.017", discount: "40%", output: "$0.115" },
@@ -234,12 +697,7 @@ export function CaseStudyTechDrishti() {
           <mark className="box-decoration-clone bg-i3/20 px-1 text-ink">
             in original Hindi prose rather than machine translation
           </mark>
-          , through a multi-stage LLM pipeline it has to be caught arguing with itself along the way.
-        </p>
-        <p className="mt-4 text-[14px] leading-relaxed text-ink-soft">
-          This page is the log of that build: why the agentic workflow exists, what the AI architecture does today,
-          and nine real bugs found along the way, each with what was claimed, what broke, what fixed it, and how it
-          was verified. Nothing below is hypothetical.
+          . No server, no database, no human editor.
         </p>
 
         <div className="mt-8 flex flex-wrap gap-4">
@@ -260,14 +718,112 @@ export function CaseStudyTechDrishti() {
           </a>
         </div>
 
+        {/* Head-matter datasheet. Deliberately before any argument: a reader who
+            gives this page thirty seconds should leave with the numbers, and a
+            reader who gives it thirty minutes should find the same numbers
+            defended below. Two rows are unflattering on purpose. */}
+        <div className="mt-10">
+          <DataSheet title="SYSTEM DATASHEET" rows={DATASHEET} />
+        </div>
+
+        <p className="mt-10 text-[14px] leading-relaxed text-ink-mid">
+          A pipeline that works once is a demo.{" "}
+          <mark className="box-decoration-clone bg-i3/20 px-1 text-ink">
+            These are the totals from a month of it running on a schedule, unattended
+          </mark>{" "}
+          — same code every morning, whether or not anyone is watching it. Read straight out of the GitHub Actions
+          run logs and the traces the pipeline commits about itself, not from a benchmark harness.
+        </p>
+
+        <div className="notch-corner mt-5 border border-rule-hard bg-panel">
+          <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 bg-ink px-4 py-2.5">
+            <span className="font-hero-mono text-[11.5px] tracking-wider text-paper">
+              AT SCALE &middot; 2 JUL &rarr; 2 AUG 2026
+            </span>
+            <span className="font-hero-mono text-[11px] tracking-wider text-rule">FROM RUN LOGS</span>
+          </div>
+          <dl className="m-0">
+            {SCALE.map((r, i) => (
+              <div
+                key={r.k}
+                className={`grid gap-x-5 px-4 py-3 sm:grid-cols-[11.5rem_1fr] sm:items-baseline ${
+                  i !== SCALE.length - 1 ? "border-b border-rule" : ""
+                }`}
+              >
+                <dt className="font-hero-mono text-[11.5px] tracking-wide text-ink-soft uppercase">
+                  {r.k}
+                  {r.trace && (
+                    <>
+                      <span className="text-i2" aria-hidden="true">
+                        {" "}
+                        &dagger;
+                      </span>
+                      {/* The dagger is the whole qualification on this number, so it
+                          cannot be a glyph a screen reader skips. */}
+                      <span className="sr-only"> (traced subset only — a floor, not a total)</span>
+                    </>
+                  )}
+                </dt>
+                <dd className="m-0 mt-1 sm:mt-0">
+                  <span className="font-mono text-[15px] font-semibold tabular-nums text-ink">{r.n}</span>{" "}
+                  <span className="text-[13.5px] leading-relaxed text-ink-mid">{r.v}</span>
+                </dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+        <p className="mt-3 text-[13px] leading-relaxed text-ink-soft">
+          <span className="text-i2">&dagger;</span> Covers the 28 runs that committed machine-readable traces.
+          Trace committing was added on 7 July 2026, so the eight runs before it left none behind:{" "}
+          <strong className="font-semibold text-ink-mid">those rows are floors, not totals</strong>. The
+          860-article store is the only figure spanning the full lifetime. Per-call LLM volume is recorded
+          nowhere, so it is not estimated here.
+        </p>
+
+        <div className="mt-8">
+          <SkillTags groups={SKILL_GROUPS} />
+        </div>
+
+        <p className="mt-8 text-[14px] leading-relaxed text-ink-soft">
+          Everything below is the log of that build: the architecture in one figure, why the workflow exists, what
+          each stage does, and nine real bugs, each with what was claimed, what broke, what fixed it, and how it was
+          verified. Nothing below is hypothetical.
+        </p>
+
         <section className="mt-20">
-          <SectionHead num="01" title="Why this exists" />
+          <SectionHead num="01" title="The whole system, in one figure" />
+          <p className="text-[14px] leading-relaxed text-ink-mid">
+            Seven stages, read downward. The left rail is the part that matters most to how this was engineered:{" "}
+            <strong className="font-semibold text-ink">a filled square is a metered model call, a hollow one is free</strong>
+            . Deduplication and language detection were pushed onto local models specifically so the paid budget is
+            spent on judgment — deciding what's worth writing, and what the source article left out — rather than on
+            bookkeeping a library could do.
+          </p>
+          <figure className="m-0 mt-6 flex flex-col gap-3">
+            <div className="notch-corner overflow-x-auto border border-rule-hard bg-panel px-3 py-4 sm:px-4">
+              <ArchitectureDiagram />
+            </div>
+            <figcaption className="text-[13px] leading-relaxed text-ink-mid">
+              <b className="text-ink">Three stages exist to throw things away.</b> Collect, cluster and gate all
+              reject — by regex, by embedding distance, and by model judgment respectively, in that order, because
+              each one is more expensive than the last and there's no reason to pay for a verdict on something a
+              regex can drop for free. What survives all three is the only thing the writing stages ever see.
+            </figcaption>
+          </figure>
+        </section>
+
+        <section className="mt-20">
+          <SectionHead num="02" title="Why this exists" />
           <p className="mb-6 text-[14px] leading-relaxed text-ink-mid">
             There's no shortage of Hindi tech coverage, but almost all of it is either wire-service translation or a
-            human editor's fast rewrite. The bet here was different: could an agentic AI workflow make its own
-            editorial calls, autonomously research what it doesn't know by calling out to a second AI agent, and
-            write original Hindi prose, at a running cost of fractions of a cent per article, with no server or
-            hosting bill beyond a GitHub Actions runner? That framing is what makes the field reports below worth
+            human editor's fast rewrite. The bet here was different:{" "}
+            <mark className="box-decoration-clone bg-i3/20 px-1 text-ink">
+              could an agentic AI workflow make its own editorial calls, autonomously research what it doesn't know
+              by calling out to a second AI agent, and write original Hindi prose, at a running cost of fractions of
+              a cent per article
+            </mark>
+            , with no server or hosting bill beyond a GitHub Actions runner? That framing is what makes the field
+            reports below worth
             reading: each one is the AI agent being asked to make a judgment call a human editor makes without
             thinking twice, getting it wrong the first time, in a way specific to how it was asked.
           </p>
@@ -283,7 +839,7 @@ export function CaseStudyTechDrishti() {
         </section>
 
         <section className="mt-20">
-          <SectionHead num="02" title="Research, not translation" />
+          <SectionHead num="03" title="Research, not translation" />
           <p className="mb-6 text-[14px] leading-relaxed text-ink-mid">
             The differentiator isn't the writing, it's what feeds it. The pipeline doesn't rephrase the source
             article: it researches the topic the way a reporter would, and hands the writer real, grounded facts the
@@ -309,7 +865,7 @@ export function CaseStudyTechDrishti() {
         </section>
 
         <section className="mt-20">
-          <SectionHead num="03" title="Built like a newsroom, not a translation" />
+          <SectionHead num="04" title="Built like a newsroom, not a translation" />
           <p className="mb-6 text-[14px] leading-relaxed text-ink-mid">
             The whole thing starts from one decision:{" "}
             <strong className="font-semibold text-ink">this is a newsroom, not a translate button</strong>. A
@@ -347,7 +903,7 @@ export function CaseStudyTechDrishti() {
         </section>
 
         <section className="mt-20">
-          <SectionHead num="04" title="How the agentic workflow thinks today" />
+          <SectionHead num="05" title="How the agentic workflow thinks today" />
           <p className="mb-6 text-[14px] leading-relaxed text-ink-mid">
             No server, no database, no standing infrastructure: the entire agentic AI workflow runs inside a daily
             GitHub Actions job, chains through collection, an LLM editorial gate, a self-built research agent, and a
@@ -486,7 +1042,7 @@ export function CaseStudyTechDrishti() {
         </section>
 
         <section className="mt-20">
-          <SectionHead num="05" title="Nine bugs that shaped the evolution" />
+          <SectionHead num="06" title="Nine bugs that shaped the evolution" />
           <p className="mb-6 text-[14px] leading-relaxed text-ink-mid">
             Every fix was reproduced against real articles, not synthetic test cases, the honest failure rate
             included alongside the fix. Real before/after artifacts where they survive: an empty API response, a
@@ -507,7 +1063,7 @@ export function CaseStudyTechDrishti() {
         </section>
 
         <section className="mt-20">
-          <SectionHead num="06" title="Measuring what it gets wrong" />
+          <SectionHead num="07" title="Measuring what it gets wrong" />
           <p className="mb-6 text-[14px] leading-relaxed text-ink-mid">
             The field reports above are qualitative: one bug, one fix, verified once. On top of that sits a
             quantitative evaluation layer, three hand-labeled golden sets (1,505 rows) with judge-validated
@@ -543,20 +1099,8 @@ export function CaseStudyTechDrishti() {
         </section>
 
         <section className="mt-20">
-          <SectionHead num="07" title="By the numbers" />
-          <div className="grid grid-cols-2 gap-px border border-rule-hard bg-rule-hard sm:grid-cols-4">
-            {STATS.map((s) => (
-              <div key={s.label} className="bg-panel p-5">
-                <div className="font-display text-2xl font-semibold text-ink">
-                  {s.num}
-                  <span className="font-mono text-sm text-panel-mid">{s.unit}</span>
-                </div>
-                <div className="mt-2 text-[12px] leading-relaxed text-panel-mid">{s.label}</div>
-              </div>
-            ))}
-          </div>
-
-          <p className="mb-4 mt-8 text-sm text-ink-soft">
+          <SectionHead num="08" title="Why Sarvam, and what it costs" />
+          <p className="mb-4 text-[14px] leading-relaxed text-ink-mid">
             Model choice was a cost decision, checked against the obvious alternative rather than assumed:
           </p>
           <div className="overflow-x-auto border border-rule-hard">
@@ -608,24 +1152,6 @@ export function CaseStudyTechDrishti() {
             server and no hosting cost. The autonomous research agent it calls out to for ambiguous entities and
             comparison questions (RESEARCH, above) is a second AI agent project of mine, built and hosted separately.
           </p>
-          <div className="mt-4 flex flex-wrap gap-2">
-            {[
-              "Agentic AI",
-              "LLM Pipeline",
-              "Python",
-              "Sarvam-30B / 105B",
-              "sentence-transformers",
-              "BeautifulSoup",
-              "GitHub Actions",
-              "pytest",
-            ].map(
-              (t) => (
-                <span key={t} className="notch-corner-sm border border-rule-hard bg-panel px-2.5 py-1 text-[12px] text-panel-mid">
-                  {t}
-                </span>
-              ),
-            )}
-          </div>
           <a
             href="https://huggingface.co/spaces/aditya0701/DeepSeek_Mini_research_tool"
             target="_blank"

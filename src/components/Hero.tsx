@@ -99,6 +99,7 @@ export function Hero() {
             {[
               { label: "Measured", cls: "measured", desc: "a real number from a real run" },
               { label: "Shipped", cls: "shipped", desc: "deployed and usable now, in production or hosted" },
+              { label: "Prototype", cls: "prototype", desc: "runs end to end on real input, still being ironed out" },
               { label: "Pending", cls: "pending", desc: "not measured yet, and says so" },
               { label: "Not shipped", cls: "excluded", desc: "built, measured, left out on purpose" },
             ].map((s) => (

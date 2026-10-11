@@ -56,8 +56,9 @@ export const projects: Project[] = [
       "Trained across three preprocessing variants (raw, difference-of-Gaussians, PSF-deconvolved) and evaluated with instance-matching metrics that account for physical voxel volume, not pixel counts",
       "BoutonViewer reports per-bouton volume and surface area in µm³ / µm², auto-derives voxel calibration from acquisition type, and lets a biologist click away a false positive without touching code",
       "Final checkpoints published on Hugging Face for reuse",
+      "Deployed the Base encoder through ONNX, INT8 quantization and OpenVINO on a laptop CPU, GPU and NPU: 5,605 ms to 241 ms (FP16, integrated GPU) with identical detections, and profiled why INT8 was slower than FP16 on the GPU",
     ],
-    tags: ["PyTorch", "MicroSAM", "Cellpose 3D", "nnU-Net v2", "SwinUNETR", "MONAI", "napari", "PyQt"],
+    tags: ["PyTorch", "MicroSAM", "Cellpose 3D", "nnU-Net v2", "SwinUNETR", "MONAI", "napari", "PyQt", "ONNX", "OpenVINO", "INT8 quantization"],
     figures: [
       {
         src: "figures/original.webp",
@@ -77,6 +78,7 @@ export const projects: Project[] = [
     ],
     links: [
       { label: "Case Study", href: "/case-study/microglomeruli-segmentation" },
+      { label: "Thesis PDF", href: "https://adityarawat.de/thesis/Aditya_Rawat_Masterarbeit.pdf" },
       { label: "Thesis code", href: "https://github.com/aditya0701/Image_segmentation_thesis" },
       {
         label: "BoutonViewer",

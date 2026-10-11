@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
-import { ArrowLeft, ExternalLink } from "lucide-react";
+import { ArrowLeft, Download, ExternalLink } from "lucide-react";
 import { SignalBar } from "../components/SignalBar";
 import { SectionHead } from "../components/SectionHead";
 import { DataSheet, type DataRow } from "../components/DataSheet";
@@ -84,6 +84,19 @@ const DATASHEET: DataRow[] = [
     label: "In use",
   },
   {
+    k: "Deployment",
+    v: (
+      <>
+        The Base encoder exported to ONNX and run through INT8 and OpenVINO on a laptop: from{" "}
+        <span className="font-mono tabular-nums">5,605</span> ms on the CPU to{" "}
+        <span className="font-mono tabular-nums">241</span> ms in FP16 on the integrated GPU, with identical
+        detections. INT8 was faster on the CPU and slower on the GPU. TensorRT on a T4 is still to come.
+      </>
+    ),
+    s: "measured",
+    label: "Measured",
+  },
+  {
     k: "Known weakness",
     v: (
       <>
@@ -125,6 +138,36 @@ const SKILL_GROUPS: SkillGroup[] = [
     ["Hand annotation in napari", "Anisotropic voxel calibration", "Richardson-Lucy deconvolution", "Difference-of-Gaussians"],
   ],
   ["Engineering", ["PyTorch", "MONAI", "Kornia", "HTCondor cluster jobs", "napari plugin", "Hugging Face Hub"]],
+  [
+    "Deployment",
+    ["ONNX export", "ONNX Runtime", "INT8 post-training quantization", "OpenVINO / NNCF", "Per-layer GPU profiling"],
+  ],
+];
+
+// Section 08. Every number is copied from edge_deploy/WRITEUP.md and the
+// results files in the thesis repo (branch edge-deploy). The baseline is the
+// MicroSAM Base checkpoint run through the deployment scripts' own pipeline, so
+// it is compared only with the rows below it, never with the model-card table.
+// Encoder latency: median of 30 runs after 10 warm-ups, batch 1, laptop on AC.
+type DeployRow = {
+  device: string;
+  runtime: string;
+  latency: string;
+  speedup: string;
+  size: string;
+  detections: string;
+  selected?: boolean;
+  failed?: boolean;
+};
+
+const DEPLOY_ROWS: DeployRow[] = [
+  { device: "CPU", runtime: "PyTorch FP32 (baseline)", latency: "5,605 ms", speedup: "1.0x", size: "359 MB", detections: "32 / 12 / 1" },
+  { device: "CPU", runtime: "ONNX Runtime FP32", latency: "3,772 ms", speedup: "1.5x", size: "368 MB", detections: "32 / 12 / 1" },
+  { device: "CPU", runtime: "ONNX Runtime INT8 dynamic", latency: "2,079 ms", speedup: "2.7x", size: "109 MB", detections: "32 / 12 / 1" },
+  { device: "CPU", runtime: "OpenVINO INT8 (NNCF)", latency: "1,889 ms", speedup: "3.0x", size: "110 MB", detections: "32 / 8 / 1" },
+  { device: "iGPU", runtime: "OpenVINO FP16", latency: "241 ms", speedup: "23x", size: "184 MB", detections: "32 / 12 / 1", selected: true },
+  { device: "iGPU", runtime: "OpenVINO INT8, best of 3 strategies", latency: "371 ms", speedup: "15x", size: "109 MB", detections: "not run" },
+  { device: "NPU", runtime: "OpenVINO FP16 / INT8", latency: "failed", speedup: "", size: "", detections: "", failed: true },
 ];
 
 const FIGURES = [
@@ -432,7 +475,20 @@ export function CaseStudySegmentation() {
           <strong className="font-semibold text-ink">and who are using the tool now</strong>.
         </p>
 
-        <div className="mt-8 flex flex-wrap gap-4">
+        <div className="mt-8 flex flex-wrap items-center gap-4">
+          {/* The one thing a visitor should do here, so it leads the row and is
+              the only button with a heavy fill and a hard offset shadow. */}
+          <a
+            href={asset("thesis/Aditya_Rawat_Masterarbeit.pdf")}
+            download
+            className="notch-corner-sm inline-flex items-center gap-2.5 border-2 border-i3-bright bg-ink px-6 py-3 text-[15px] font-semibold text-paper shadow-[4px_4px_0_var(--color-i3-bright)] transition-transform hover:-translate-x-0.5 hover:-translate-y-0.5"
+          >
+            <Download size={17} />
+            Download thesis (PDF)
+            <span className="font-hero-mono text-[11px] font-normal tracking-wide text-i3-bright">
+              21 MB
+            </span>
+          </a>
           <a
             href="https://github.com/aditya0701/Image_segmentation_thesis"
             target="_blank"
@@ -772,7 +828,153 @@ export function CaseStudySegmentation() {
 
         {/* ------------------------------------------------------------ */}
         <section className="mt-20">
-          <SectionHead num="08" title="Reproducibility" />
+          <SectionHead num="08" title="Deploying the encoder: ONNX, INT8, OpenVINO" />
+          <p className="text-[14px] leading-relaxed text-ink-mid">
+            A model the lab runs on a workstation is one thing; the same model on cheaper hardware is
+            another. So I took the heaviest part of the pipeline, the ViT-B image encoder of the fine-tuned
+            MicroSAM Base model (about 90 M parameters, one 1024 &times; 1024 tile per call), and pushed it
+            through the industry deployment toolchain on an Intel Core Ultra 7 258V laptop: export to ONNX,
+            INT8 post-training quantization, and OpenVINO on the CPU, the integrated Arc GPU and the NPU.{" "}
+            <strong className="font-semibold text-ink">
+              Every row was checked against the full 3D segmentation pipeline, not just against the
+              encoder&rsquo;s output.
+            </strong>
+          </p>
+          <p className="mt-3 text-[14px] leading-relaxed text-ink-soft">
+            Method: batch 1, 10 warm-up and 30 timed runs, median reported, and the benchmark code refuses
+            to run unless the laptop is on mains power in its best-performance mode. INT8 calibration used
+            57 tiles from training volumes only, hash-checked against the test set. Detections are true
+            positives / false positives / misses on the 33 ground-truth boutons at IoU &ge; 0.25.
+          </p>
+
+          <div className="mt-6 overflow-x-auto">
+            <table className="w-full border-collapse text-left">
+              <caption className="sr-only">
+                Encoder latency, speed-up, model size and detections for each runtime and precision on the
+                laptop CPU, integrated GPU and NPU.
+              </caption>
+              <thead>
+                <tr className="border-b border-rule-hard">
+                  {["Device", "Runtime · precision", "Encoder", "vs baseline", "Size", "TP / FP / FN"].map((h) => (
+                    <th
+                      key={h}
+                      className="py-3 pr-4 font-hero-mono text-[12px] uppercase tracking-wide text-ink-mid"
+                    >
+                      {h}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody className="font-mono tabular-nums">
+                {DEPLOY_ROWS.map((r) => (
+                  <tr
+                    key={`${r.device}-${r.runtime}`}
+                    className={`border-b border-panel-border ${r.selected ? "bg-i3/[0.06]" : ""}`}
+                  >
+                    <td className="py-3 pr-4 text-[13px] text-ink-soft">{r.device}</td>
+                    <td className={`py-3 pr-4 text-[13px] ${r.selected ? "font-semibold text-i3" : "text-ink"}`}>
+                      {r.runtime}
+                    </td>
+                    {r.failed ? (
+                      <td colSpan={4} className="py-3 text-[13px] text-ink-soft">
+                        compiled, then wrong output and a device-lost error; documented, not shipped
+                      </td>
+                    ) : (
+                      <>
+                        <td className={`py-3 pr-4 text-[13px] ${r.selected ? "font-semibold text-i3" : "text-ink"}`}>
+                          {r.latency}
+                        </td>
+                        <td className="py-3 pr-4 text-[13px] text-ink">{r.speedup}</td>
+                        <td className="py-3 pr-4 text-[13px] text-ink">{r.size}</td>
+                        <td className="py-3 text-[13px] text-ink">{r.detections}</td>
+                      </>
+                    )}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <div className="mt-8 flex flex-col gap-4">
+            <div className="notch-corner border border-rule-hard bg-panel p-5 sm:p-6">
+              <span className="font-hero-mono text-[12px] tracking-wide text-i3">
+                FINDING 1 · INT8 HELPED THE CPU AND HURT THE GPU
+              </span>
+              <div className="mt-1 font-display text-lg font-semibold text-ink">
+                Smaller numbers are not automatically faster
+              </div>
+              <p className="mt-2 text-[14px] leading-relaxed text-panel-text">
+                On the CPU, INT8 roughly halved latency and cut the model to a third of its size with the same
+                detections. On the integrated GPU, every INT8 variant I built was slower than FP16 (371 to
+                592 ms against 241 ms). Per-layer profiling showed why: the attention matrix multiplications
+                got no INT8 kernel, and the element-wise operations around the 4096 &times; 4096 attention maps
+                fell back to FP32. Keeping attention in FP16, then quantizing weights only, narrowed the gap
+                but never closed it. With 4,096 patches reusing every weight, this encoder is compute-bound,
+                so shrinking the weights saves nothing. FP16 is the right choice on this GPU, and INT8 the
+                right choice on the CPU.
+              </p>
+            </div>
+
+            <div className="notch-corner border border-rule-hard bg-panel p-5 sm:p-6">
+              <span className="font-hero-mono text-[12px] tracking-wide text-i3">
+                FINDING 2 · A 23X FASTER ENCODER IS A 2.6X FASTER PIPELINE
+              </span>
+              <div className="mt-1 font-display text-lg font-semibold text-ink">
+                Amdahl&rsquo;s law, measured
+              </div>
+              <p className="mt-2 text-[14px] leading-relaxed text-panel-text">
+                With the FP16 encoder on the GPU, the full two-volume pipeline went from 5,941 s to 2,248 s
+                with identical detections, and energy per encoder call fell from about 66 J to about 5 J
+                (package power from a software sensor, not a power meter). The pipeline gained far less than
+                the encoder because the encoder dropped to about 14% of total time: tiling, the mask decoder
+                and post-processing are now the bottleneck, and that is where the next speed-up has to come from.
+              </p>
+            </div>
+
+            <div className="notch-corner border border-rule-hard bg-panel p-5 sm:p-6">
+              <span className="font-hero-mono text-[12px] tracking-wide text-i3">
+                FINDING 3 · FAILURES ARE RESULTS
+              </span>
+              <div className="mt-1 font-display text-lg font-semibold text-ink">
+                Two toolchain failures, reproduced and isolated rather than worked around silently
+              </div>
+              <p className="mt-2 text-[14px] leading-relaxed text-panel-text">
+                The NNCF INT8 model built from ONNX failed to compile on the GPU in 3 of 3 fresh runs, while the
+                same quantization applied to a model converted straight from PyTorch compiled, which isolates
+                the fault to the ONNX-route graph. The NPU compiled every variant but returned wrong output,
+                then lost the device, before and after a driver update. Both are written up as results with
+                their logs; neither is claimed as a speed-up.
+              </p>
+            </div>
+          </div>
+
+          <div className="notch-corner-sm mt-6 flex flex-col gap-2 border border-rule-hard bg-panel p-4 sm:flex-row sm:items-baseline sm:justify-between">
+            <p className="m-0 text-[14px] leading-relaxed text-panel-text">
+              <b className="text-ink">Next: TensorRT on an NVIDIA T4.</b> FP16 and INT8 engines built from the
+              same ONNX file, where INT8 Tensor Cores may change the INT8 picture. No numbers until they are
+              measured.
+            </p>
+            <span className="status-badge pending shrink-0">Pending</span>
+          </div>
+
+          <p className="mt-6 text-[14px] leading-relaxed text-ink-soft">
+            These are laptop CPU, GPU and NPU results, not measurements on an embedded device, and the test set
+            is the same 33 boutons, so a difference of a few false positives between rows is noise, not an
+            accuracy gain.
+          </p>
+          <a
+            href="https://github.com/aditya0701/Image_segmentation_thesis/tree/edge-deploy/edge_deploy"
+            target="_blank"
+            rel="noreferrer"
+            className="mt-4 inline-flex items-center gap-1.5 text-[14px] font-medium text-i3 hover:text-i3"
+          >
+            Deployment code, results and write-up <ExternalLink size={13} />
+          </a>
+        </section>
+
+        {/* ------------------------------------------------------------ */}
+        <section className="mt-20">
+          <SectionHead num="09" title="Reproducibility" />
           <p className="text-[14px] leading-relaxed text-ink-mid">
             The thesis claim is reproducibility, so the repo has to earn it. Training, inference
             and evaluation are separate scripts with a{" "}

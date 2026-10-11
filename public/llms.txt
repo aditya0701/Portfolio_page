@@ -78,8 +78,13 @@ a model nobody can run is not a result.
   voxel calibration from acquisition type, and lets a biologist click away a false
   positive without touching code.
 - Final checkpoints published on Hugging Face for reuse.
+- Deployed the Base encoder through ONNX, INT8 quantization and OpenVINO on a laptop
+  CPU, integrated GPU and NPU: 5,605 ms to 241 ms (FP16, integrated GPU) with
+  identical detections. INT8 was faster on the CPU and slower on the GPU, explained
+  by per-layer profiling. TensorRT on an NVIDIA T4 is in progress (no numbers yet).
 
-Stack: PyTorch, MicroSAM, Cellpose 3D, nnU-Net v2, SwinUNETR, MONAI, napari, PyQt
+Stack: PyTorch, MicroSAM, Cellpose 3D, nnU-Net v2, SwinUNETR, MONAI, napari, PyQt, ONNX, OpenVINO
+Thesis PDF (Masterarbeit): https://adityarawat.de/thesis/Aditya_Rawat_Masterarbeit.pdf
 Thesis code: https://github.com/aditya0701/Image_segmentation_thesis
 BoutonViewer: https://github.com/aditya0701/Fluorescent-Microscopy-Image-Segmentation-and-Quantification
 Model weights: https://huggingface.co/aditya0701/Drosophilla_melanogaster_Bouton_3d_segmentation

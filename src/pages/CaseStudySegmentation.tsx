@@ -481,11 +481,11 @@ export function CaseStudySegmentation() {
           <a
             href={asset("thesis/Aditya_Rawat_Masterarbeit.pdf")}
             download
-            className="notch-corner-sm inline-flex items-center gap-2.5 border-2 border-i3-bright bg-ink px-6 py-3 text-[15px] font-semibold text-paper shadow-[4px_4px_0_var(--color-i3-bright)] transition-transform hover:-translate-x-0.5 hover:-translate-y-0.5"
+            className="notch-corner-sm inline-flex items-center gap-2.5 border-2 border-i3 bg-i3 px-6 py-3 text-[15px] font-semibold text-paper shadow-[4px_4px_0_var(--color-ink)] transition-transform hover:-translate-x-0.5 hover:-translate-y-0.5"
           >
             <Download size={17} />
             Download thesis (PDF)
-            <span className="font-hero-mono text-[11px] font-normal tracking-wide text-i3-bright">
+            <span className="font-hero-mono text-[11px] font-normal tracking-wide text-paper/80">
               21 MB
             </span>
           </a>
@@ -493,7 +493,7 @@ export function CaseStudySegmentation() {
             href="https://github.com/aditya0701/Image_segmentation_thesis"
             target="_blank"
             rel="noreferrer"
-            className="notch-corner-sm inline-flex items-center gap-2 bg-i3 px-5 py-2.5 text-[14px] font-medium text-paper transition-transform hover:-translate-y-0.5"
+            className="notch-corner-sm inline-flex items-center gap-2 border border-panel-border bg-panel px-5 py-2.5 text-[14px] font-medium text-panel-text transition-colors hover:border-i3 hover:text-i3"
           >
             Thesis code <ExternalLink size={14} />
           </a>

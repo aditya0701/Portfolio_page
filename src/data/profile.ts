@@ -80,6 +80,14 @@ export const skills = {
     "Vision-language models",
     "Evals",
   ],
+  "Model Deployment": [
+    "ONNX / ONNX Runtime",
+    "OpenVINO / NNCF",
+    "TensorRT",
+    "INT8 quantization",
+    "Per-layer GPU profiling",
+    "Latency & energy benchmarking",
+  ],
   "ML & Data": ["Transformers", "Foundation models", "Scikit-learn", "Pandas", "Matplotlib", "Seaborn"],
   "Infra & Tools": ["Git", "Docker", "GitHub Actions", "FastAPI", "Hugging Face", "Postman", "Celonis"],
 };

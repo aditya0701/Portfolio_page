@@ -78,10 +78,11 @@ a model nobody can run is not a result.
   voxel calibration from acquisition type, and lets a biologist click away a false
   positive without touching code.
 - Final checkpoints published on Hugging Face for reuse.
-- Deployed the Base encoder through ONNX, INT8 quantization and OpenVINO on a laptop
-  CPU, integrated GPU and NPU: 5,605 ms to 241 ms (FP16, integrated GPU) with
-  identical detections. INT8 was faster on the CPU and slower on the GPU, explained
-  by per-layer profiling. TensorRT on an NVIDIA T4 is in progress (no numbers yet).
+- Deployed the Base encoder through ONNX, INT8 quantization, OpenVINO and TensorRT:
+  on a laptop CPU, integrated GPU and NPU, 5,605 ms to 241 ms (FP16, integrated GPU)
+  with identical detections. INT8 was faster on the CPU and slower on the GPU,
+  explained by per-layer profiling. On a Colab T4 with TensorRT 11, INT8 was only
+  1.10x faster than FP16, with lower accuracy.
 
 Stack: PyTorch, MicroSAM, Cellpose 3D, nnU-Net v2, SwinUNETR, MONAI, napari, PyQt, ONNX, OpenVINO
 Thesis PDF (Masterarbeit): https://adityarawat.de/thesis/Aditya_Rawat_Masterarbeit.pdf
@@ -212,6 +213,29 @@ GitHub: https://github.com/aditya0701/Fluorescent-Microscopy-Image-Segmentation-
 Usage manual: https://github.com/aditya0701/Fluorescent-Microscopy-Image-Segmentation-and-Quantification/wiki
 Model card: https://huggingface.co/aditya0701/Drosophilla_melanogaster_Bouton_3d_segmentation
 
+### MicroSAM Encoder Deployment - MEASURED
+Thesis follow-up, solo · 10/2026 · Computer vision
+
+A measured deployment study of the fine-tuned MicroSAM Base image encoder on an Intel
+Core Ultra laptop (CPU, integrated GPU, NPU) and a Colab T4. Accuracy is checked
+against the FP32 model, not assumed, and a separate claims file lists what the numbers
+do and do not support.
+
+- Integrated Arc GPU in FP16: encoder 5,605 ms to 241 ms (23x) with identical
+  detections, at about 13x less energy per inference (software power sensor, not a
+  meter).
+- INT8 helped the CPU (2.7x, 3.4x smaller, same detections) but was slower than FP16
+  on the GPU, explained by per-layer profiling. On a Colab T4 with TensorRT 11 it was
+  only 1.10x faster than FP16, with lower accuracy.
+- Failures documented, not hidden: NPU device lost, an INT8 model that would not
+  compile on the GPU, and TensorRT 11 rejecting the ONNX Runtime INT8 model until it
+  was re-quantized.
+
+Stack: ONNX Runtime, OpenVINO, TensorRT, INT8 quantization, NNCF, Python
+Code & results: https://github.com/aditya0701/Image_segmentation_thesis/tree/main/edge_deploy
+Write-up: https://github.com/aditya0701/Image_segmentation_thesis/blob/main/edge_deploy/WRITEUP.md
+What is claimed: https://github.com/aditya0701/Image_segmentation_thesis/blob/main/edge_deploy/CLAIMS.md
+
 ### Realtime Human Detection & Counting
 Bachelor's project · 10/2020 – 05/2021 · Computer vision
 
@@ -246,6 +270,8 @@ Computer Vision: PyTorch, MicroSAM / SAM, nnU-Net v2, SwinUNETR, Cellpose 3D, MO
 LLM & Agents: agentic tool use, LLM pipeline design, grounding & hallucination
   mitigation, prompt / token-budget engineering, sentence-transformers, Chainlit,
   vision-language models, evals
+Model Deployment: ONNX / ONNX Runtime, OpenVINO / NNCF, TensorRT, INT8 quantization,
+  per-layer GPU profiling, latency & energy benchmarking
 ML & Data: transformers, foundation models, scikit-learn, Pandas, Matplotlib, Seaborn
 Infra & Tools: Git, Docker, GitHub Actions, FastAPI, Hugging Face, Postman, Celonis
 

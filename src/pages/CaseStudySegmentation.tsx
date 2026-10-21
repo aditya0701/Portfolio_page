@@ -87,10 +87,11 @@ const DATASHEET: DataRow[] = [
     k: "Deployment",
     v: (
       <>
-        The Base encoder exported to ONNX and run through INT8 and OpenVINO on a laptop: from{" "}
+        The Base encoder exported to ONNX and run through INT8, OpenVINO and TensorRT: on a laptop, from{" "}
         <span className="font-mono tabular-nums">5,605</span> ms on the CPU to{" "}
         <span className="font-mono tabular-nums">241</span> ms in FP16 on the integrated GPU, with identical
-        detections. INT8 was faster on the CPU and slower on the GPU. TensorRT on a T4 is still to come.
+        detections. INT8 was faster on the CPU and slower on the GPU. On a Colab T4 with TensorRT 11, INT8 was
+        only <span className="font-mono tabular-nums">1.10</span>x faster than FP16, with lower accuracy.
       </>
     ),
     s: "measured",
@@ -140,7 +141,7 @@ const SKILL_GROUPS: SkillGroup[] = [
   ["Engineering", ["PyTorch", "MONAI", "Kornia", "HTCondor cluster jobs", "napari plugin", "Hugging Face Hub"]],
   [
     "Deployment",
-    ["ONNX export", "ONNX Runtime", "INT8 post-training quantization", "OpenVINO / NNCF", "Per-layer GPU profiling"],
+    ["ONNX export", "ONNX Runtime", "INT8 post-training quantization", "OpenVINO / NNCF", "TensorRT 11", "Per-layer GPU profiling"],
   ],
 ];
 
@@ -828,7 +829,7 @@ export function CaseStudySegmentation() {
 
         {/* ------------------------------------------------------------ */}
         <section className="mt-20">
-          <SectionHead num="08" title="Deploying the encoder: ONNX, INT8, OpenVINO" />
+          <SectionHead num="08" title="Deploying the encoder: ONNX, INT8, OpenVINO, TensorRT" />
           <p className="text-[14px] leading-relaxed text-ink-mid">
             A model the lab runs on a workstation is one thing; the same model on cheaper hardware is
             another. So I took the heaviest part of the pipeline, the ViT-B image encoder of the fine-tuned
@@ -948,22 +949,35 @@ export function CaseStudySegmentation() {
             </div>
           </div>
 
-          <div className="notch-corner-sm mt-6 flex flex-col gap-2 border border-rule-hard bg-panel p-4 sm:flex-row sm:items-baseline sm:justify-between">
-            <p className="m-0 text-[14px] leading-relaxed text-panel-text">
-              <b className="text-ink">Next: TensorRT on an NVIDIA T4.</b> FP16 and INT8 engines built from the
-              same ONNX file, where INT8 Tensor Cores may change the INT8 picture. No numbers until they are
-              measured.
+          <div className="mt-4 notch-corner border border-rule-hard bg-panel p-5 sm:p-6">
+            <span className="font-hero-mono text-[12px] tracking-wide text-i3">
+              FINDING 4 · TENSORRT 11 ON A T4: THE SAME PICTURE, A SMALLER MARGIN
+            </span>
+            <div className="mt-1 font-display text-lg font-semibold text-ink">
+              FP16 stayed the right default, and the toolchain moved under me
+            </div>
+            <p className="mt-2 text-[14px] leading-relaxed text-panel-text">
+              On a Colab T4 the encoder ran in 314.5 ms (FP32), 108.3 ms (FP16) and 98.7 ms (INT8). FP16 is 2.9x
+              faster than FP32; INT8 is only 1.10x faster than FP16, and its agreement with the FP32 output drops
+              from a cosine of 0.99998 to 0.984 on five real test tiles. These are GPU execution times on a
+              different machine, so only the ratios inside the T4 are comparable, never the absolute times with
+              the laptop. Detections were not scored for the TensorRT engines.
             </p>
-            <span className="status-badge pending shrink-0">Pending</span>
+            <p className="mt-2 text-[14px] leading-relaxed text-panel-text">
+              TensorRT 11 also removed the FP16 and INT8 builder flags: precision now has to be inside the ONNX
+              file. It rejected my ONNX Runtime INT8 model twice (Int32 bias nodes, then non-zero zero points),
+              so I re-quantized it symmetrically with float biases. The write-up lists what that does and does
+              not allow me to claim.
+            </p>
           </div>
 
           <p className="mt-6 text-[14px] leading-relaxed text-ink-soft">
-            These are laptop CPU, GPU and NPU results, not measurements on an embedded device, and the test set
+            These are laptop CPU, GPU and NPU results plus one Colab T4, not measurements on an embedded device, and the test set
             is the same 33 boutons, so a difference of a few false positives between rows is noise, not an
             accuracy gain.
           </p>
           <a
-            href="https://github.com/aditya0701/Image_segmentation_thesis/tree/edge-deploy/edge_deploy"
+            href="https://github.com/aditya0701/Image_segmentation_thesis/tree/main/edge_deploy"
             target="_blank"
             rel="noreferrer"
             className="mt-4 inline-flex items-center gap-1.5 text-[14px] font-medium text-i3 hover:text-i3"

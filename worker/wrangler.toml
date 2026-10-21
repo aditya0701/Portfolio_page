@@ -1,0 +1,7 @@
+name = "portfolio-visit-notifier"
+main = "visit-notifier.js"
+compatibility_date = "2026-01-01"
+
+# Secrets (never committed) are set with:
+#   npx wrangler secret put TELEGRAM_BOT_TOKEN
+#   npx wrangler secret put TELEGRAM_CHAT_ID

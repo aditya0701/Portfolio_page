@@ -4,6 +4,7 @@ import { BrowserRouter } from "react-router-dom";
 import { MotionConfig } from "framer-motion";
 import "./index.css";
 import App from "./App.tsx";
+import { notifyVisit } from "./lib/notify.ts";
 
 // Derived from Vite's `base` so a repo rename is a one-line change in
 // vite.config.ts rather than a hunt for hardcoded paths. BASE_URL always
@@ -36,3 +37,5 @@ if (container.firstElementChild) {
 } else {
   createRoot(container).render(app);
 }
+
+notifyVisit();

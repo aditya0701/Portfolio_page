@@ -183,6 +183,29 @@ export const projects: Project[] = [
     weight: "bridge",
   },
   {
+    slug: "encoder-deployment",
+    status: "measured",
+    title: "MicroSAM Encoder Deployment",
+    tagline: "The thesis encoder through ONNX, OpenVINO and TensorRT 11, with every claim measured and every failure written up",
+    period: "10/2026 · Thesis follow-up, solo",
+    track: "cv",
+    description:
+      "A measured deployment study of the fine-tuned MicroSAM Base image encoder on an Intel Core Ultra laptop (CPU, integrated GPU, NPU) and a Colab T4. Accuracy is checked against the FP32 model, not assumed, and a separate claims file lists what the numbers do and do not support.",
+    bullets: [
+      "Integrated Arc GPU in FP16: encoder 5,605 ms to 241 ms (23x) with identical detections, at about 13x less energy per inference (software power sensor, not a meter)",
+      "INT8 helped the CPU (2.7x, 3.4x smaller, same detections) but was slower than FP16 on the GPU, explained by per-layer profiling. On a Colab T4 with TensorRT 11 it was only 1.10x faster than FP16, with lower accuracy",
+      "Failures documented, not hidden: NPU device lost, an INT8 model that would not compile on the GPU, and TensorRT 11 rejecting the ONNX Runtime INT8 model until it was re-quantized",
+    ],
+    tags: ["ONNX Runtime", "OpenVINO", "TensorRT", "INT8 quantization", "NNCF", "Python"],
+    links: [
+      { label: "Code & results", href: "https://github.com/aditya0701/Image_segmentation_thesis/tree/main/edge_deploy" },
+      { label: "Write-up", href: "https://github.com/aditya0701/Image_segmentation_thesis/blob/main/edge_deploy/WRITEUP.md" },
+      { label: "What is claimed", href: "https://github.com/aditya0701/Image_segmentation_thesis/blob/main/edge_deploy/CLAIMS.md" },
+      { label: "Thesis case study", href: "/case-study/microglomeruli-segmentation" },
+    ],
+    weight: "supporting",
+  },
+  {
     slug: "human-detection-and-counting",
     title: "Realtime Human Detection & Counting",
     tagline: "YOLOv3-based distance enforcement during COVID-19",

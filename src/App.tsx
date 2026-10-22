@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import { Home } from "./pages/Home";
 import { CaseStudySegmentation } from "./pages/CaseStudySegmentation";
 import { CaseStudyTechDrishti } from "./pages/CaseStudyTechDrishti";
@@ -11,23 +11,35 @@ import { SarvamVsDeepseek } from "./pages/SarvamVsDeepseek";
 import { EvaluationReport } from "./pages/EvaluationReport";
 import { Evolution } from "./pages/Evolution";
 import { Certifications } from "./pages/Certifications";
+import { Impressum } from "./pages/Impressum";
+import { Datenschutz } from "./pages/Datenschutz";
+import { LegalFooter } from "./components/LegalFooter";
 
 function App() {
+  // The home page carries the footer inside its Contact section.
+  const { pathname } = useLocation();
+  const isHome = pathname === "/" || pathname === "";
+
   return (
-    <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/case-study/microglomeruli-segmentation" element={<CaseStudySegmentation />} />
-      <Route path="/case-study/techdrishti" element={<CaseStudyTechDrishti />} />
-      <Route path="/case-study/techdrishti/sarvam-vs-deepseek" element={<SarvamVsDeepseek />} />
-      <Route path="/case-study/techdrishti/evaluation" element={<EvaluationReport />} />
-      <Route path="/case-study/techdrishti/evolution" element={<Evolution />} />
-      <Route path="/case-study/deep-research-agent" element={<CaseStudyDeepResearch />} />
-      <Route path="/case-study/deep-research-agent/comparison" element={<DeepResearchComparison />} />
-      <Route path="/case-study/chitragupta" element={<CaseStudyChitragupta />} />
-      <Route path="/case-study/chitragupta/architecture" element={<ChitraguptaArchitecture />} />
-      <Route path="/case-study/chitragupta/failure-log" element={<ChitraguptaFailureLog />} />
-      <Route path="/certifications" element={<Certifications />} />
-    </Routes>
+    <>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/case-study/microglomeruli-segmentation" element={<CaseStudySegmentation />} />
+        <Route path="/case-study/techdrishti" element={<CaseStudyTechDrishti />} />
+        <Route path="/case-study/techdrishti/sarvam-vs-deepseek" element={<SarvamVsDeepseek />} />
+        <Route path="/case-study/techdrishti/evaluation" element={<EvaluationReport />} />
+        <Route path="/case-study/techdrishti/evolution" element={<Evolution />} />
+        <Route path="/case-study/deep-research-agent" element={<CaseStudyDeepResearch />} />
+        <Route path="/case-study/deep-research-agent/comparison" element={<DeepResearchComparison />} />
+        <Route path="/case-study/chitragupta" element={<CaseStudyChitragupta />} />
+        <Route path="/case-study/chitragupta/architecture" element={<ChitraguptaArchitecture />} />
+        <Route path="/case-study/chitragupta/failure-log" element={<ChitraguptaFailureLog />} />
+        <Route path="/certifications" element={<Certifications />} />
+        <Route path="/impressum" element={<Impressum />} />
+        <Route path="/datenschutz" element={<Datenschutz />} />
+      </Routes>
+      {!isHome && <LegalFooter className="bg-paper" />}
+    </>
   );
 }
 

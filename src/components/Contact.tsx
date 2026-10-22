@@ -1,6 +1,7 @@
 import { Mail, ExternalLink } from "lucide-react";
 import { profile } from "../data/profile";
 import { GithubIcon } from "./icons";
+import { LegalFooter } from "./LegalFooter";
 
 export function Contact() {
   return (
@@ -47,9 +48,7 @@ export function Contact() {
           </a>
         </div>
       </div>
-      <footer className="flex items-center justify-center gap-2 border-t border-rule py-6 text-center font-hero-mono text-[0.72rem] tracking-[0.05em] text-ink-soft">
-        &copy; {new Date().getFullYear()} {profile.name}
-      </footer>
+      <LegalFooter />
     </section>
   );
 }

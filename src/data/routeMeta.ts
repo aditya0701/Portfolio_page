@@ -94,6 +94,17 @@ export const ROUTE_META = {
     description:
       "The coursework behind the two tracks — every credential links to its Coursera verification page. DeepLearning.AI, Stanford, Google and U-Michigan programs.",
   },
+
+  "/impressum": {
+    title: "Impressum | Aditya Rawat",
+    description: "Legal notice (Impressum) for adityarawat.de: provider identification under § 5 DDG.",
+  },
+
+  "/datenschutz": {
+    title: "Datenschutzerklärung | Aditya Rawat",
+    description:
+      "Privacy notice for adityarawat.de: no cookies, no tracking, self-hosted fonts, and a country-only visitor notification. Datenschutzerklärung auf Deutsch und Englisch.",
+  },
 } as const satisfies Record<string, RouteMeta>;
 
 export type PrerenderedRoute = keyof typeof ROUTE_META;

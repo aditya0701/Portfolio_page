@@ -56,24 +56,21 @@ export function Datenschutz() {
           Datenverarbeitungsvereinbarung von Porkbun sind.
         </p>
 
-        <LegalHeading>5. Besucherhinweis (Cloudflare Worker und Telegram)</LegalHeading>
+        <LegalHeading>5. Besucherhinweis (Cloudflare Worker)</LegalHeading>
         <p>
           Wenn Sie die Seite aufrufen, sendet Ihr Browser eine leere Anfrage ohne Inhalt an einen von mir
           betriebenen Cloudflare Worker (Cloudflare, Inc., USA). Der Worker ermittelt aus der technisch
-          übermittelten Verbindung das Herkunftsland und schickt mir daraufhin eine kurze Nachricht über den
-          Messenger-Dienst Telegram, die nur lautet: „Jemand hat die Seite geöffnet“ und das Land nennt. Es werden
-          keine IP-Adresse, kein Ort, keine Netzwerkangabe, kein Browser und keine besuchte Unterseite übermittelt
-          oder von mir gespeichert. Auf Ihrem Gerät wird nichts gespeichert oder ausgelesen. Die Nachricht bleibt
-          in meinem Telegram-Chat, bis ich sie lösche.
+          übermittelten Verbindung das Herkunftsland und schickt mir daraufhin eine kurze Benachrichtigung, die nur
+          lautet: „Jemand hat die Seite geöffnet“ und das Land nennt. Es werden keine IP-Adresse, kein Ort, keine
+          Netzwerkangabe, kein Browser und keine besuchte Unterseite übermittelt oder von mir gespeichert. Auf
+          Ihrem Gerät wird nichts gespeichert oder ausgelesen. Die Benachrichtigung bleibt auf meinem Gerät, bis
+          ich sie lösche.
         </p>
         <p>
           Zweck ist, dass ich erfahre, ob und aus welchen Ländern die Seite aufgerufen wird. Rechtsgrundlage ist
           Art. 6 Abs. 1 lit. f DSGVO (mein berechtigtes Interesse an dieser groben Reichweitenkenntnis).
           Cloudflare gibt an, unter dem EU-US Data Privacy Framework zertifiziert zu sein, und stützt sich
-          hilfsweise auf EU-Standardvertragsklauseln. Telegram hat seinen Sitz auf den Britischen Jungferninseln,
-          wofür es keinen Angemessenheitsbeschluss gibt; es beruft sich in seiner Datenschutzerklärung für
-          Übermittlungen innerhalb seiner Unternehmensgruppe auf EU-Standardvertragsklauseln. An Telegram sende ich
-          nur den Hinweis und das Land, nichts, was Sie identifiziert.
+          hilfsweise auf EU-Standardvertragsklauseln.
         </p>
         <p>
           Sie können dem widersprechen (siehe Abschnitt 9). Technisch lässt sich die Anfrage auch durch einen
@@ -163,23 +160,20 @@ export function Datenschutz() {
           relies on the EU standard contractual clauses that form part of Porkbun&apos;s data processing addendum.
         </p>
 
-        <LegalHeading>5. Visitor notification (Cloudflare Worker and Telegram)</LegalHeading>
+        <LegalHeading>5. Visitor notification (Cloudflare Worker)</LegalHeading>
         <p>
           When you open the site, your browser sends an empty request with no content to a Cloudflare Worker that I
           operate (Cloudflare, Inc., USA). From the connection that is transmitted technically, the Worker works
-          out the country of origin and sends me a short message through the messenger service Telegram that says
-          only &ldquo;Someone opened the site&rdquo; and names the country. No IP address, city, network details,
-          browser or page visited is passed on or stored by me. Nothing is stored on or read from your device. The
-          message stays in my Telegram chat until I delete it.
+          out the country of origin and sends me a short notification that says only &ldquo;Someone opened the
+          site&rdquo; and names the country. No IP address, city, network details, browser or page visited is
+          passed on or stored by me. Nothing is stored on or read from your device. The notification stays on my
+          device until I delete it.
         </p>
         <p>
           The purpose is to let me know whether the site is visited and from which countries. The legal basis is
           Art. 6(1)(f) GDPR (my legitimate interest in this rough picture of reach). Cloudflare states that it is
           certified under the EU-US Data Privacy Framework and falls back on EU standard contractual clauses if
-          that certification lapses. Telegram is established in the British Virgin Islands, for which there is no
-          adequacy decision; in its privacy policy it relies on EU standard contractual clauses for transfers
-          within its corporate group. The only content I send to Telegram is the notice and the country, nothing
-          that identifies you.
+          that certification lapses.
         </p>
         <p>
           You can object (see section 9). Technically you can also prevent the request with a content blocker, or

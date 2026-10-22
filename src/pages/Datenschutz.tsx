@@ -42,9 +42,9 @@ export function Datenschutz() {
         </p>
         <p>
           Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO: Mein berechtigtes Interesse liegt in der sicheren und
-          zuverlässigen Bereitstellung dieser Website. Eine Übermittlung in die USA stützt sich auf den
-          Angemessenheitsbeschluss der EU-Kommission zum EU-US Data Privacy Framework, soweit der Anbieter dort
-          zertifiziert ist, im Übrigen auf EU-Standardvertragsklauseln.
+          zuverlässigen Bereitstellung dieser Website. GitHub gibt an, unter dem EU-US Data Privacy Framework
+          zertifiziert zu sein; die Übermittlung in die USA stützt sich daher auf den Angemessenheitsbeschluss der
+          EU-Kommission dazu, im Übrigen auf EU-Standardvertragsklauseln.
         </p>
 
         <LegalHeading>4. Domain und DNS (Porkbun)</LegalHeading>
@@ -52,7 +52,8 @@ export function Datenschutz() {
           Die Domain adityarawat.de ist bei Porkbun LLC (USA) registriert und wird dort per DNS aufgelöst. Bei der
           Namensauflösung können technische Verbindungsdaten (in der Regel die IP-Adresse des anfragenden
           DNS-Servers) bei Porkbun anfallen. Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO (Erreichbarkeit der
-          Website).
+          Website). Die Übermittlung in die USA stützt sich auf die EU-Standardvertragsklauseln, die Teil der
+          Datenverarbeitungsvereinbarung von Porkbun sind.
         </p>
 
         <LegalHeading>5. Besucherhinweis (Cloudflare Worker und Telegram)</LegalHeading>
@@ -68,9 +69,11 @@ export function Datenschutz() {
         <p>
           Zweck ist, dass ich erfahre, ob und aus welchen Ländern die Seite aufgerufen wird. Rechtsgrundlage ist
           Art. 6 Abs. 1 lit. f DSGVO (mein berechtigtes Interesse an dieser groben Reichweitenkenntnis).
-          Cloudflare und Telegram haben ihren Sitz außerhalb der EU; die Übermittlung stützt sich auf den
-          Angemessenheitsbeschluss zum EU-US Data Privacy Framework, soweit der Anbieter dort zertifiziert ist, im
-          Übrigen auf EU-Standardvertragsklauseln.
+          Cloudflare gibt an, unter dem EU-US Data Privacy Framework zertifiziert zu sein, und stützt sich
+          hilfsweise auf EU-Standardvertragsklauseln. Telegram hat seinen Sitz auf den Britischen Jungferninseln,
+          wofür es keinen Angemessenheitsbeschluss gibt; es beruft sich in seiner Datenschutzerklärung für
+          Übermittlungen innerhalb seiner Unternehmensgruppe auf EU-Standardvertragsklauseln. An Telegram sende ich
+          nur den Hinweis und das Land, nichts, was Sie identifiziert.
         </p>
         <p>
           Sie können dem widersprechen (siehe Abschnitt 9). Technisch lässt sich die Anfrage auch durch einen
@@ -147,16 +150,17 @@ export function Datenschutz() {
         </p>
         <p>
           The legal basis is Art. 6(1)(f) GDPR: my legitimate interest in providing this website securely and
-          reliably. Transfers to the USA rely on the European Commission&apos;s adequacy decision for the EU-US
-          Data Privacy Framework where the provider is certified under it, and otherwise on EU standard contractual
-          clauses.
+          reliably. GitHub states that it is certified under the EU-US Data Privacy Framework, so transfers to the
+          USA rely on the European Commission&apos;s adequacy decision for that framework, and otherwise on EU
+          standard contractual clauses.
         </p>
 
         <LegalHeading>4. Domain and DNS (Porkbun)</LegalHeading>
         <p>
           The domain adityarawat.de is registered with Porkbun LLC (USA) and resolved through its DNS. Technical
           connection data (usually the IP address of the requesting DNS server) may arise at Porkbun during name
-          resolution. The legal basis is Art. 6(1)(f) GDPR (keeping the website reachable).
+          resolution. The legal basis is Art. 6(1)(f) GDPR (keeping the website reachable). The transfer to the USA
+          relies on the EU standard contractual clauses that form part of Porkbun&apos;s data processing addendum.
         </p>
 
         <LegalHeading>5. Visitor notification (Cloudflare Worker and Telegram)</LegalHeading>
@@ -170,9 +174,12 @@ export function Datenschutz() {
         </p>
         <p>
           The purpose is to let me know whether the site is visited and from which countries. The legal basis is
-          Art. 6(1)(f) GDPR (my legitimate interest in this rough picture of reach). Cloudflare and Telegram are
-          based outside the EU; transfers rely on the adequacy decision for the EU-US Data Privacy Framework where
-          the provider is certified under it, and otherwise on EU standard contractual clauses.
+          Art. 6(1)(f) GDPR (my legitimate interest in this rough picture of reach). Cloudflare states that it is
+          certified under the EU-US Data Privacy Framework and falls back on EU standard contractual clauses if
+          that certification lapses. Telegram is established in the British Virgin Islands, for which there is no
+          adequacy decision; in its privacy policy it relies on EU standard contractual clauses for transfers
+          within its corporate group. The only content I send to Telegram is the notice and the country, nothing
+          that identifies you.
         </p>
         <p>
           You can object (see section 9). Technically you can also prevent the request with a content blocker, or
